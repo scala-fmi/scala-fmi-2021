@@ -14,6 +14,11 @@
 
     git submodule update --init
 
+**Local with Reaveal + Markdown**
+
+To be able to successfully load .md files w/ the Markdown plugin and no co policy pass the `--allow-file-access-from-files` flag for google chrome. If you use a real browser and not google chrome
+you are clearly an adult and can figure out how to fix it for yourself.
+
 ### Генериране на конретна лекция
 
     cd lectures

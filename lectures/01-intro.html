@@ -24,20 +24,14 @@
 <body>
   <div class="reveal">
     <div class="slides">
-
-<section id="title-slide">
-  <h1 class="title">Функционално програмиране за напреднали със Scala</h1>
-</section>
-
-<section class="slide level6">
-
-</section>
+        <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines -->
+        <section data-markdown="01-intro.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section>
     </div>
   </div>
 
   <script src="reveal-js/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <script src="reveal-js/plugin/markdown/markdown.js"></script>
   <script src="reveal-js/plugin/notes/notes.js"></script>
   <script src="reveal-js/plugin/search/search.js"></script>
   <script src="reveal-js/plugin/zoom/zoom.js"></script>
@@ -55,11 +49,12 @@
         transition: 'fade', // none/fade/slide/convex/concave/zoom
 
         // reveal.js plugins
-        plugins: [
-          RevealNotes,
-          RevealSearch,
-          RevealZoom
-        ]
+          plugins: [
+              RevealMarkdown,
+              RevealNotes,
+              RevealSearch,
+              RevealZoom
+          ]
       });
     </script>
     </body>
