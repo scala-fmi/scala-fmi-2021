@@ -26,3 +26,14 @@
 .reveal li pre {
   width: auto;
 }
+
+.slide-background.scala3::before {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 192px;
+  content: url(../images/scala3-small.png);
+  width: 146px;
+  height: 236px;
+  box-shadow: 32px 32px 100px;
+}
