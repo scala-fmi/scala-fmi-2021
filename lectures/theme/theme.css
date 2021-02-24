@@ -37,3 +37,10 @@
   height: 236px;
   box-shadow: 32px 32px 100px;
 }
+
+p code, li code {
+  white-space: pre-wrap;
+  background: #f0f0f0;
+  padding: 0 2px;
+  border-radius: 4px;
+}
