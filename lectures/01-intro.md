@@ -165,7 +165,7 @@ Scala 2, Dotty, Scala 3.
 
 
 
-# Let's look at a bit of code.
+# Boring code examples do not look
 
 Chain:
 
