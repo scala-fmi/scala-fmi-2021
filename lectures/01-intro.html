@@ -17,9 +17,48 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    #left {
+        margin: 10px 0 15px 20px;
+        text-align: center;
+        float: left;
+        z-index:-10;
+        width:45%;
+        font-size: 0.85em;
+        line-height: 1.5;
+    }
+
+    #middle {
+        width: 5%;
+        float: left;
+        font-size: 0.85em;
+        line-height: 1.5;
+        text-align: center;
+        min-height: 200px;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    #right {
+        margin: 10px 0 15px 0;
+        float: right;
+        text-align: center;
+        z-index:-10;
+        width:45%;
+        font-size: 0.85em;
+        line-height: 1.5;
+    }
+    #bottom-right {
+        position: absolute;
+        right: 0;
+    }
+    #bottom-left {
+        position: absolute;
+        left: 0;
+    }
   </style>
   <link rel="stylesheet" href="reveal-js/dist/theme/white.css" id="theme">
   <link rel="stylesheet" href="theme/theme.css"/>
+  <link rel="stylesheet" href="reveal-js/plugin/highlight/monokai.css">
 </head>
 <body>
   <div class="reveal">
@@ -35,27 +74,30 @@
   <script src="reveal-js/plugin/notes/notes.js"></script>
   <script src="reveal-js/plugin/search/search.js"></script>
   <script src="reveal-js/plugin/zoom/zoom.js"></script>
+  <script src="reveal-js/plugin/highlight/highlight.js"></script>
 
   <script>
 
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
-        // Push each slide change to the browser history
-        history: true,
-        // Vertical centering of slides
-        center: false,
-        // Transition style
-        transition: 'fade', // none/fade/slide/convex/concave/zoom
+          // Push each slide change to the browser history
+          history: true,
+          // Vertical centering of slides
+          center: false,
+          // Transition style
+          transition: 'fade', // none/fade/slide/convex/concave/zoom
 
-        // reveal.js plugins
+          // reveal.js plugins
           plugins: [
               RevealMarkdown,
+              RevealHighlight,
               RevealNotes,
               RevealSearch,
-              RevealZoom
-          ]
+              RevealZoom,
+              RevealHighlight,
+          ],
       });
-    </script>
+  </script>
     </body>
 </html>
