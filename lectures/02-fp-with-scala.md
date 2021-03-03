@@ -2,12 +2,13 @@
 title: Въведение във функционалното програмиране със Scala
 ---
 
-# Използване на инструментите
+# Scala инструменти
 
 # Read-eval-print loop (REPL)
 
 - интерактивен езиков шел
 - стартира се от командния ред със `scala`
+- препоръчваме и [Ammonite](https://ammonite.io/)
 
 # Hello World
 
@@ -36,7 +37,7 @@ name := "hello-world"
 version := "0.1"
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+  "org.scalatest" %% "scalatest" % "3.2.5" % Test
 )
 ```
 
@@ -53,7 +54,68 @@ libraryDependencies ++= Seq(
 - compile -- компилира кода
 - run -- изпълнява обект с `main` метод
 - console -- стартира REPL, в който е достъпно всичко от кода
-- тест -- пуска всички тестове
+- test -- пуска всички тестове
+
+# Фиксиране на sbt версия
+
+`project/build.properties`:
+
+```scala
+sbt.version=1.4.7
+```
+
+# Тестове
+
+```scala
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+
+class ExampleSpec extends AnyFlatSpec with Matchers {
+  "+" should "sum two numbers" in {
+    2 + 3 should be (5)
+  }
+}
+```
+
+# Включване на Java библиотеки
+
+`build.sbt`:
+
+```scala
+name := "hello-world"
+version := "0.1"
+
+libraryDependencies ++= Seq(
+  // Java библиотека, може да се използва директно в Scala код
+  "com.google.guava" % "guava" % "30.1-jre",
+
+  // Scala библиотека, %% залепва версията на Scala към името (т.е. akka-actor-typed_2.13)
+  "com.typesafe.akka" %% "akka-actor-typed" % "2.6.13",
+
+  // Test посочва, че библиотеката ще е налична само за тестовете (в src/test/scala)
+  "org.scalatest" %% "scalatest" % "3.2.5" % Test
+)
+```
+
+# Scala 3 проект
+
+`project/plugins.sbt`:
+
+```scala
+addSbtPlugin("ch.epfl.lamp" % "sbt-dotty" % "0.5.3")
+```
+
+`build.sbt`:
+
+```scala
+name := "hello-scala-3"
+version := "0.1"
+scalaVersion := "3.0.0-RC1"
+
+libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.2.5" % Test
+)
+```
 
 # Scala
 
@@ -113,8 +175,9 @@ sum(fortyTwo, 58) // 100
 <div class="fragment">
 
 ```scala
+// посочването на типа на връщания резултат е опционално,
+// но препоръчително за публични функции
 def twice(str: String): String = str * 2
-
 twice(":)") // ":):)"
 ```
 
@@ -160,11 +223,13 @@ object TestApp {
 
   def sum = a + b + c
 
-  def main(args: Array[String]) = println("The sum is: ", sum)
+  def main(args: Array[String]) = println("The sum is: " + sum)
 }
 ``` 
 
 # Топ ниво във файл { .scala3 }
+
+`TestApp.scala`:
 
 ```scala
 val a = 10 * 2
@@ -173,11 +238,7 @@ def c = 30 * 8
 
 def sum = a + b + c
 
-@main def printSum = println("The sum is: ", sum)
-```
-
-```
-TestApp.scala
+@main def printSum = println("The sum is: " + sum)
 ```
 
 # Файлове и пакети
@@ -198,7 +259,7 @@ def c = 30 * 8
 
 def sum = a + b + c
 
-@main def printSum = println("The sum is: ", sum)
+@main def printSum = println("The sum is: " + sum)
 ```
 </div>
 
