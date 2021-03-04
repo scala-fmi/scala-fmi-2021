@@ -1,0 +1,5 @@
+package scalafmi
+
+object Examples {
+
+}
