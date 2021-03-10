@@ -4,6 +4,7 @@
 
 * [01 – За курса](https://scala-fmi.github.io/scala-fmi-2021/lectures/01-intro.html)
 * [02 – Въведение във функционалното програмиране със Scala](https://scala-fmi.github.io/scala-fmi-2021/lectures/02-fp-with-scala.html) \[[код](lectures/examples/02-fp-with-scala)\]
+* [03 – ООП във функционален език](https://scala-fmi.github.io/scala-fmi-2021/lectures/03-oop-in-a-functional-language.html) \[[код](lectures/examples/03-oop-in-a-functional-language)\]
 
 ## Генериране на лекции
 

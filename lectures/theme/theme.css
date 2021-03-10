@@ -52,3 +52,15 @@ p > code, li > code {
 .reveal li pre.sourceCode {
   margin: 8px;
 }
+
+.reveal blockquote {
+  box-sizing: border-box;
+  width: 80%;
+  margin: 16px auto;
+  background: #334455;
+  padding: 5px;
+  color: white;
+  font-weight: bold;
+  font-style: italic;
+  border-radius: 10px;
+}
