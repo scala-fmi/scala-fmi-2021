@@ -1,0 +1,3 @@
+package mathematical
+
+class Rational
