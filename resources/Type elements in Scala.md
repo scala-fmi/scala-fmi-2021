@@ -11,7 +11,7 @@
    		</thead>		
 	<tbody>
 		<tr>
-			<th colspan="4"><i>Типове</i></th>
+			<th colspan="4" align="left"><i>Типове</i></th>
 		</tr>
 	</tbody>
 	<tbody>
@@ -30,7 +30,7 @@
 	</tbody>
     <tbody>
 		<tr>
-			<th colspan="4"><i>Полиморфизъм</i></th>
+			<th colspan="4" align="left"><i>Полиморфизъм</i></th>
 		</tr>
 	</tbody>
     <tbody>
