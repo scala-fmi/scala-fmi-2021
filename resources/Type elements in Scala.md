@@ -41,12 +41,10 @@
                 <pre class="sourceCode scala">
 def twice(n: Int) = n * 2
 def twice(d: Double) = d * 2
-def twice(str: String) = str * 2
-<br/>
+def twice(str: String) = str * 2<br/>
 twice(10) // 20
 twice(10.0) // 20.0
-twice("10") // "1010"
-                </pre>
+twice("10") // "1010"</pre>
             </td>
 			<td>Функциите имат еднакво име, но се различават по броя, наредбата или типа на параметрите.</td>
 		</tr>
@@ -55,8 +53,7 @@ twice("10") // "1010"
 			<td></td>
 			<td>
 <pre>
-def repeat[A](value: A, times: Int): List[A]
-
+def repeat[A](value: A, times: Int): List[A]<br/>
 repeat("Hello", 3) // List("Hello", "Hello", "Hello")
 </pre>
             </td>
