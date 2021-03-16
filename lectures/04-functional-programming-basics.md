@@ -33,8 +33,6 @@ title: Основни подходи при ФП
     else n * fact(n - 1)
   ```
 
-// * Обикновено се имплементира от две части - дъно и рекурсивно извикване с промяна в параметрите
-
 :::
 
 # Примери
@@ -86,8 +84,6 @@ fact(5)
 :::
 
 # Примери
-
-::: incremental
 
 ```scala
 def fact(n: Int, acc: Int = 1): Int =
@@ -141,11 +137,7 @@ def size[A](l: List[A]): Int
 def fibonacci(i: Int): Int
 ```
 
-:::
-
 # Обхождане на списък
-
-::: incremental
 
 * drop
 * reverse
@@ -153,10 +145,6 @@ def fibonacci(i: Int): Int
 * nth element 
 * size 
 * concat
-
-:::
-
-
 
 # Малко повече за функциите
 
@@ -245,7 +233,11 @@ def fibonacci(i: Int): Int
   }
   ```
 
+:::
+
 # apply?
+
+::: incremental
 
 * Метод `apply` е специален. Обектите, които го имат могат да бъдат извиквани като функции
 * `Function2` e нормален `trait` - репрезентира функции на два аргумента
@@ -264,6 +256,8 @@ def fibonacci(i: Int): Int
 
 # "Placeholder" синтаксис
 
+::: incremental
+
 * Може да използваме `_`, който ще бъде попълнен с параметър
   ```scala
   val addOne: Int => Int = _ + 1
@@ -278,6 +272,8 @@ def fibonacci(i: Int): Int
   
   val sum3: (Int, Int, Int) => Int = _ + _ + _
   ```
+
+:::
   
 # Partial application
 
@@ -286,6 +282,8 @@ val addOne = sum(_, 1)
 ```
 
 The type of `addOne` is `Int => Int` 
+
+<div class="fragment">
 
 ```scala
 def wrap(prefix: String, html: String, suffix: String) = prefix + html + suffix
@@ -297,11 +295,14 @@ wrapWithDiv(wrapWithP("Hello, world"))
 //res0: String = "<div><p>Hello, world</div></div>"
 ```
 
-Трябва да специфицираме параметъра
+Трябва да специфицираме типа на параметъра
+
+</div>
 
 
 # Difference between `def` and `val` functions
 
+maybe delete
 
 # Eta expansion
   ```scala
