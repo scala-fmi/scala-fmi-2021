@@ -2,7 +2,7 @@
 title: Основни подходи при ФП
 ---
 
-# За какво ще говорим по тази тема
+# За какво ще говорим
 
 ::: incremental
 
@@ -26,7 +26,7 @@ title: Основни подходи при ФП
 * ![](images/04-functional-programming-basics/captain-obvious.jpg){ height=200 }
 * Използва се за постигане на цикличност. Често срещано във ФП
 * Избягва мутиране на състояние
-* По естествен начин за описване на определени алгоритми. Пример - fact
+* По-естествен начин за описване на определени алгоритми. Пример - fact
   ```scala
   def fact(n: Int): Int =
     if (n <= 1) 1
@@ -47,31 +47,35 @@ def fibonacci(i: Int): Int
 
 # Unfolding the recursion
 
-* Използвайки substitution model
+::: incremental
 
-```
-fact(5)
---
-5 * fact(5 - 1) =
---
-5 * fact(4) =
---
-5 * (4 * fact(4 - 1)) =
---
-5 * (4 * fact(3)) =
---
-5 * (4 * (3 * fact(3 - 1))) =
---
-5 * (4 * (3 * fact(2))) =
---
-5 * (4 * (3 * (2 * fact(2 - 1)))) =
---
-5 * (4 * (3 * (2 * fact(1)))) =
---
-5 * (4 * (3 * (2 * 1)))
-```
+* Използвайки substitution model
+  
+  ```
+  fact(5)
+  --
+  5 * fact(5 - 1) =
+  --
+  5 * fact(4) =
+  --
+  5 * (4 * fact(4 - 1)) =
+  --
+  5 * (4 * fact(3)) =
+  --
+  5 * (4 * (3 * fact(3 - 1))) =
+  --
+  5 * (4 * (3 * fact(2))) =
+  --
+  5 * (4 * (3 * (2 * fact(2 - 1)))) =
+  --
+  5 * (4 * (3 * (2 * fact(1)))) =
+  --
+  5 * (4 * (3 * (2 * 1)))
+  ```
 
 * ако извикаме функцията с `Int.MaxValue` ще получим `java.lang.StackOverflowError`
+
+:::
 
 # Опашкова рекурсия (tail recursion)
 
@@ -79,17 +83,25 @@ fact(5)
 
 > "A recursive function is tail recursive when recursive call is the last thing executed by the function."
 
-* И какво от това?
-
 :::
 
 # Примери
+
+::: incremental
 
 ```scala
 def fact(n: Int, acc: Int = 1): Int =
   if (n <= 1) acc
   else fact(n - 1, acc * n)
 ```
+
+<div class="fragment">
+
+И какво от това?
+
+</div>
+
+:::
 
 # Как изглежда стека тогава?
 
@@ -121,14 +133,15 @@ fact(1, 120) =
 
 * Няма нужда да пазим променливи в стека от предните извиквания
 * "Tail recursive" функциите могат да бъдат оптимизирани от компилатора
-* accumulator подход - // паралел с императивните итерации - променливите всъщност стават параметри на функцията
+* accumulator подход
 * @tailrec
 
 :::
 
 # Още примери
 
-* Нека преправим предните примери с опашкова рекурсия
+Нека преправим предните примери с опашкова рекурсия
+
 ```scala
 def sum(l: List[Int]): Int
 
@@ -142,8 +155,7 @@ def fibonacci(i: Int): Int
 * drop
 * reverse
 * take 
-* nth element 
-* size 
+* nth element
 * concat
 
 # Малко повече за функциите
@@ -153,68 +165,65 @@ def fibonacci(i: Int): Int
 * Функциите в Scala са първокласни обекти.
 * Какво означава това?
   * Могат да се използват навсякъде както бихме използвали "нормални" стойности
-  * Няма ограничение къде могат да бъдат дефинирани (с едно изключение за Scala 2)
+  * Няма ограничение къде могат да бъдат дефинирани, т.е. като "нормални" стойности
   * Типа им се описва подобно на "нормалните" стойности
 * В Scala има Function literals - анонимни функции (ламбда)
 
 :::
 
-# Примери
+# Локални функции
 
 ::: incremental
 
-* ```scala
-  def sum(a: Int, b: Int) = a + b
-  ```
-* ```scala
-  def foo(a: Int): Int = {
-    def bar(b: Int) = a + b // can use scope defined above
+```scala
+def foo(a: Int): Int = {
+  def bar(b: Int) = b + 10 // local function
 
-    bar(42)
-  }
-  ```
-* ```scala
-  val sumFun: (Int, Int) => Int = sum
-  ``` 
+  bar(a)
+}
+```
+```scala
+def foo(a: Int): Int = {
+  def bar(b: Int) = a + b // can also use scope defined above
+
+  bar(42)
+}
+```
 
 :::
-
 
 # Анонимни функции, a.k.a lambda 
 
-::: incremental
+Синтаксис
+```scala
+val lambdaName = (param:Type) => expression
+```
 
-* Синтаксис
-  ```scala
-  val lambda = (param:Type) => expression
-  ```
-* Примери
-  ```scala
-  val addOne = (x: Int) => x + 1
-  val sum = (x: Int, y: Int) => x + y
-  ```
-  ```scala
-  val addOne: Int => Int = x => x + 1
-  ```
-* С къдрави скоби
-  ```scala
-  val addOne = { x: Int =>
-    val a = x + 1
-    a
-  }
-  ```
-* Може и така
-  ```scala
-  val addOne = (x: Int) => {
-    x + 1
-  }
-  ```
-* Извикват се по стандартния начин
-  ```scala
-  addOne(41) // 42
-  ```
+<div class="fragment">
 
-:::
+```scala
+val addOne = (x: Int) => x + 1
+val sum = (x: Int, y: Int) => x + y
+
+// или така
+val addOne: Int => Int = x => x + 1
+val sum: (Int, Int) => Int = (x, y) => x + y
+
+val addOne = { x: Int =>    // с къдрави скоби
+  val a = x + 1
+  a
+}
+
+val addOne = (x: Int) => {  // може и така
+  x + 1
+}
+
+// Извикват се по стандартния начин
+addOne(41) // 42
+sum(40, 2) // 42
+```
+
+</div>
 
 
 # Функционален тип
@@ -226,12 +235,14 @@ def fibonacci(i: Int): Int
   ```scala
   val lessThan = (a: Int, b: Int) => a < b
   ```
-* всъщност се дефинира обект с метод `apply`
+* всъщност се дефинира обект от тип `Function2` с метод `apply`
   ```scala
   val lessThan = new Function2[Int, Int, Boolean] {
     def apply(a: Int, b: Int): Boolean = a < b
   }
   ```
+* `Function2` e нормален `trait` - репрезентира функции на два аргумента
+* Съществуват подобни за функции на различен брой аргументи - `Function0` ... `Function22`
 
 :::
 
@@ -240,16 +251,20 @@ def fibonacci(i: Int): Int
 ::: incremental
 
 * Метод `apply` е специален. Обектите, които го имат могат да бъдат извиквани като функции
-* `Function2` e нормален `trait` - репрезентира функции на два аргумента
-* Съществуват подобни за функции на различен брой аргументи - `Function0` ... `Function22`
-* ```scala
+
+<div class="fragment">
+
+```scala
   class Adder(a: Int) {
     def apply(b: Int) = a + b
   }
   
   val oneAdder = new Adder(1)
-  oneAdder(2) // res: 3
+  oneAdder(2)
+  // res2: Int = 3
   ```
+
+</div>
 
 :::
 
@@ -288,16 +303,16 @@ The type of `addOne` is `Int => Int`
 ```scala
 def wrap(prefix: String, html: String, suffix: String) = prefix + html + suffix
 
-val wrapWithP = wrap("<p>", _: String, "</div>")
+val wrapWithP = wrap("<p>", _: String, "</p>")
 val wrapWithDiv = wrap("<div>", _: String, "</div>")
 
 wrapWithDiv(wrapWithP("Hello, world"))
-//res0: String = "<div><p>Hello, world</div></div>"
+// res3: String = "<div><p>Hello, world</p></div>"
 ```
 
 Трябва да специфицираме типа на параметъра
 
-</div>
+</p>
 
 
 # Difference between `def` and `val` functions
@@ -321,7 +336,39 @@ maybe delete
 
 # Higher-order functions
 
-* Функции, които приемат функции като параметри или връщат функции като резултат
+::: incremental
+
+* Вече видяхме, че са функциите нормални стойности
+* Което означава, че можем да ги подаваме на други функции или да ги връщаме като резултати
+
+<div class="fragment">
+
+Higher-order functions
+
+> Функции, които приемат функции като параметри или връщат функции като резултат
+
+</div>
+
+:::
+
+# Пример
+
+```scala
+def formatResult(name: String, n: Int, f: Int => Int) = {
+  s"The $name of $n is ${f(n)}" 
+}
+
+formatResult("factorial", 3, fact)
+//res2: String = "The factorial of 3 is 6"
+
+formatResult("+1 addition", 41, addOne)
+//res4: String = "The +1 addition of 41 is 42"
+
+```
+
+# filter
+
+![](images/04-functional-programming-basics/filter.png)
 
 # filter
 
@@ -334,8 +381,6 @@ trait Seq[A] {
   ...
 }
 ```
-
-![](images/04-functional-programming-basics/filter.png)
 
 # Примери
 
@@ -353,6 +398,9 @@ l.filter(_ < 3)
 // res2: List[Int] = List(1, 2)
 ```
 
+# map
+
+![](images/04-functional-programming-basics/map.png)
 
 # map
 
@@ -365,8 +413,6 @@ trait Seq[A] {
   ...
 }
 ```
-
-![](images/04-functional-programming-basics/map.png)
 
 # Примери
 
@@ -411,6 +457,7 @@ l.map { s =>
 }
 // res0: List[String] = List("<div>foo</div>", "<div>bar</div>", "<div>baz</div>")
 
+//maybe delete that - show with partial functions
 l.map {
   case "foo" => wrapWithP("foo")
   case s => wrapWithDiv(s)
