@@ -385,10 +385,10 @@ val v2 = v1.updated(5, 42)
 
 # Анонимни функции, a.k.a lambda 
 
-* Синтаксис
-  ```scala
-  val lambdaName = (param:Type) => expression
-  ```
+Синтаксис
+```scala
+val lambdaName = (param:Type) => expression
+```
 
 <div class="fragment">
 

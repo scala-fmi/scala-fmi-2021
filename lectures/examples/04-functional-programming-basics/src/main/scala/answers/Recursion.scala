@@ -1,7 +1,6 @@
-package exercises
+package answers
 
 import answers.TailRecursion.fibonacci
-import exercises.Recursion.fibonacci
 
 import scala.annotation.tailrec
 
@@ -19,16 +18,16 @@ object Recursion extends App {
     if (l.isEmpty) 0
     else l.head + sum(l.tail)
 
-  //f(5) = f(4) + f(3)
-  def fibonacci(i: Int): Int =
-    if (i <= 1) 1
+  def fibonacci(i: Int): Int = {
+    if (i <= 0) 0
+    else if (i == 1) 1
     else fibonacci(i - 1) + fibonacci(i - 2)
+  }
 }
 
 object TailRecursion extends App {
 
   // We could introduce inner functions if we don't want to pollute the interface
-  // But let's use default parameters
 
   @tailrec
   def fact(n: Int, acc: Int = 1): Int =
@@ -43,12 +42,12 @@ object TailRecursion extends App {
   @tailrec
   def sum(l: List[Int], acc: Int = 0): Int =
     if (l.isEmpty) acc
-    else sum(l.tail, acc + l.head)
+    else sum(l.tail, l.head + acc)
 
   @tailrec
-  def fibonacci(i: Int, prev: Int = 0, current: Int = 1): Int =
-    if (i <= 1) current
-    else fibonacci(i - 1, prev = current, current = current + prev)
+  def fibonacci(i: Int, current: Int = 0, next: Int = 1): Int =
+    if (i <= 0) current
+    else fibonacci(i - 1, current = next, next = current + next)
 
 }
 
@@ -64,9 +63,28 @@ object MoreListFunctions extends App {
     if (l.isEmpty) acc
     else reverse(l.tail, l.head :: acc)
 
-  def take[A](la: List[A], n: Int): List[A] = ???
+  def take[A](la: List[A], n: Int): List[A] = {
+    @tailrec
+    def loop(rest: List[A], k: Int, acc: List[A] = Nil): List[A] = {
+      if (k == 0) acc
+      else loop(rest.tail, k - 1, rest.head :: acc)
+    }
 
-  def nthElement[A](la: List[A], n: Int): A = ???
+    reverse(loop(la, n))
+  }
 
-  def concat(l1: List[Int], l2: List[Int]): List[Int] = ???
+  @tailrec
+  def nthElement[A](la: List[A], n: Int): A =
+    if (n == 0) la.head
+    else nthElement(la.tail, n - 1)
+
+  def concat(l1: List[Int], l2: List[Int]): List[Int] = {
+    @tailrec
+    def loop(rest: List[Int], acc: List[Int]): List[Int] = {
+      if (rest.isEmpty) acc
+      else loop(rest.tail, rest.head :: acc)
+    }
+
+    loop(reverse(l1), l2)
+  }
 }
