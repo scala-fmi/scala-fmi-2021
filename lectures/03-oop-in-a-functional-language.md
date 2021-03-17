@@ -150,7 +150,7 @@ Alan Kay<span class="fragment"><br/>предлага термина ООП (c. 1
   - обекти (а.к.а. процеси/актьори) със чисто функционално поведение
   - недерменирана комуникация чрез съобщения между тях
 * В Scala – библиотеката Akka
-* Тема на друг курс
+* Тема на друг курс <span class="fragment">(но е възможно да я засегнем мъничко)</soan>
 
 :::
 
@@ -266,7 +266,7 @@ object Rational {
     else rationals.head + sum(rationals.tail)
 }
 
-Rational.sum(Rational(1, 2), Rational(5), Rational(3, 5))
+Rational.sum(Rational(1, 2), Rational(5), Rational(3, 5)) // вече не е нужно да пишем new
 ```
 
 # Придружаващи обекти
@@ -458,6 +458,11 @@ class Person(n: String, a: Int) extends Humanoid {
   val name = n
   val age = a
 }
+
+class Robot(brand: String, serialNumber: String, a: Int) extends Humanoid {
+  def name = s"$brand--$serialNumber"
+  val age = a
+}
 ```
 
 :::
@@ -465,10 +470,8 @@ class Person(n: String, a: Int) extends Humanoid {
 ::: { .fragment }
 
 ```scala
-class Robot(brand: String, serialNumber: String, a: Int) extends Humanoid {
-  def name = s"$brand--$serialNumber"
-  val age = a
-}
+val personName = new Person("Alex", 21).name
+val robotName = new Robot("mi6-42", "000007", 1).name
 ```
 
 :::
@@ -502,7 +505,7 @@ trait A {
 trait B extends A
 trait C extends A
 
-class X extends B with C
+class X extends B with C // всеки последващ trait се изрежда с with
 
 new X().hello // Hello, diamond структура не създава проблем
 ```
@@ -570,10 +573,10 @@ val unitSquare = new Shape {
 # trait параметри { .scala3 }
 
 ```scala
-trait Greeting(name: String):
+trait Friendly(name: String):
    def hello = s"Hello, I am $name"
 
-case class Person(name: String) extends Greeting(name)
+case class Person(name: String) extends Friendly(name)
 
 Person("Dimitar").hello // Hello, I am Dimitar
 ```
@@ -702,7 +705,7 @@ MathUtils.twice(2.0) // 4.0
 
 ```scala
 class Scanner {
-  def scan(bitMap: Image): Page = ???
+  def scan(image: Image): Page = ???
   def isOn: Boolean = ???
 }
 
@@ -723,7 +726,7 @@ class Copier {
 
 val copier = new Copier
 val image = ???
-val copiedImage = copier.print(copier.scan(bitMap))
+val copiedImage = copier.print(copier.scan(image))
 
 image == copiedImage // true, hopefully :D
 ```
@@ -750,8 +753,10 @@ createAddressRegistration(ruse, stoyan) // грешка, не е възможн�
 
 ::: incremental
 
-* не създават допълнителен обект, вместо това се репрезентират от типа, който wrap-ват
+* не създават допълнителен обект, вместо това се репрезентират от типа, който обвиват
 * носят повече type safety в някои ситуации
+* обвитата стойност задължително трябва да е `val` в обиващия клас
+* поради JVM ограничения не могат да обвият повече от едно поле
 
 :::
 
@@ -859,6 +864,17 @@ def checkLocations(locations: List[String], bird: Bird): List[String] = for {
 checkLocations(List("Sofia", "Varna"), Eagle("Henry"))
 ```
 
+# ООП досега
+
+* ООП като цялостна система от обекти, взаимодействащи помежду си
+* Дефиниране на класове и обекти, параметри на клас
+* Неизменими value/data обекти чрез case class
+* Абстракции чрез trait. Uniform Access Principle
+* Подтипов полиморфизъм
+* implicit конверсии
+* Type safety чрез обвиващи AnyVal класове
+* Номинално и структурно типизиране
+
 # Типова алгебра { .scala3 }
 
 ::: { .fragment }
@@ -896,6 +912,43 @@ toInteger("10") // 10
 toInteger(10) // 10
 toInteger(10.0) // 10
 toInteger(List(10)) // не се компилира
+```
+
+# Обединение на типове
+
+```scala
+def toInteger(value: String | Int | Double): Int = value match {
+  case n: Int => n
+  case s: String => s.toInt
+}
+```
+
+::: { .fragment }
+
+```
+|def toInteger(value: String | Int | Double): Int = value match {
+|                                                   ^^^^^
+|                                  match may not be exhaustive.
+|
+|                                  It would fail on pattern case: _: Double
+```
+
+:::
+
+::: { .fragment }
+
+Превърнете в грешка чрез<br />`-Xfatal-warnings`:
+
+```scala
+scalacOptions += "-Xfatal-warnings"
+```
+
+:::
+
+# Обединение на типове
+
+```scala
+def registerUser(registrationForm: RegistrationForm): RegistrationFormError | User = ???
 ```
 
 # The Expression Problem
@@ -1048,9 +1101,11 @@ extension (n: Int) {
   def squared = n * n
   def **(exp: Double) = math.pow(n, exp)
 }
+```
 
+```scala
 // file Demo.scala
-import scalafmi.intextensions.{ squared, twice }
+import scalafmi.intextensions.{ squared, ** }
 
 3.squared // 9
 2 ** 3 // 8.0
@@ -1066,7 +1121,7 @@ extension (xs: List[Double]) {
 }
 
 List(1.0, 2.0, 3.0).avg // 2.0
-List("a", "b", "c").avg // value avg is not a member of List[String]
+List("a", "b", "c").avg // грешка, value avg is not a member of List[String]
 ```
 
 ::: { .fragment }
@@ -1115,6 +1170,12 @@ implicit class EnrichedInt(val n: Int) extends AnyVal {
 2 ** 3 // 8.0
 ```
 
+::: { .fragment }
+
+Тук не е нужен `import scala.language.implicitConversions`
+
+:::
+
 # Примери от стандартната библиотека
 
 ```scala
@@ -1135,25 +1196,16 @@ import org.scalatest.matchers.should.Matchers
 
 class ExampleSpec extends AnyFlatSpec with Matchers {
   "+" should "sum two numbers" in {
-    2 + 3 should be (5)
+    2 + 3 shouldBe 5
   }
 }
 ```
 
-# Изброими типове чрез DSL (Scala 2)
+::: { .fragment }
 
-```scala
-object WeekDay extends Enumeration {
-  type WeekDay = Value
-  
-  val Mon, Tue, Wed, Thu, Fri, Sat, Sun = Value
-}
+[ScalaTest стилове](https://www.scalatest.org/user_guide/selecting_a_style)
 
-import WeekDay._
-def isWorkingDay(day: WeekDay) = d != Sat && d != Sun
-
-isWorkingDay(Wed) // true, :(
-```
+:::
 
 # ООП дизайн?
 
@@ -1166,6 +1218,76 @@ isWorkingDay(Wed) // true, :(
 
 :::
 
-# Таблица на типовите елементи в Scala
+# ООП дизайн -- скрити домейн обекти
+
+```scala
+def buyTea(cc: CreditCard, paymentService: PaymentService): Tea = {
+  val teaCup = new Tea(...)
+  paymentService.charge(cc, teaCup.price)
+  teaCup
+}
+```
+
+::: { .fragment }
+
+```scala
+case class Charge(cc: CreditCard, amount: Double)
+
+def buyTea(cc: CreditCard): (Tea, Charge) = {
+  val teaCup = new Tea(...)
+  (teaCup, Charge(cc, teatCup.price)
+}
+```
+
+:::
+
+::: { .fragment }
+
+Отлагане на страничния ефект =>
+
+::: incremental
+
+* скрити домейн концепции изплуват на яве (`Charge` обект)
+* моделираме дейности като данни
+* които допълнително можем да трансформиране функционално
+  - купуване на n кафета и събиране на Charge-ове
+  - анализ на Charge-ове от различни потребители
+* по-добра тестваемост
+
+:::
+
+:::
+
+
+# Изброими типове чрез DSL (Scala 2)
+
+```scala
+object WeekDay extends Enumeration {
+  val Mon, Tue, Wed, Thu, Fri, Sat, Sun = Value
+}
+```
+
+::: { .fragment }
+
+```scala
+def isWorkingDay(day: WeekDay.Value) = d != Sat && d != Sun
+isWorkingDay(WeekDay.Wed) // true, :(
+
+WeekDay.withName("Sun") // Sun
+```
+
+:::
+
+# Изброими типове (Scala 3) { .scala3 }
+
+```scala
+enum WeekDay {
+  case Mon, Tue, Wed, Thu, Fri, Sat, Sun
+}
+```
+
+# [Таблица на типовите елементи в Scala](https://github.com/scala-fmi/scala-fmi-2021/blob/master/resources/type-elements-in-scala.md)
+
+
 
 # Въпроси :)?

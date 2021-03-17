@@ -49,8 +49,16 @@ p > code, li > code {
   margin: 0;
 }
 
+.reveal div.sourceCode {
+  margin: 0.5em 0;
+}
+
 .reveal li pre.sourceCode {
   margin: 8px;
+}
+
+.reveal pre code {
+  max-height: 520px;
 }
 
 .reveal blockquote {
