@@ -100,7 +100,7 @@
 <ul>
 <li class="fragment">Опашкова рекурсия, практични примери</li>
 </ul></li>
-<li class="fragment">Персистентни структури от данни</li>
+<li class="fragment">Неизменимост и неизменими структури от данни</li>
 <li class="fragment">Функциите като първокласни обекти
 <ul>
 <li class="fragment">ламбда фунцкии и функционален тип</li>
@@ -234,6 +234,174 @@ fact(1, 120) =
 <li>concat</li>
 </ul>
 </section>
+<section id="неизменимост" class="slide level1">
+<h1>Неизменимост</h1>
+</section>
+<section id="неизменими-обекти-във-времето" class="slide level1">
+<h1>Неизменими обекти във времето</h1>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Person</span><span class="op">(</span>name<span class="op">:</span> String<span class="op">,</span> age<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> address<span class="op">:</span> Address<span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Address</span><span class="op">(</span>country<span class="op">:</span> String<span class="op">,</span> city<span class="op">:</span> String<span class="op">,</span> street<span class="op">:</span> String<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">getOlder</span><span class="op">(</span>person<span class="op">:</span> Person<span class="op">):</span> Person <span class="op">=</span> person<span class="op">.</span><span class="fu">copy</span><span class="op">(</span>age <span class="op">=</span> person<span class="op">.</span>age <span class="op">+</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> youngRadost <span class="op">=</span> <span class="fu">Person</span><span class="op">(</span><span class="st">&quot;Radost&quot;</span><span class="op">,</span> <span class="dv">24</span><span class="op">,</span> <span class="fu">Address</span><span class="op">(</span><span class="st">&quot;Bulgaria&quot;</span><span class="op">,</span> <span class="st">&quot;Veliko Tarnovo&quot;</span><span class="op">,</span> <span class="st">&quot;ul. Roza&quot;</span><span class="op">))</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> olderRadost <span class="op">=</span> <span class="fu">getOlder</span><span class="op">(</span>radost<span class="op">)</span></span></code></pre></div>
+<div class="fragment">
+<p>Неизменимосттa ни позволява:</p>
+<div>
+<ul>
+<li class="fragment">Persistence (персистентност)
+<ul>
+<li class="fragment">и двата обекта (<code>youngRadost</code> и <code>olderRadost</code>) остават валидни</li>
+</ul></li>
+<li class="fragment">Structural sharing
+<ul>
+<li class="fragment">и споделят голяма част от вътрешните си обекти</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="неизменими-обекти-във-времето-1" class="slide level1">
+<h1>Неизменими обекти във времето</h1>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Person</span><span class="op">(</span>name<span class="op">:</span> String<span class="op">,</span> age<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> address<span class="op">:</span> Address<span class="op">)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Address</span><span class="op">(</span>country<span class="op">:</span> String<span class="op">,</span> city<span class="op">:</span> String<span class="op">,</span> street<span class="op">:</span> String<span class="op">)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">getOlder</span><span class="op">(</span>person<span class="op">:</span> Person<span class="op">):</span> Person <span class="op">=</span> person<span class="op">.</span><span class="fu">copy</span><span class="op">(</span>age <span class="op">=</span> person<span class="op">.</span>age <span class="op">+</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> youngRadost <span class="op">=</span> <span class="fu">Person</span><span class="op">(</span><span class="st">&quot;Radost&quot;</span><span class="op">,</span> <span class="dv">24</span><span class="op">,</span> <span class="fu">Address</span><span class="op">(</span><span class="st">&quot;Bulgaria&quot;</span><span class="op">,</span> <span class="st">&quot;Veliko Tarnovo&quot;</span><span class="op">,</span> <span class="st">&quot;ul. Roza&quot;</span><span class="op">))</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> olderRadost <span class="op">=</span> <span class="fu">getOlder</span><span class="op">(</span>radost<span class="op">)</span></span></code></pre></div>
+<p><img data-src="images/04-functional-programming-basics/shared-objects.jpg" height="380" /></p>
+</section>
+<section id="неизменими-структури-от-данни-списък" class="slide level1">
+<h1>Неизменими структури от данни – списък</h1>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> a <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span></code></pre></div>
+<div class="fragment">
+<p><img data-src="images/04-functional-programming-basics/list.jpg" height="120" /></p>
+</div>
+</section>
+<section id="неизменими-структури-от-данни-списък-1" class="slide level1">
+<h1>Неизменими структури от данни – списък</h1>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> a <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> b <span class="op">=</span> <span class="dv">4</span> <span class="op">::</span> a</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> c <span class="op">=</span> <span class="dv">5</span> <span class="op">::</span> a<span class="op">.</span>tail</span></code></pre></div>
+<div class="fragment">
+<p><img data-src="images/04-functional-programming-basics/multple-lists.jpg" height="240" /></p>
+</div>
+<div>
+<ul>
+<li class="fragment">Persistence</li>
+<li class="fragment">Structural sharing</li>
+<li class="fragment">Ако някоя променлива излезе от scope GC ще се погрижи за ненужните части</li>
+</ul>
+</div>
+</section>
+<section id="списък-от-цели-числа" class="slide level1">
+<h1>Списък от цели числа</h1>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> IntList <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> head<span class="op">:</span> <span class="bu">Int</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> tail<span class="op">:</span> IntList</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Cons</span><span class="op">(</span>head<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> tail<span class="op">:</span> IntList<span class="op">)</span> <span class="kw">extends</span> IntList</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">object</span> Nil <span class="kw">extends</span> IntList <span class="op">{</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> head <span class="op">=</span> <span class="cf">throw</span> <span class="kw">new</span> NoSuchElementException</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> tail <span class="op">=</span> <span class="cf">throw</span> <span class="kw">new</span> UnsupportedOperationException</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> xs <span class="op">=</span> <span class="fu">Cons</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="fu">Cons</span><span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="fu">Cons</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> Nil<span class="op">)))</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>xs<span class="op">.</span>tail<span class="op">.</span>head <span class="co">// 2</span></span></code></pre></div>
+</div>
+</section>
+<section id="добавяне-на-елемент-в-края-на-списък" class="slide level1">
+<h1>Добавяне на елемент в края на списък</h1>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> a <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> d <span class="op">=</span> a <span class="op">:+</span> <span class="dv">0</span></span></code></pre></div>
+<div class="fragment">
+<p><img data-src="images/04-functional-programming-basics/list-append.jpg" height="240" /></p>
+</div>
+<div class="fragment">
+<p>Тук вече няма как да споделим общите елементи</p>
+</div>
+</section>
+<section id="вектор-оптимизация-за-произволен-достъп" class="slide level1">
+<h1>Вектор – оптимизация за произволен достъп</h1>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> v1 <span class="op">=</span> <span class="fu">Vector</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">7</span><span class="op">)</span></span></code></pre></div>
+<div class="fragment">
+<p><img data-src="images/04-functional-programming-basics/vector.jpg" height="380" /></p>
+</div>
+<div class="fragment">
+<p>балансирано дърво</p>
+</div>
+</section>
+<section id="вектор-операции" class="slide level1">
+<h1>Вектор – операции</h1>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> v1 <span class="op">=</span> <span class="fu">Vector</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">7</span><span class="op">)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>v1<span class="op">.</span>head <span class="co">// 1</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>v1<span class="op">.</span>last <span class="co">// 7</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">v1</span><span class="op">(</span><span class="dv">4</span><span class="op">)</span> <span class="co">// 5</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Трите операции имат еднаква сложност</span></span></code></pre></div>
+<div class="fragment">
+<p><img data-src="images/04-functional-programming-basics/vector.jpg" height="380" /></p>
+</div>
+</section>
+<section id="вектор-замяна-на-елемент" class="slide level1">
+<h1>Вектор – замяна на елемент</h1>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> v1 <span class="op">=</span> <span class="fu">Vector</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">7</span><span class="op">)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> v2 <span class="op">=</span> v1<span class="op">.</span><span class="fu">updated</span><span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">42</span><span class="op">)</span></span></code></pre></div>
+<div class="fragment">
+<p><img data-src="images/04-functional-programming-basics/vector-update.jpg" height="420" /></p>
+</div>
+</section>
+<section id="вектор" class="slide level1">
+<h1>Вектор</h1>
+<div>
+<ul>
+<li class="fragment">Дърво с 32 деца на всеки възел</li>
+<li class="fragment">Така повечето му операции са със сложност log<sub>32</sub>n
+<ul>
+<li class="fragment">Което се смята за почти константа (<a href="https://docs.scala-lang.org/overviews/collections/performance-characteristics.html">ефективно константа</a>)</li>
+</ul></li>
+<li class="fragment">Полезно ако имаме нужда от произволен достъп</li>
+<li class="fragment">Имплементира Radix Balanced Tree</li>
+<li class="fragment">Примери за още операции <a href="https://docs.google.com/presentation/d/1GY0p2P-BzPfWspKoMRxOQ87fG01t4oMJ1PJxjxGFurQ/edit">тук</a></li>
+</ul>
+</div>
+</section>
+<section id="чисто-функционални-структури-от-данни" class="slide level1">
+<h1>Чисто функционални структури от данни</h1>
+<div>
+<ul>
+<li class="fragment">Разучаването им започва силно през 90-те
+<ul>
+<li class="fragment"><a href="https://www.cambridge.org/core/books/purely-functional-data-structures/0409255DA1B48FA731859AC72E34D494">“Purely Functional Data Structures”, Chris Okasaki</a></li>
+</ul></li>
+<li class="fragment">Популяризирани чрез Clojure
+<ul>
+<li class="fragment"><a href="https://www.infoq.com/presentations/Value-Values/">“The Value of Values”, Rich Hickey</a></li>
+</ul></li>
+<li class="fragment">Persistence</li>
+<li class="fragment">Structural sharing</li>
+<li class="fragment">Подпогани от GC</li>
+</ul>
+</div>
+</section>
+<section id="set-и-map" class="slide level1">
+<h1>Set и Map</h1>
+<div>
+<ul>
+<li class="fragment">Подобно на Vector, също използват дърво, по-точно Trie</li>
+<li class="fragment"><a href="https://lampwww.epfl.ch/papers/idealhashtrees.pdf">Hash array mapped trie (HAMT)</a></li>
+<li class="fragment">От Scala 2.13 – <a href="https://core.ac.uk/download/pdf/192654061.pdf">оптимизация</a></li>
+<li class="fragment">Повечето им операции също са <a href="https://docs.scala-lang.org/overviews/collections/performance-characteristics.html">ефективно константа</a></li>
+<li class="fragment">До 4 елемента се пазят в масив</li>
+</ul>
+</div>
+</section>
+<section id="безопасно-споделяне-на-функционални-структури" class="slide level1">
+<h1>Безопасно споделяне на функционални структури</h1>
+</section>
 <section id="функциите-като-първокласни-обекти" class="slide level1">
 <h1>Функциите като първокласни обекти</h1>
 <div>
@@ -252,19 +420,19 @@ fact(1, 120) =
 <h1>Анонимни функции, a.k.a lambda</h1>
 <ul>
 <li><p>Синтаксис</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lambdaName <span class="op">=</span> <span class="op">(</span>param<span class="op">:</span>Type<span class="op">)</span> <span class="op">=&gt;</span> expression</span></code></pre></div></li>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lambdaName <span class="op">=</span> <span class="op">(</span>param<span class="op">:</span>Type<span class="op">)</span> <span class="op">=&gt;</span> expression</span></code></pre></div></li>
 </ul>
 <div class="fragment">
-<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> addOne <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> y<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> y</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">// или така</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> addOne<span class="op">:</span> <span class="bu">Int</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> x <span class="op">=&gt;</span> x <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> <span class="op">(</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> y</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Извикват се по стандартния начин</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">addOne</span><span class="op">(</span><span class="dv">41</span><span class="op">)</span> <span class="co">// 42</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="dv">40</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="co">// 42</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> addOne <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> y<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> y</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">// или така</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> addOne<span class="op">:</span> <span class="bu">Int</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> x <span class="op">=&gt;</span> x <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> <span class="op">(</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> y</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Извикват се по стандартния начин</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">addOne</span><span class="op">(</span><span class="dv">41</span><span class="op">)</span> <span class="co">// 42</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="dv">40</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="co">// 42</span></span></code></pre></div>
 </div>
 </section>
 <section id="функционален-тип" class="slide level1">
@@ -273,11 +441,11 @@ fact(1, 120) =
 <ul>
 <li class="fragment"><p>Функциите са обекти, които също си имат тип.</p></li>
 <li class="fragment"><p>Когато дефинираме следната функция</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lessThan <span class="op">=</span> <span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> a <span class="op">&lt;</span> b</span></code></pre></div></li>
+<div class="sourceCode" id="cb19"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lessThan <span class="op">=</span> <span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> a <span class="op">&lt;</span> b</span></code></pre></div></li>
 <li class="fragment"><p>всъщност се дефинира обект от тип <code>Function2</code> с метод <code>apply</code></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lessThan <span class="op">=</span> <span class="kw">new</span> Function2<span class="op">[</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">,</span> Boolean<span class="op">]</span> <span class="op">{</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> b<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> Boolean <span class="op">=</span> a <span class="op">&lt;</span> b</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb20"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lessThan <span class="op">=</span> <span class="kw">new</span> Function2<span class="op">[</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">,</span> Boolean<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> b<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> Boolean <span class="op">=</span> a <span class="op">&lt;</span> b</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
 <li class="fragment"><p><code>Function2</code> e нормален <code>trait</code> - репрезентира функции на два аргумента</p></li>
 <li class="fragment"><p>Съществуват подобни за функции на различен брой аргументи - <code>Function0</code> … <code>Function22</code></p></li>
 </ul>
@@ -290,48 +458,48 @@ fact(1, 120) =
 <li class="fragment">Метод <code>apply</code> е специален. Обектите, които го имат могат да бъдат извиквани като функции</li>
 </ul>
 <div class="fragment">
-<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="fu">Adder</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> a <span class="op">+</span> b</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> oneAdder <span class="op">=</span> <span class="kw">new</span> <span class="fu">Adder</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">oneAdder</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = 3</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">makeAdder</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> <span class="op">(</span>b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> a <span class="op">+</span> b</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> oneAdder <span class="op">=</span> <span class="fu">makeAdder</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">oneAdder</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="fu">Adder</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> a <span class="op">+</span> b</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> oneAdder <span class="op">=</span> <span class="kw">new</span> <span class="fu">Adder</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">oneAdder</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">makeAdder</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> <span class="op">(</span>b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> a <span class="op">+</span> b</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> oneAdder <span class="op">=</span> <span class="fu">makeAdder</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">oneAdder</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = 3</span></span></code></pre></div>
 </div>
 </div>
 </section>
 <section id="eta-expansion" class="slide level1">
 <h1>Eta expansion</h1>
 <p>Преобразуване на метод към функция</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">sum</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> a <span class="op">+</span> b</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun <span class="op">=</span> sum  <span class="co">// doesn&#39;t work, will work in Scala 3</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun <span class="op">=</span> sum _  <span class="co">// works</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> sum   <span class="co">// also works</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun2<span class="op">:</span> Function2<span class="op">[</span><span class="bu">Int</span><span class="op">,</span><span class="bu">Int</span><span class="op">,</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> sum   <span class="co">// also works</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sumFun</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">sum</span><span class="op">(</span>a<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> b<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> a <span class="op">+</span> b</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun <span class="op">=</span> sum  <span class="co">// doesn&#39;t work, will work in Scala 3</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun <span class="op">=</span> sum _  <span class="co">// works</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> sum   <span class="co">// also works</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun2<span class="op">:</span> Function2<span class="op">[</span><span class="bu">Int</span><span class="op">,</span><span class="bu">Int</span><span class="op">,</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> sum   <span class="co">// also works</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sumFun</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span></span></code></pre></div>
 </section>
 <section id="partial-application" class="slide level1">
 <h1>Partial application</h1>
-<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> addOne <span class="op">=</span> <span class="fu">sum</span><span class="op">(</span>_<span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> addOne <span class="op">=</span> <span class="fu">sum</span><span class="op">(</span>_<span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span></code></pre></div>
 <p>Типът на <code>addOne</code> е <code>Int =&gt; Int</code></p>
 <div class="fragment">
-<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">wrap</span><span class="op">(</span>prefix<span class="op">:</span> String<span class="op">,</span> html<span class="op">:</span> String<span class="op">,</span> suffix<span class="op">:</span> String<span class="op">)</span> <span class="op">=</span> prefix <span class="op">+</span> html <span class="op">+</span> suffix</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> wrapWithP <span class="op">=</span> <span class="fu">wrap</span><span class="op">(</span><span class="st">&quot;&lt;p&gt;&quot;</span><span class="op">,</span> _<span class="op">,</span> <span class="st">&quot;&lt;/p&gt;&quot;</span><span class="op">)</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> wrapWithDiv <span class="op">=</span> <span class="fu">wrap</span><span class="op">(</span><span class="st">&quot;&lt;div&gt;&quot;</span><span class="op">,</span> _<span class="op">,</span> <span class="st">&quot;&lt;/div&gt;&quot;</span><span class="op">)</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">wrapWithDiv</span><span class="op">(</span><span class="fu">wrapWithP</span><span class="op">(</span><span class="st">&quot;Hello, world&quot;</span><span class="op">))</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">// res3: String = &quot;&lt;div&gt;&lt;p&gt;Hello, world&lt;/p&gt;&lt;/div&gt;&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">wrap</span><span class="op">(</span>prefix<span class="op">:</span> String<span class="op">,</span> html<span class="op">:</span> String<span class="op">,</span> suffix<span class="op">:</span> String<span class="op">)</span> <span class="op">=</span> prefix <span class="op">+</span> html <span class="op">+</span> suffix</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> wrapWithP <span class="op">=</span> <span class="fu">wrap</span><span class="op">(</span><span class="st">&quot;&lt;p&gt;&quot;</span><span class="op">,</span> _<span class="op">,</span> <span class="st">&quot;&lt;/p&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> wrapWithDiv <span class="op">=</span> <span class="fu">wrap</span><span class="op">(</span><span class="st">&quot;&lt;div&gt;&quot;</span><span class="op">,</span> _<span class="op">,</span> <span class="st">&quot;&lt;/div&gt;&quot;</span><span class="op">)</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">wrapWithDiv</span><span class="op">(</span><span class="fu">wrapWithP</span><span class="op">(</span><span class="st">&quot;Hello, world&quot;</span><span class="op">))</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">// res3: String = &quot;&lt;div&gt;&lt;p&gt;Hello, world&lt;/p&gt;&lt;/div&gt;&quot;</span></span></code></pre></div>
 </div>
 </section>
 <section id="higher-order-functions" class="slide level1">
@@ -350,15 +518,15 @@ fact(1, 120) =
 </section>
 <section id="пример" class="slide level1">
 <h1>Пример</h1>
-<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">formatResult</span><span class="op">(</span>name<span class="op">:</span> String<span class="op">,</span> n<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> f<span class="op">:</span> <span class="bu">Int</span> <span class="op">=&gt;</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">s&quot;</span><span class="st">The </span><span class="ss">$name</span><span class="st"> of </span><span class="ss">$n</span><span class="st"> is </span><span class="ss">${</span><span class="fu">f</span><span class="op">(</span>n<span class="op">)</span><span class="ss">}&quot;</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">formatResult</span><span class="op">(</span><span class="st">&quot;factorial&quot;</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> fact<span class="op">)</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">//res2: String = &quot;The factorial of 3 is 6&quot;</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">formatResult</span><span class="op">(</span><span class="st">&quot;+1 addition&quot;</span><span class="op">,</span> <span class="dv">41</span><span class="op">,</span> addOne<span class="op">)</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">//res4: String = &quot;The +1 addition of 41 is 42&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">formatResult</span><span class="op">(</span>name<span class="op">:</span> String<span class="op">,</span> n<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> f<span class="op">:</span> <span class="bu">Int</span> <span class="op">=&gt;</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">s&quot;</span><span class="st">The </span><span class="ss">$name</span><span class="st"> of </span><span class="ss">$n</span><span class="st"> is </span><span class="ss">${</span><span class="fu">f</span><span class="op">(</span>n<span class="op">)</span><span class="ss">}&quot;</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">formatResult</span><span class="op">(</span><span class="st">&quot;factorial&quot;</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> fact<span class="op">)</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">//res2: String = &quot;The factorial of 3 is 6&quot;</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">formatResult</span><span class="op">(</span><span class="st">&quot;+1 addition&quot;</span><span class="op">,</span> <span class="dv">41</span><span class="op">,</span> addOne<span class="op">)</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">//res4: String = &quot;The +1 addition of 41 is 42&quot;</span></span></code></pre></div>
 </section>
 <section id="hofs-върху-списъци" class="slide level1">
 <h1>HOFs върху списъци</h1>
@@ -369,31 +537,31 @@ fact(1, 120) =
 </section>
 <section id="filter-1" class="slide level1">
 <h1>filter</h1>
-<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> filter<span class="op">[</span>A<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> p<span class="op">:</span> A <span class="op">=&gt;</span> Boolean<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">]</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">// метод на trait Seq</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">filter</span><span class="op">(</span>pred<span class="op">:</span> A <span class="op">=&gt;</span> Boolean<span class="op">):</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> filter<span class="op">[</span>A<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> p<span class="op">:</span> A <span class="op">=&gt;</span> Boolean<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">]</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">// метод на trait Seq</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">filter</span><span class="op">(</span>pred<span class="op">:</span> A <span class="op">=&gt;</span> Boolean<span class="op">):</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </section>
 <section id="примери-2" class="slide level1">
 <h1>Примери</h1>
-<div class="sourceCode" id="cb18"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> l <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">)</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> isEven <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span><span class="fu">filter</span><span class="op">(</span>isEven<span class="op">)</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[Int] = List(2, 4, 6)</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span><span class="fu">filter</span><span class="op">(</span>x <span class="op">=&gt;</span> x <span class="op">&gt;</span> <span class="dv">3</span><span class="op">)</span>    <span class="co">// uses Type Inference</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: List[Int] = List(4, 5, 6)</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> l <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">)</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> isEven <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span><span class="fu">filter</span><span class="op">(</span>isEven<span class="op">)</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[Int] = List(2, 4, 6)</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span><span class="fu">filter</span><span class="op">(</span>x <span class="op">=&gt;</span> x <span class="op">&gt;</span> <span class="dv">3</span><span class="op">)</span>    <span class="co">// uses Type Inference</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: List[Int] = List(4, 5, 6)</span></span></code></pre></div>
 <div class="fragment">
 <p>За създаване на ламбда може да използваме и <code>_</code> (placeholder), който ще бъде попълнен с параметър</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span><span class="fu">filter</span><span class="op">(</span>_ <span class="op">&gt;</span> <span class="dv">3</span><span class="op">)</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: List[Int] = List(4, 5, 6)</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;&quot;</span><span class="op">).</span><span class="fu">filterNot</span><span class="op">(</span>_<span class="op">.</span>isEmpty<span class="op">)</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res3: List[String] = List(&quot;foo&quot;, &quot;bar&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span><span class="fu">filter</span><span class="op">(</span>_ <span class="op">&gt;</span> <span class="dv">3</span><span class="op">)</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: List[Int] = List(4, 5, 6)</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;&quot;</span><span class="op">).</span><span class="fu">filterNot</span><span class="op">(</span>_<span class="op">.</span>isEmpty<span class="op">)</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res3: List[String] = List(&quot;foo&quot;, &quot;bar&quot;)</span></span></code></pre></div>
 </div>
 </section>
 <section id="map" class="slide level1">
@@ -402,59 +570,59 @@ fact(1, 120) =
 </section>
 <section id="map-1" class="slide level1">
 <h1>map</h1>
-<div class="sourceCode" id="cb20"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>B<span class="op">]</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">// метод на trait Seq</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> map<span class="op">[</span>B<span class="op">](</span>f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> <span class="bu">Seq</span><span class="op">[</span>B<span class="op">]</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>B<span class="op">]</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">// метод на trait Seq</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> map<span class="op">[</span>B<span class="op">](</span>f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> <span class="bu">Seq</span><span class="op">[</span>B<span class="op">]</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </section>
 <section id="примери-3" class="slide level1">
 <h1>Примери</h1>
-<div class="sourceCode" id="cb21"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span>_ <span class="op">*</span> <span class="dv">2</span><span class="op">)</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[Int] = List(2, 4, 6)</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;baz&quot;</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span>wrapWithDiv<span class="op">)</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">//res1: List[String] = List(&quot;&lt;div&gt;foo&lt;/div&gt;&quot;, &quot;&lt;div&gt;bar&lt;/div&gt;&quot;, &quot;&lt;div&gt;baz&lt;/div&gt;&quot;)</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="op">-</span><span class="dv">20</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span>_<span class="op">.</span>abs<span class="op">)</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">//res12: List[Int] = List(1, 5, 6, 20)</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span><span class="fu">sum</span><span class="op">(</span>_<span class="op">,</span> <span class="dv">1</span><span class="op">))</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">//res11: List[Int] = List(2, 3, 4)</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span>_ <span class="op">*</span> <span class="dv">2</span><span class="op">)</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[Int] = List(2, 4, 6)</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;baz&quot;</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span>wrapWithDiv<span class="op">)</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">//res1: List[String] = List(&quot;&lt;div&gt;foo&lt;/div&gt;&quot;, &quot;&lt;div&gt;bar&lt;/div&gt;&quot;, &quot;&lt;div&gt;baz&lt;/div&gt;&quot;)</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="op">-</span><span class="dv">20</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span>_<span class="op">.</span>abs<span class="op">)</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">//res12: List[Int] = List(1, 5, 6, 20)</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">map</span><span class="op">(</span><span class="fu">sum</span><span class="op">(</span>_<span class="op">,</span> <span class="dv">1</span><span class="op">))</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co">//res11: List[Int] = List(2, 3, 4)</span></span></code></pre></div>
 </section>
 <section id="имплементация" class="slide level1">
 <h1>Имплементация</h1>
-<div class="sourceCode" id="cb22"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> filter<span class="op">[</span>A<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> p<span class="op">:</span> A <span class="op">=&gt;</span> Boolean<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>B<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> filter<span class="op">[</span>A<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> p<span class="op">:</span> A <span class="op">=&gt;</span> Boolean<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>B<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span></code></pre></div>
 </section>
 <section id="chaining" class="slide level1">
 <h1>chaining</h1>
-<div class="sourceCode" id="cb23"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;bazzzz&quot;</span><span class="op">)</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filter</span><span class="op">(</span>_<span class="op">.</span>size <span class="op">&lt;</span> <span class="dv">5</span><span class="op">)</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span><span class="op">(</span>wrapWithP<span class="op">)</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span><span class="op">(</span>wrapWithDiv<span class="op">)</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[String] = List(&quot;&lt;div&gt;&lt;p&gt;foo&lt;/div&gt;&lt;/div&gt;&quot;, &quot;&lt;div&gt;&lt;p&gt;bar&lt;/div&gt;&lt;/div&gt;&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;bazzzz&quot;</span><span class="op">)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filter</span><span class="op">(</span>_<span class="op">.</span>size <span class="op">&lt;</span> <span class="dv">5</span><span class="op">)</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span><span class="op">(</span>wrapWithP<span class="op">)</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span><span class="op">(</span>wrapWithDiv<span class="op">)</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[String] = List(&quot;&lt;div&gt;&lt;p&gt;foo&lt;/div&gt;&lt;/div&gt;&quot;, &quot;&lt;div&gt;&lt;p&gt;bar&lt;/div&gt;&lt;/div&gt;&quot;)</span></span></code></pre></div>
 </section>
 <section id="синтаксис-с-блок" class="slide level1">
 <h1>Синтаксис с блок</h1>
-<div class="sourceCode" id="cb24"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> l <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;baz&quot;</span><span class="op">)</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span>map <span class="op">{</span> s <span class="op">=&gt;</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wrapWithDiv</span><span class="op">(</span>s<span class="op">)</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[String] = List(&quot;&lt;div&gt;foo&lt;/div&gt;&quot;, &quot;&lt;div&gt;bar&lt;/div&gt;&quot;, &quot;&lt;div&gt;baz&lt;/div&gt;&quot;)</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>map <span class="op">{</span> x <span class="op">=&gt;</span> <span class="fu">complexCalc2</span><span class="op">(</span>x<span class="op">)</span> <span class="op">}</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>filter <span class="op">{</span> c <span class="op">=&gt;</span> </span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> limit <span class="op">=</span> <span class="fu">getLimit</span><span class="op">(</span>c<span class="op">)</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    c <span class="op">&lt;</span> limit</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> l <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;baz&quot;</span><span class="op">)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span>map <span class="op">{</span> s <span class="op">=&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wrapWithDiv</span><span class="op">(</span>s<span class="op">)</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[String] = List(&quot;&lt;div&gt;foo&lt;/div&gt;&quot;, &quot;&lt;div&gt;bar&lt;/div&gt;&quot;, &quot;&lt;div&gt;baz&lt;/div&gt;&quot;)</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>map <span class="op">{</span> x <span class="op">=&gt;</span> <span class="fu">complexCalc2</span><span class="op">(</span>x<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>filter <span class="op">{</span> c <span class="op">=&gt;</span> </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> limit <span class="op">=</span> <span class="fu">getLimit</span><span class="op">(</span>c<span class="op">)</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    c <span class="op">&lt;</span> limit</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 </section>
 <section id="reduce" class="slide level1">
 <h1>reduce</h1>
@@ -462,29 +630,29 @@ fact(1, 120) =
 </section>
 <section id="reduce-1" class="slide level1">
 <h1>reduce</h1>
-<div class="sourceCode" id="cb25"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> reduce<span class="op">[</span>A<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span> <span class="op">=&gt;</span> A<span class="op">):</span> A</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]:</span> <span class="bu">Unit</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">reduce</span><span class="op">(</span>op<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span> ⇒ A<span class="op">):</span> A</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> reduce<span class="op">[</span>A<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span> <span class="op">=&gt;</span> A<span class="op">):</span> A</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]:</span> <span class="bu">Unit</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">reduce</span><span class="op">(</span>op<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span> ⇒ A<span class="op">):</span> A</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </section>
 <section id="примери-4" class="slide level1">
 <h1>Примери</h1>
-<div class="sourceCode" id="cb26"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">reduce</span><span class="op">((</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> y<span class="op">)</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: Int = 6</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="op">-</span><span class="dv">50</span><span class="op">,</span> <span class="op">-</span><span class="dv">100</span><span class="op">,</span> <span class="dv">200</span><span class="op">).</span><span class="fu">reduce</span><span class="op">(</span>Math<span class="op">.</span>min<span class="op">)</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = -100</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">reduce</span><span class="op">((</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> y<span class="op">)</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: Int = 6</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="op">-</span><span class="dv">50</span><span class="op">,</span> <span class="op">-</span><span class="dv">100</span><span class="op">,</span> <span class="dv">200</span><span class="op">).</span><span class="fu">reduce</span><span class="op">(</span>Math<span class="op">.</span>min<span class="op">)</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = -100</span></span></code></pre></div>
 <div class="fragment">
 <p>Може да използваме <code>_</code> и за повече от един параметър</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">reduce</span><span class="op">(</span>_ <span class="op">+</span> _<span class="op">)</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: Int = 6</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="op">-</span><span class="dv">50</span><span class="op">,</span> <span class="op">-</span><span class="dv">100</span><span class="op">,</span> <span class="dv">200</span><span class="op">).</span><span class="fu">reduce</span><span class="op">(</span>_ max _<span class="op">)</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = 200</span></span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">).</span><span class="fu">reduce</span><span class="op">(</span>_ <span class="op">+</span> _<span class="op">)</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: Int = 6</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="op">-</span><span class="dv">50</span><span class="op">,</span> <span class="op">-</span><span class="dv">100</span><span class="op">,</span> <span class="dv">200</span><span class="op">).</span><span class="fu">reduce</span><span class="op">(</span>_ max _<span class="op">)</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">// res2: Int = 200</span></span></code></pre></div>
 </div>
 </section>
 <section id="допълнителни-ресурси" class="slide level1">
@@ -509,9 +677,6 @@ fact(1, 120) =
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
-        // Determines whether slide content should be vertically centered
-        center: false,
-      
         // Push each slide change to the browser history
         history: true,
         // Vertical centering of slides

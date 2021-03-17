@@ -8,7 +8,7 @@ title: Основни подходи при ФП
 
 * Рекурсия
   * Опашкова рекурсия, практични примери
-* Персистентни структури от данни
+* Неизменимост и неизменими структури от данни
 * Функциите като първокласни обекти
   * ламбда фунцкии и функционален тип
   * Функции от по-висок ред - `map`, `filter`, `foldLeft` и други
@@ -158,6 +158,217 @@ def fibonacci(i: Int): Int
 * take 
 * nth element
 * concat
+
+# Неизменимост
+
+# Неизменими обекти във времето
+
+```scala
+case class Person(name: String, age: Int, address: Address)
+case class Address(country: String, city: String, street: String)
+
+def getOlder(person: Person): Person = person.copy(age = person.age + 1)
+
+val youngRadost = Person("Radost", 24, Address("Bulgaria", "Veliko Tarnovo", "ul. Roza"))
+val olderRadost = getOlder(radost)
+```
+
+::: { .fragment }
+
+Неизменимосттa ни позволява:
+
+::: incremental
+
+* Persistence (персистентност)
+  - и двата обекта (`youngRadost` и `olderRadost`) остават валидни
+* Structural sharing
+  - и споделят голяма част от вътрешните си обекти
+
+:::
+
+:::
+
+# Неизменими обекти във времето
+
+```scala
+case class Person(name: String, age: Int, address: Address)
+case class Address(country: String, city: String, street: String)
+
+def getOlder(person: Person): Person = person.copy(age = person.age + 1)
+
+val youngRadost = Person("Radost", 24, Address("Bulgaria", "Veliko Tarnovo", "ul. Roza"))
+val olderRadost = getOlder(radost)
+```
+
+![](images/04-functional-programming-basics/shared-objects.jpg){ height=380 }
+
+# Неизменими структури от данни -- списък
+
+```scala
+val a = List(3, 2, 1)
+```
+
+::: { .fragment }
+
+![](images/04-functional-programming-basics/list.jpg){ height=120 }
+
+:::
+
+# Неизменими структури от данни -- списък
+
+```scala
+val a = List(3, 2, 1)
+val b = 4 :: a
+val c = 5 :: a.tail
+```
+
+::: { .fragment }
+
+![](images/04-functional-programming-basics/multple-lists.jpg){ height=240 }
+
+:::
+
+::: incremental
+
+* Persistence
+* Structural sharing
+* Ако някоя променлива излезе от scope GC ще се погрижи за ненужните части
+
+:::
+
+# Списък от цели числа
+
+```scala
+trait IntList {
+  def head: Int
+  def tail: IntList
+}
+
+case class Cons(head: Int, tail: IntList) extends IntList
+case object Nil extends IntList {
+  def head = throw new NoSuchElementException
+  def tail = throw new UnsupportedOperationException
+}
+```
+
+::: { .fragment }
+
+```scala
+val xs = Cons(1, Cons(2, Cons(3, Nil)))
+xs.tail.head // 2
+```
+
+:::
+
+# Добавяне на елемент в края на списък
+
+```scala
+val a = List(3, 2, 1)
+val d = a :+ 0
+```
+
+::: { .fragment }
+
+![](images/04-functional-programming-basics/list-append.jpg){ height=240 }
+
+:::
+
+::: { .fragment }
+
+Тук вече няма как да споделим общите елементи
+
+:::
+
+# Вектор -- оптимизация за произволен достъп
+
+```scala
+val v1 = Vector(1, 2, 3, 4, 5, 6, 7)
+```
+
+::: { .fragment }
+
+![](images/04-functional-programming-basics/vector.jpg){ height=380 }
+
+:::
+
+::: { .fragment }
+
+балансирано дърво
+
+:::
+
+# Вектор -- операции
+
+```scala
+val v1 = Vector(1, 2, 3, 4, 5, 6, 7)
+v1.head // 1
+v1.last // 7
+v1(4) // 5
+
+// Трите операции имат еднаква сложност
+```
+
+::: { .fragment }
+
+![](images/04-functional-programming-basics/vector.jpg){ height=380 }
+
+:::
+
+# Вектор -- замяна на елемент
+
+```scala
+val v1 = Vector(1, 2, 3, 4, 5, 6, 7)
+val v2 = v1.updated(5, 42)
+```
+
+::: { .fragment }
+
+![](images/04-functional-programming-basics/vector-update.jpg){ height=420 }
+
+:::
+
+# Вектор
+
+::: incremental
+
+* Дърво с 32 деца на всеки възел
+* Така повечето му операции са със сложност log<sub>32</sub>n
+  - Което се смята за почти константа ([ефективно константа](https://docs.scala-lang.org/overviews/collections/performance-characteristics.html))
+* Полезно ако имаме нужда от произволен достъп
+* Имплементира Radix Balanced Tree
+* Примери за още операции [тук](https://docs.google.com/presentation/d/1GY0p2P-BzPfWspKoMRxOQ87fG01t4oMJ1PJxjxGFurQ/edit)
+
+:::
+
+# Чисто функционални структури от данни
+
+::: incremental
+
+* Разучаването им започва силно през 90-те
+  - ["Purely Functional Data Structures", Chris Okasaki](https://www.cambridge.org/core/books/purely-functional-data-structures/0409255DA1B48FA731859AC72E34D494)
+* Популяризирани чрез Clojure
+  - ["The Value of Values", Rich Hickey](https://www.infoq.com/presentations/Value-Values/)
+* Persistence
+* Structural sharing
+* Подпогани от GC
+* Безопасно споделяне със всяка част от кода
+  - дори между нишки 
+  - (~)константно създаване на производна структура -- например с допълнителен елемент
+
+:::
+
+# Set и Map
+
+::: incremental
+
+* Подобно на Vector, също използват дърво, по-точно Trie
+* [Hash array mapped trie (HAMT)](https://lampwww.epfl.ch/papers/idealhashtrees.pdf)
+* От Scala 2.13 -- [оптимизация](https://core.ac.uk/download/pdf/192654061.pdf)
+* Повечето им операции също са [ефективно константа](https://docs.scala-lang.org/overviews/collections/performance-characteristics.html)
+* До 4 елемента се пазят в масив
+
+:::
+
 
 # Функциите като първокласни обекти
 
