@@ -23,7 +23,8 @@ title: Основни подходи при ФП
 ::: incremental
 
 * Функция, която извиква себе си
-* ![](images/04-functional-programming-basics/captain-obvious.jpg){ height=200 }
+  
+  ![](images/04-functional-programming-basics/captain-obvious.jpg){ height=200 .fragment }
 * Използва се за постигане на цикличност. Често срещано във ФП
 * Избягва мутиране на състояние
 * По-естествен начин за описване на определени алгоритми. Пример - fact
@@ -158,11 +159,10 @@ def fibonacci(i: Int): Int
 * nth element
 * concat
 
-# Малко повече за функциите
+# Функциите като първокласни обекти
 
 ::: incremental
 
-* Функциите в Scala са първокласни обекти.
 * Какво означава това?
   * Могат да се използват навсякъде както бихме използвали "нормални" стойности
   * Няма ограничение къде могат да бъдат дефинирани, т.е. като "нормални" стойности
@@ -171,33 +171,13 @@ def fibonacci(i: Int): Int
 
 :::
 
-# Локални функции
-
-::: incremental
-
-```scala
-def foo(a: Int): Int = {
-  def bar(b: Int) = b + 10 // local function
-
-  bar(a)
-}
-```
-```scala
-def foo(a: Int): Int = {
-  def bar(b: Int) = a + b // can also use scope defined above
-
-  bar(42)
-}
-```
-
-:::
 
 # Анонимни функции, a.k.a lambda 
 
-Синтаксис
-```scala
-val lambdaName = (param:Type) => expression
-```
+* Синтаксис
+  ```scala
+  val lambdaName = (param:Type) => expression
+  ```
 
 <div class="fragment">
 
@@ -208,15 +188,6 @@ val sum = (x: Int, y: Int) => x + y
 // или така
 val addOne: Int => Int = x => x + 1
 val sum: (Int, Int) => Int = (x, y) => x + y
-
-val addOne = { x: Int =>    // с къдрави скоби
-  val a = x + 1
-  a
-}
-
-val addOne = (x: Int) => {  // може и така
-  x + 1
-}
 
 // Извикват се по стандартния начин
 addOne(41) // 42
@@ -246,7 +217,7 @@ sum(40, 2) // 42
 
 :::
 
-# apply?
+# apply? - от предния път 
 
 ::: incremental
 
@@ -255,75 +226,35 @@ sum(40, 2) // 42
 <div class="fragment">
 
 ```scala
-  class Adder(a: Int) {
-    def apply(b: Int) = a + b
-  }
-  
-  val oneAdder = new Adder(1)
-  oneAdder(2)
-  // res2: Int = 3
+class Adder(a: Int) {
+  def apply(b: Int) = a + b
+}
+
+val oneAdder = new Adder(1)
+oneAdder(2)
+// res2: Int = 3
   ```
+
+```scala
+def makeAdder(a: Int) = (b: Int) => a + b
+
+val oneAdder = makeAdder(1)
+oneAdder(2)
+// res2: Int = 3
+```
 
 </div>
 
 :::
 
-
-# "Placeholder" синтаксис
-
-::: incremental
-
-* Може да използваме `_`, който ще бъде попълнен с параметър
-  ```scala
-  val addOne: Int => Int = _ + 1
-  
-  val addOne = (_: Int) + 1
-  
-  val describe: Int => String = _.toString
-  ```
-* Може да използваме за повече от един параметър
-  ```scala
-  val sum2: (Int, Int) => Int = _ + _
-  
-  val sum3: (Int, Int, Int) => Int = _ + _ + _
-  ```
-
-:::
-  
-# Partial application
-
-```scala
-val addOne = sum(_, 1)
-```
-
-The type of `addOne` is `Int => Int` 
-
-<div class="fragment">
-
-```scala
-def wrap(prefix: String, html: String, suffix: String) = prefix + html + suffix
-
-val wrapWithP = wrap("<p>", _: String, "</p>")
-val wrapWithDiv = wrap("<div>", _: String, "</div>")
-
-wrapWithDiv(wrapWithP("Hello, world"))
-// res3: String = "<div><p>Hello, world</p></div>"
-```
-
-Трябва да специфицираме типа на параметъра
-
-</p>
-
-
-# Difference between `def` and `val` functions
-
-maybe delete
-
 # Eta expansion
+
+Преобразуване на метод към функция
+
   ```scala
   def sum(a: Int, b: Int) = a + b
 
-  val sumFun = sum  // doesn't work
+  val sumFun = sum  // doesn't work, will work in Scala 3
   
   val sumFun = sum _  // works
 
@@ -334,6 +265,29 @@ maybe delete
   sumFun(1, 2)
   ```
 
+# Partial application
+
+```scala
+val addOne = sum(_, 1)
+```
+
+Типът на `addOne` е `Int => Int`
+
+<div class="fragment">
+
+```scala
+def wrap(prefix: String, html: String, suffix: String) = prefix + html + suffix
+
+val wrapWithP = wrap("<p>", _, "</p>")
+val wrapWithDiv = wrap("<div>", _, "</div>")
+
+wrapWithDiv(wrapWithP("Hello, world"))
+// res3: String = "<div><p>Hello, world</p></div>"
+```
+
+</div>
+
+
 # Higher-order functions
 
 ::: incremental
@@ -343,9 +297,8 @@ maybe delete
 
 <div class="fragment">
 
-Higher-order functions
 
-> Функции, които приемат функции като параметри или връщат функции като резултат
+> Дефиниция - Функции, които приемат функции като параметри или връщат функции като резултат
 
 </div>
 
@@ -365,6 +318,8 @@ formatResult("+1 addition", 41, addOne)
 //res4: String = "The +1 addition of 41 is 42"
 
 ```
+
+# HOFs върху списъци
 
 # filter
 
@@ -394,9 +349,20 @@ l.filter(isEven)
 l.filter(x => x > 3)    // uses Type Inference
 // res1: List[Int] = List(4, 5, 6)
 
-l.filter(_ < 3)
-// res2: List[Int] = List(1, 2)
 ```
+
+<div class="fragment">
+
+За създаване на ламбда може да използваме и `_` (placeholder), който ще бъде попълнен с параметър
+```scala
+l.filter(_ > 3)
+// res2: List[Int] = List(4, 5, 6)
+
+List("foo", "bar", "").filterNot(_.isEmpty)
+// res3: List[String] = List("foo", "bar")
+```
+
+</div>
 
 # map
 
@@ -424,6 +390,11 @@ List(1, 2, 3).map(_ * 2)
 List("foo", "bar", "baz").map(wrapWithDiv)
 //res1: List[String] = List("<div>foo</div>", "<div>bar</div>", "<div>baz</div>")
 
+List(1, -5, 6, -20).map(_.abs)
+//res12: List[Int] = List(1, 5, 6, 20)
+
+List(1, 2, 3).map(sum(_, 1))
+//res11: List[Int] = List(2, 3, 4)
 ```
 
 # Имплементация
@@ -440,7 +411,7 @@ def map[A, B](la: List[A], f: A => B): List[B] = ???
 
 ```scala
 List("foo", "bar", "bazzzz")
-  .filter(_.length < 5)
+  .filter(_.size < 5)
   .map(wrapWithP)
   .map(wrapWithDiv)
 
@@ -450,20 +421,62 @@ List("foo", "bar", "bazzzz")
 # Синтаксис с блок
 
 ```scala
-val l = List("foo", "bar", "baz") 
+val l = List("foo", "bar", "baz")
 l.map { s =>
-  println(s)
   wrapWithDiv(s)
 }
 // res0: List[String] = List("<div>foo</div>", "<div>bar</div>", "<div>baz</div>")
 
-//maybe delete that - show with partial functions
-l.map {
-  case "foo" => wrapWithP("foo")
-  case s => wrapWithDiv(s)
-}
-// res1: List[String] = List("<p>foo</div>", "<div>bar</div>", "<div>baz</div>")
+List(1, 2, 3)
+  .map { x => complexCalc2(x) }
+  .filter { c => 
+    val limit = getLimit(c)
+    c < limit
+  }
 ```
+
+# reduce
+
+![](images/04-functional-programming-basics/reduce.png)
+
+# reduce
+
+```scala
+def reduce[A](la: List[A], f: (A, A) => A): A
+
+def Seq[A]: Unit = {
+  def reduce(op: (A, A) ⇒ A): A
+  ...
+}
+```
+
+# Примери
+
+```scala
+
+List(1, 2, 3).reduce((x, y) => x + y)
+// res1: Int = 6
+
+List(5, 10, -50, -100, 200).reduce(Math.min)
+// res2: Int = -100
+
+```
+
+<div class="fragment">
+
+Може да използваме `_` и за повече от един параметър
+
+```scala
+
+List(1, 2, 3).reduce(_ + _)
+// res1: Int = 6
+
+List(5, 10, -50, -100, 200).reduce(_ max _)
+// res2: Int = 200
+
+```
+
+</div>
 
 # Допълнителни ресурси
 
