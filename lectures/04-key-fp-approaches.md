@@ -11,7 +11,7 @@ title: Основни подходи при ФП
 * Неизменимост и неизменими структури от данни
 * Функциите като първокласни обекти
   * ламбда фунцкии и функционален тип
-  * Функции от по-висок ред - `map`, `filter`, `foldLeft` и други
+  * Функции от по-висок ред - `map`, `filter`, `fold` и други
   * Currying - защо и кои са средствата, които Скала ни дава
 * Композиция на функции
 * Изразяване чрез типове
@@ -694,3 +694,368 @@ List(5, 10, -50, -100, 200).reduce(_ max _)
 * [Scala: The Differences Between `val` and `def` When Creating Functions](https://alvinalexander.com/scala/fp-book-diffs-val-def-scala-functions/)
 * [Partially-Applied Functions (and Currying) in Scala](https://alvinalexander.com/scala/fp-book/partially-applied-functions-currying-in-scala/)
 
+# Множество списъци с параметри
+
+::: { .fragment }
+
+```scala
+def sum(a: Int)(b: Int) = a + b
+
+sum(10)(20) // 30
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+List(1, 2, 3, 4, 5).map(sum(10)) // List(11, 12, 13, 14, 15)
+```
+
+:::
+
+# Но защо ни е?
+
+![](images/but-why.gif)
+
+# Групиране на параметри
+
+::: { .fragment }
+
+```scala
+def min[T](compare: (T, T) => Int)(a: T, b: T) =
+  if (compare(a, b) < 0) a
+  else b
+```
+
+:::
+
+::: { .fragment }
+
+```scala  
+min(Integer.compare)(-10, -20) // -20
+
+val compareByAbsoluteValue = (a: Int, b: Int) => a.abs - b.abs
+min(compareByAbsoluteValue)(-10, -20) // -10
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+val minByAbsoluteValue = min(compareByAbsoluteValue) _
+
+minByAbsoluteValue(10, 20) // 10
+minByAbsoluteValue(-10, -20) // -10
+```
+
+:::
+
+::: { .fragment }
+
+Приложимо е и при параметри на класове
+
+```scala
+class MyClass(service1: Service1, service2: Service2, service3: Service3)
+             (config1: Config1, config2: Config2) {
+  // ...
+}
+```
+
+:::
+
+# Type inference работи списък по списък
+
+::: { .fragment }
+
+```scala
+def mapSL[A, B](xs: List[A], f: A => B): List[B] = ???
+
+
+mapSL(List(1, 2, 3), n => n * n) // error: missing parameter type
+mapSL(List(1, 2, 3), _ * 2) // error: missing parameter type
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+mapSL(List(1, 2, 3), (n: Int) => n * n) // работи
+mapSL(List(1, 2, 3), (_: Int) * 2) // работи
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+def mapML[A, B](xs: List[A])(f: A => B): List[B] = ???
+
+mapML(List(1, 2, 3))(n => n * n) // работи
+mapML(List(1, 2, 3))(_ * 2) // също работи
+```
+
+:::
+
+::: incremental
+
+* Type inference-а работи на етапи от ляво надясно
+* При `mapSL` Scala не може да определи типа на `n`, тъй като не знае типа на `A`
+* При `mapML`:
+  - първият списък определя типа на `A`
+  - при втория `A` вече е фиксиран, което позволява да се определи `B`
+
+:::
+
+# Имплементиране на собствени конструкции
+
+::: { .fragment }
+
+```scala
+mapML(List(4, 5, 6))(_ * 2) // List(8, 10, 12)
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+mapML(List(4, 5, 6)) { n =>
+  val factN = fact(n)
+  val fibN = fib(n)
+  
+  factN + fibN
+}
+// List(27, 125, 728)
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+List(10, 20, 30).fold(1)(_ * _) // 6000
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+List(20, -40, 30).fold(0) { (a, b) =>
+  math.max(a.abs, b.abs)
+}
+// 40
+```
+
+:::
+
+# Имплементиране на собствени конструкции
+
+```scala
+type Closeable = { def close(): Unit }
+
+def using[A <: Closeable, B](resource: A)(f: A => B): B =
+  try f(resource)
+  finally resource.close()
+```
+
+::: { .fragment }
+
+```scala
+def numberOfLines(fileName: String): Int =
+  using(Source.fromFile(fileName)) { file => 
+    file.getLines().size
+  }
+
+numberOfLines("poem.txt")
+```
+
+:::
+
+# Currying
+
+![](images/04-key-fp-approaches/chicken-curry.jpg){ .fragment }
+
+# Currying
+
+::: incremental
+
+* currying е преобразуването на функция с много параметри към последователност от функции, всяка приемаща един параметър
+
+  ::: { .fragment }
+
+  ```scala
+  val sum = (a: Int, b: Int, c: Int) => a + b + c
+  val sumCurried = (a: Int) => (b: Int) => (c: Int) => a + b + c
+  ```
+  
+  :::
+  
+  ::: { .fragment }
+  
+  ```scala
+  val sumAHundredFourtyTwo = sumCurried(100)(42)
+  // val sumAHundredFourtyTwo: Int => Int = $Lambda$1198/1481577195@6b909973
+  
+  sumAHundredFourtyTwo(1000) // 1142
+  sumAHundredFourtyTwo(2000) // 2142
+  ```
+  
+  :::
+* кръстено на Haskell Curry
+* алтернатива на частично приложените функции
+
+  ::: { .fragment }
+ 
+  ```scala
+  val pencil = (colour: String) => (text: String) => s"$text in $colour"
+  ```
+ 
+  :::
+ 
+  ::: { .fragment }
+ 
+  ```scala
+  val redPencil = pencil("red")
+  
+  redPencil("Hello") // Hello in red
+  redPencil(":) :) :)") // :) :) :) in red
+  ```
+ 
+  :::
+ 
+  ::: { .fragment }
+
+    ```scala
+  pencil("blue")("you") // you in blue
+  List("The sky", "The sea").map(pencil("blue")) // List("The sky in blue", "The sea in blue")
+  ```
+ 
+  :::
+
+:::
+
+# Операции с функции
+
+# Операции с функции -- композиция
+
+::: { .fragment }
+
+```scala
+val even = (n: Int) => n % 2 == 0
+val len = (s: String) => s.size
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+val isEvenLen = even compose len
+// val isEvenLen: String => Boolean = scala.Function1$$Lambda$1227/1733158206@4c59c76c
+
+isEvenLen("Sofia University") // true
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+val isEvenLen = len andThen even
+// val isEvenLen: String => Boolean = scala.Function1$$Lambda$1227/1733158206@4c59c76c
+
+isEvenLen("FMI") // false
+```
+
+:::
+
+::: { .fragment }
+
+И при двата случая `isEvenLen` изразява `s => even(len(s))`
+
+:::
+
+::: { .fragment }
+
+```scala
+scala> val isEvenLen = len compose even
+                                   ^
+       error: type mismatch;
+        found   : Int => Boolean
+        required: ? => String
+```
+
+:::
+
+# Операции с функции -- currying
+
+::: { .fragment }
+
+```scala
+val sum = (a: Int, b: Int, c: Int) = a + b + c
+val sumCurried = sum.curried
+
+sumCurried(1000)(100)(42) // 1142
+```
+
+:::
+
+# Операции с функции -- tupled
+
+::: { .fragment }
+
+```scala
+val sum = (a: Int, b: Int, c: Int) = a + b + c
+val sumTupled = sum.tupled
+
+sumTupled((1, 2, 3)) // 6
+```
+
+:::
+
+
+# Операции с функции -- tupled
+
+```scala
+Map(1 -> 100, 2 -> 200, 3 -> 300).map(pair => pair._2) // List(100, 200, 300)
+```
+
+::: { .fragment }
+
+```scala
+val sum = (a: Int, b: Int) => a + b
+Map(1 -> 100, 2 -> 200, 3 -> 300).map(sum.tupled) // List(101, 202, 303)
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+Map(1 -> "One", 2 -> "Two", 3 -> "Three").map(((k, v) => s"$k: $v").tupled)
+// Грешка: Missing parameter type. Type inference не сработва
+```
+
+:::
+
+::: { .fragment }
+
+```scala
+import Function.tupled
+
+Map(1 -> "One", 2 -> "Two", 3 -> "Three").map(tupled((k, v) => s"$k: $v"))
+// List(1: One, 2: Two, 3: Three)
+// Type inference сработва успешно (от ляво надясно)
+```
+
+:::
+
+::: { .fragment }
+
+Scala 3 прави последното автоматично без нужда от [`tupled`](https://www.scala-lang.org/api/current/scala/Function$.html#tupled[T1,T2,R](f:(T1,T2)=%3ER):((T1,T2))=%3ER)
+
+:::
