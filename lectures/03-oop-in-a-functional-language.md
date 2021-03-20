@@ -1258,36 +1258,6 @@ def buyTea(cc: CreditCard): (Tea, Charge) = {
 
 :::
 
-
-# Изброими типове чрез DSL (Scala 2)
-
-```scala
-object WeekDay extends Enumeration {
-  val Mon, Tue, Wed, Thu, Fri, Sat, Sun = Value
-}
-```
-
-::: { .fragment }
-
-```scala
-def isWorkingDay(day: WeekDay.Value) = d != Sat && d != Sun
-isWorkingDay(WeekDay.Wed) // true, :(
-
-WeekDay.withName("Sun") // Sun
-```
-
-:::
-
-# Изброими типове (Scala 3) { .scala3 }
-
-```scala
-enum WeekDay {
-  case Mon, Tue, Wed, Thu, Fri, Sat, Sun
-}
-```
-
 # [Таблица на типовите елементи в Scala](https://github.com/scala-fmi/scala-fmi-2021/blob/master/resources/type-elements-in-scala.md)
-
-
 
 # Въпроси :)?
