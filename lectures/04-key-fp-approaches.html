@@ -117,7 +117,7 @@
 <div>
 <ul>
 <li class="fragment"><p>Функция, която извиква себе си</p>
-<p><img data-src="images/04-functional-programming-basics/captain-obvious.jpg" class="fragment" height="200" /></p></li>
+<p><img data-src="images/04-key-fp-approaches/captain-obvious.jpg" class="fragment" height="200" /></p></li>
 <li class="fragment"><p>Използва се за постигане на цикличност. Често срещано във ФП</p></li>
 <li class="fragment"><p>Избягва мутиране на състояние</p></li>
 <li class="fragment"><p>По-естествен начин за описване на определени алгоритми. Пример - fact</p>
@@ -271,13 +271,13 @@ fact(1, 120) =
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> youngRadost <span class="op">=</span> <span class="fu">Person</span><span class="op">(</span><span class="st">&quot;Radost&quot;</span><span class="op">,</span> <span class="dv">24</span><span class="op">,</span> <span class="fu">Address</span><span class="op">(</span><span class="st">&quot;Bulgaria&quot;</span><span class="op">,</span> <span class="st">&quot;Veliko Tarnovo&quot;</span><span class="op">,</span> <span class="st">&quot;ul. Roza&quot;</span><span class="op">))</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> olderRadost <span class="op">=</span> <span class="fu">getOlder</span><span class="op">(</span>radost<span class="op">)</span></span></code></pre></div>
-<p><img data-src="images/04-functional-programming-basics/shared-objects.jpg" height="380" /></p>
+<p><img data-src="images/04-key-fp-approaches/shared-objects.jpg" height="380" /></p>
 </section>
 <section id="неизменими-структури-от-данни-списък" class="slide level1">
 <h1>Неизменими структури от данни – списък</h1>
 <div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> a <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span></code></pre></div>
 <div class="fragment">
-<p><img data-src="images/04-functional-programming-basics/list.jpg" height="120" /></p>
+<p><img data-src="images/04-key-fp-approaches/list.jpg" height="120" /></p>
 </div>
 </section>
 <section id="неизменими-структури-от-данни-списък-1" class="slide level1">
@@ -286,7 +286,7 @@ fact(1, 120) =
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> b <span class="op">=</span> <span class="dv">4</span> <span class="op">::</span> a</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> c <span class="op">=</span> <span class="dv">5</span> <span class="op">::</span> a<span class="op">.</span>tail</span></code></pre></div>
 <div class="fragment">
-<p><img data-src="images/04-functional-programming-basics/multple-lists.jpg" height="240" /></p>
+<p><img data-src="images/04-key-fp-approaches/multple-lists.jpg" height="240" /></p>
 </div>
 <div>
 <ul>
@@ -318,7 +318,7 @@ fact(1, 120) =
 <div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> a <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">1</span><span class="op">)</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> d <span class="op">=</span> a <span class="op">:+</span> <span class="dv">0</span></span></code></pre></div>
 <div class="fragment">
-<p><img data-src="images/04-functional-programming-basics/list-append.jpg" height="240" /></p>
+<p><img data-src="images/04-key-fp-approaches/list-append.jpg" height="240" /></p>
 </div>
 <div class="fragment">
 <p>Тук вече няма как да споделим общите елементи</p>
@@ -328,7 +328,7 @@ fact(1, 120) =
 <h1>Вектор – оптимизация за произволен достъп</h1>
 <div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> v1 <span class="op">=</span> <span class="fu">Vector</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">7</span><span class="op">)</span></span></code></pre></div>
 <div class="fragment">
-<p><img data-src="images/04-functional-programming-basics/vector.jpg" height="380" /></p>
+<p><img data-src="images/04-key-fp-approaches/vector.jpg" height="380" /></p>
 </div>
 <div class="fragment">
 <p>балансирано дърво</p>
@@ -343,7 +343,7 @@ fact(1, 120) =
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Трите операции имат еднаква сложност</span></span></code></pre></div>
 <div class="fragment">
-<p><img data-src="images/04-functional-programming-basics/vector.jpg" height="380" /></p>
+<p><img data-src="images/04-key-fp-approaches/vector.jpg" height="380" /></p>
 </div>
 </section>
 <section id="вектор-замяна-на-елемент" class="slide level1">
@@ -351,7 +351,7 @@ fact(1, 120) =
 <div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> v1 <span class="op">=</span> <span class="fu">Vector</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">7</span><span class="op">)</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> v2 <span class="op">=</span> v1<span class="op">.</span><span class="fu">updated</span><span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">42</span><span class="op">)</span></span></code></pre></div>
 <div class="fragment">
-<p><img data-src="images/04-functional-programming-basics/vector-update.jpg" height="420" /></p>
+<p><img data-src="images/04-key-fp-approaches/vector-update.jpg" height="420" /></p>
 </div>
 </section>
 <section id="вектор" class="slide level1">
@@ -383,7 +383,7 @@ fact(1, 120) =
 </ul></li>
 <li class="fragment">Persistence</li>
 <li class="fragment">Structural sharing</li>
-<li class="fragment">Подпогани от GC</li>
+<li class="fragment">Подпомагани от GC</li>
 <li class="fragment">Безопасно споделяне със всяка част от кода
 <ul>
 <li class="fragment">дори между нишки</li>
@@ -421,7 +421,7 @@ fact(1, 120) =
 <section id="анонимни-функции-a.k.a-lambda" class="slide level1">
 <h1>Анонимни функции, a.k.a lambda</h1>
 <p>Синтаксис</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lambdaName <span class="op">=</span> <span class="op">(</span>param<span class="op">:</span>Type<span class="op">)</span> <span class="op">=&gt;</span> expression</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lambdaName <span class="op">=</span> <span class="op">(</span>param<span class="op">:</span> Type<span class="op">)</span> <span class="op">=&gt;</span> expression</span></code></pre></div>
 <div class="fragment">
 <div class="sourceCode" id="cb18"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> addOne <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> y<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> x <span class="op">+</span> y</span>
@@ -484,7 +484,7 @@ fact(1, 120) =
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> sum   <span class="co">// also works</span></span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun2<span class="op">:</span> Function2<span class="op">[</span><span class="bu">Int</span><span class="op">,</span><span class="bu">Int</span><span class="op">,</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> sum   <span class="co">// also works</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sumFun2<span class="op">:</span> Function2<span class="op">[</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> sum   <span class="co">// also works</span></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sumFun</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span></span></code></pre></div>
 </section>
@@ -533,7 +533,7 @@ fact(1, 120) =
 </section>
 <section id="filter" class="slide level1">
 <h1>filter</h1>
-<p><img data-src="images/04-functional-programming-basics/filter.png" /></p>
+<p><img data-src="images/04-key-fp-approaches/filter.png" /></p>
 </section>
 <section id="filter-1" class="slide level1">
 <h1>filter</h1>
@@ -566,7 +566,7 @@ fact(1, 120) =
 </section>
 <section id="map" class="slide level1">
 <h1>map</h1>
-<p><img data-src="images/04-functional-programming-basics/map.png" /></p>
+<p><img data-src="images/04-key-fp-approaches/map.png" /></p>
 </section>
 <section id="map-1" class="slide level1">
 <h1>map</h1>
@@ -626,7 +626,7 @@ fact(1, 120) =
 </section>
 <section id="reduce" class="slide level1">
 <h1>reduce</h1>
-<p><img data-src="images/04-functional-programming-basics/reduce.png" /></p>
+<p><img data-src="images/04-key-fp-approaches/reduce.png" /></p>
 </section>
 <section id="reduce-1" class="slide level1">
 <h1>reduce</h1>
@@ -677,9 +677,6 @@ fact(1, 120) =
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
-        // Determines whether slide content should be vertically centered
-        center: false,
-      
         // Push each slide change to the browser history
         history: true,
         // Vertical centering of slides

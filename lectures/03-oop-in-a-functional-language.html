@@ -833,8 +833,8 @@
 <span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> lovelyOwl<span class="op">:</span> Owl <span class="op">&amp;</span> LovingAnimal <span class="op">=</span> <span class="kw">new</span> <span class="fu">Owl</span><span class="op">(</span><span class="st">&quot;Oliver&quot;</span><span class="op">,</span> <span class="dv">7</span><span class="op">)</span> <span class="kw">with</span> LovingAnimal</span>
 <span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>lovelyOwl<span class="op">.</span>hug <span class="co">// A hug from Oliver</span></span></code></pre></div>
 </section>
-<section id="обединение-на-типове" class="slide level1">
-<h1>Обединение на типове</h1>
+<section id="обединение-на-типове" class="slide level1 scala3">
+<h1 class="scala3">Обединение на типове</h1>
 <div class="sourceCode" id="cb50"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">toInteger</span><span class="op">(</span>value<span class="op">:</span> String <span class="op">|</span> <span class="bu">Int</span> <span class="op">|</span> Double<span class="op">):</span> <span class="bu">Int</span> <span class="op">=</span> value <span class="cf">match</span> <span class="op">{</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> n<span class="op">:</span> <span class="bu">Int</span> <span class="op">=&gt;</span> n</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> s<span class="op">:</span> String <span class="op">=&gt;</span> s<span class="op">.</span>toInt</span>
@@ -846,8 +846,8 @@
 <span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="fu">toInteger</span><span class="op">(</span><span class="fl">10.0</span><span class="op">)</span> <span class="co">// 10</span></span>
 <span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="fu">toInteger</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">10</span><span class="op">))</span> <span class="co">// не се компилира</span></span></code></pre></div>
 </section>
-<section id="обединение-на-типове-1" class="slide level1">
-<h1>Обединение на типове</h1>
+<section id="обединение-на-типове-1" class="slide level1 scala3">
+<h1 class="scala3">Обединение на типове</h1>
 <div class="sourceCode" id="cb51"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">toInteger</span><span class="op">(</span>value<span class="op">:</span> String <span class="op">|</span> <span class="bu">Int</span> <span class="op">|</span> Double<span class="op">):</span> <span class="bu">Int</span> <span class="op">=</span> value <span class="cf">match</span> <span class="op">{</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> n<span class="op">:</span> <span class="bu">Int</span> <span class="op">=&gt;</span> n</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> s<span class="op">:</span> String <span class="op">=&gt;</span> s<span class="op">.</span>toInt</span>
@@ -864,8 +864,8 @@
 <div class="sourceCode" id="cb53"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>scalacOptions <span class="op">+=</span> <span class="st">&quot;-Xfatal-warnings&quot;</span></span></code></pre></div>
 </div>
 </section>
-<section id="обединение-на-типове-2" class="slide level1">
-<h1>Обединение на типове</h1>
+<section id="обединение-на-типове-2" class="slide level1 scala3">
+<h1 class="scala3">Обединение на типове</h1>
 <div class="sourceCode" id="cb54"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">registerUser</span><span class="op">(</span>registrationForm<span class="op">:</span> RegistrationForm<span class="op">):</span> RegistrationFormError <span class="op">|</span> User <span class="op">=</span> <span class="op">???</span></span></code></pre></div>
 </section>
 <section id="the-expression-problem" class="slide level1">
@@ -1071,7 +1071,7 @@
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ExampleSpec <span class="kw">extends</span> AnyFlatSpec <span class="kw">with</span> Matchers <span class="op">{</span></span>
 <span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;+&quot;</span> should <span class="st">&quot;sum two numbers&quot;</span> in <span class="op">{</span></span>
-<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span> shouldBe <span class="dv">5</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span> shouldEqual <span class="dv">5</span></span>
 <span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
 <span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <div class="fragment">

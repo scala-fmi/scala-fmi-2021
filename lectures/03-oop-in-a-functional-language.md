@@ -899,7 +899,7 @@ val lovelyOwl: Owl & LovingAnimal = new Owl("Oliver", 7) with LovingAnimal
 lovelyOwl.hug // A hug from Oliver
 ```
 
-# Обединение на типове
+# Обединение на типове { .scala3 }
 
 ```scala
 def toInteger(value: String | Int | Double): Int = value match {
@@ -914,7 +914,7 @@ toInteger(10.0) // 10
 toInteger(List(10)) // не се компилира
 ```
 
-# Обединение на типове
+# Обединение на типове { .scala3 }
 
 ```scala
 def toInteger(value: String | Int | Double): Int = value match {
@@ -945,7 +945,7 @@ scalacOptions += "-Xfatal-warnings"
 
 :::
 
-# Обединение на типове
+# Обединение на типове { .scala3 }
 
 ```scala
 def registerUser(registrationForm: RegistrationForm): RegistrationFormError | User = ???
@@ -1196,7 +1196,7 @@ import org.scalatest.matchers.should.Matchers
 
 class ExampleSpec extends AnyFlatSpec with Matchers {
   "+" should "sum two numbers" in {
-    2 + 3 shouldBe 5
+    2 + 3 shouldEqual 5
   }
 }
 ```

@@ -24,7 +24,7 @@ title: Основни подходи при ФП
 
 * Функция, която извиква себе си
   
-  ![](images/04-functional-programming-basics/captain-obvious.jpg){ height=200 .fragment }
+  ![](images/04-key-fp-approaches/captain-obvious.jpg){ height=200 .fragment }
 * Използва се за постигане на цикличност. Често срещано във ФП
 * Избягва мутиране на състояние
 * По-естествен начин за описване на определени алгоритми. Пример - fact
@@ -200,7 +200,7 @@ val youngRadost = Person("Radost", 24, Address("Bulgaria", "Veliko Tarnovo", "ul
 val olderRadost = getOlder(radost)
 ```
 
-![](images/04-functional-programming-basics/shared-objects.jpg){ height=380 }
+![](images/04-key-fp-approaches/shared-objects.jpg){ height=380 }
 
 # Неизменими структури от данни -- списък
 
@@ -210,7 +210,7 @@ val a = List(3, 2, 1)
 
 ::: { .fragment }
 
-![](images/04-functional-programming-basics/list.jpg){ height=120 }
+![](images/04-key-fp-approaches/list.jpg){ height=120 }
 
 :::
 
@@ -224,7 +224,7 @@ val c = 5 :: a.tail
 
 ::: { .fragment }
 
-![](images/04-functional-programming-basics/multple-lists.jpg){ height=240 }
+![](images/04-key-fp-approaches/multple-lists.jpg){ height=240 }
 
 :::
 
@@ -269,7 +269,7 @@ val d = a :+ 0
 
 ::: { .fragment }
 
-![](images/04-functional-programming-basics/list-append.jpg){ height=240 }
+![](images/04-key-fp-approaches/list-append.jpg){ height=240 }
 
 :::
 
@@ -287,7 +287,7 @@ val v1 = Vector(1, 2, 3, 4, 5, 6, 7)
 
 ::: { .fragment }
 
-![](images/04-functional-programming-basics/vector.jpg){ height=380 }
+![](images/04-key-fp-approaches/vector.jpg){ height=380 }
 
 :::
 
@@ -310,7 +310,7 @@ v1(4) // 5
 
 ::: { .fragment }
 
-![](images/04-functional-programming-basics/vector.jpg){ height=380 }
+![](images/04-key-fp-approaches/vector.jpg){ height=380 }
 
 :::
 
@@ -323,7 +323,7 @@ val v2 = v1.updated(5, 42)
 
 ::: { .fragment }
 
-![](images/04-functional-programming-basics/vector-update.jpg){ height=420 }
+![](images/04-key-fp-approaches/vector-update.jpg){ height=420 }
 
 :::
 
@@ -350,7 +350,7 @@ val v2 = v1.updated(5, 42)
   - ["The Value of Values", Rich Hickey](https://www.infoq.com/presentations/Value-Values/)
 * Persistence
 * Structural sharing
-* Подпогани от GC
+* Подпомагани от GC
 * Безопасно споделяне със всяка част от кода
   - дори между нишки 
   - (~)константно създаване на производна структура -- например с допълнителен елемент
@@ -387,7 +387,7 @@ val v2 = v1.updated(5, 42)
 
 Синтаксис
 ```scala
-val lambdaName = (param:Type) => expression
+val lambdaName = (param: Type) => expression
 ```
 
 <div class="fragment">
@@ -471,7 +471,7 @@ oneAdder(2)
 
   val sumFun: (Int, Int) => Int = sum   // also works
 
-  val sumFun2: Function2[Int,Int,Int] = sum   // also works
+  val sumFun2: Function2[Int, Int, Int] = sum   // also works
 
   sumFun(1, 2)
   ```
@@ -534,7 +534,7 @@ formatResult("+1 addition", 41, addOne)
 
 # filter
 
-![](images/04-functional-programming-basics/filter.png)
+![](images/04-key-fp-approaches/filter.png)
 
 # filter
 
@@ -577,7 +577,7 @@ List("foo", "bar", "").filterNot(_.isEmpty)
 
 # map
 
-![](images/04-functional-programming-basics/map.png)
+![](images/04-key-fp-approaches/map.png)
 
 # map
 
@@ -648,7 +648,7 @@ List(1, 2, 3)
 
 # reduce
 
-![](images/04-functional-programming-basics/reduce.png)
+![](images/04-key-fp-approaches/reduce.png)
 
 # reduce
 

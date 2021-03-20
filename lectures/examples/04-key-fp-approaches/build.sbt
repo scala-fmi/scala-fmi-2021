@@ -1,4 +1,4 @@
-name := "functional-programming-basics"
+name := "key-fp-approaches"
 version := "0.1"
 
 scalaVersion := "2.13.5"
