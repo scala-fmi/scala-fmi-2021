@@ -6,4 +6,6 @@ object HigherOrderFunctions {
 
   def map[A, B](la: List[A], f: A => B): List[B] = ???
 
+  def reduce[A](la: List[A], f: (A, A) => A): A = ???
+
 }

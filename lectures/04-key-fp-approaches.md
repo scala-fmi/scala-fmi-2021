@@ -632,14 +632,8 @@ List("foo", "bar", "bazzzz")
 # Синтаксис с блок
 
 ```scala
-val l = List("foo", "bar", "baz")
-l.map { s =>
-  wrapWithDiv(s)
-}
-// res0: List[String] = List("<div>foo</div>", "<div>bar</div>", "<div>baz</div>")
-
 List(1, 2, 3)
-  .map { x => complexCalc2(x) }
+  .map(complexCalc)
   .filter { c => 
     val limit = getLimit(c)
     c < limit
@@ -655,7 +649,7 @@ List(1, 2, 3)
 ```scala
 def reduce[A](la: List[A], f: (A, A) => A): A
 
-def Seq[A]: Unit = {
+trait Seq[A] {
   def reduce(op: (A, A) ⇒ A): A
   ...
 }
