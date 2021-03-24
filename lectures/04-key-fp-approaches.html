@@ -611,18 +611,12 @@ fact(1, 120) =
 </section>
 <section id="синтаксис-с-блок" class="slide level1">
 <h1>Синтаксис с блок</h1>
-<div class="sourceCode" id="cb34"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> l <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="st">&quot;bar&quot;</span><span class="op">,</span> <span class="st">&quot;baz&quot;</span><span class="op">)</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>l<span class="op">.</span>map <span class="op">{</span> s <span class="op">=&gt;</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wrapWithDiv</span><span class="op">(</span>s<span class="op">)</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">// res0: List[String] = List(&quot;&lt;div&gt;foo&lt;/div&gt;&quot;, &quot;&lt;div&gt;bar&lt;/div&gt;&quot;, &quot;&lt;div&gt;baz&lt;/div&gt;&quot;)</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>map <span class="op">{</span> x <span class="op">=&gt;</span> <span class="fu">complexCalc2</span><span class="op">(</span>x<span class="op">)</span> <span class="op">}</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>filter <span class="op">{</span> c <span class="op">=&gt;</span> </span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> limit <span class="op">=</span> <span class="fu">getLimit</span><span class="op">(</span>c<span class="op">)</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    c <span class="op">&lt;</span> limit</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span><span class="op">(</span>complexCalc<span class="op">)</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>filter <span class="op">{</span> c <span class="op">=&gt;</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> limit <span class="op">=</span> <span class="fu">getLimit</span><span class="op">(</span>c<span class="op">)</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    c <span class="op">&lt;</span> limit</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 </section>
 <section id="reduce" class="slide level1">
 <h1>reduce</h1>
@@ -632,7 +626,7 @@ fact(1, 120) =
 <h1>reduce</h1>
 <div class="sourceCode" id="cb35"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> reduce<span class="op">[</span>A<span class="op">](</span>la<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">],</span> f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span> <span class="op">=&gt;</span> A<span class="op">):</span> A</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]:</span> <span class="bu">Unit</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> <span class="bu">Seq</span><span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">reduce</span><span class="op">(</span>op<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span> ⇒ A<span class="op">):</span> A</span>
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
