@@ -1053,3 +1053,27 @@ Map(1 -> "One", 2 -> "Two", 3 -> "Three").map(tupled((k, v) => s"$k: $v"))
 Scala 3 прави последното автоматично без нужда от [`tupled`](https://www.scala-lang.org/api/current/scala/Function$.html#tupled[T1,T2,R](f:(T1,T2)=%3ER):((T1,T2))=%3ER)
 
 :::
+
+# Композиция
+
+::: incremental
+
+* Един от основните идеали в програмирането
+* ФП помага изключително
+  - декларативност и referential transparency
+  - лесно за проследяване и reasoning
+  - лесно е да вземем две частички и да ги сглобим (даже компилатора помага с типовете)
+* Основна наша цел при ФП стил
+* Ще си говорим за това през целия курс
+
+:::
+
+::: { .fragment }
+
+![](images/04-key-fp-approaches/lego-blocks.jpg){ height="240" } ![](images/04-key-fp-approaches/building-blocks.webp){ height="240" }
+
+:::
+
+# Композиция
+
+[Cube Composer](https://david-peter.de/cube-composer/)

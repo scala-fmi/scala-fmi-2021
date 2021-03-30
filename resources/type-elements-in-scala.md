@@ -163,6 +163,37 @@ lovelyOwl.hug // A hug from Oliver
 </td>
     </tr>
   </tbody>
+
+  <tbody>
+    <tr>
+      <th colspan="4" align="left"><i>Type bounds (ограничения върху типови параметри)</i></th>
+    </tr>
+    <tr>
+<th>
+Горна граница
+
+`A <: Type`
+</th>
+<td>
+
+```scala
+def using[A <: AutoCloseable, B](resource: A)
+                                (f: A => B): B =
+  try f(resource)
+  finally resource.close()
+```
+
+</td>
+<td>
+
+Параметърът `A` трябва да е съвместип с типа `Type`, т.е.
+* ако `Type` е номинален, то `A` да наследява `Type`
+* ако `Type` е структурен, то `A` да има структурата на `Type`
+
+</td>
+    </tr>
+  </tbody>
+
   <tbody>
     <tr>
       <th colspan="4" align="left"><i>Полиморфизъм</i></th>
