@@ -9,7 +9,7 @@ import scala.concurrent.{Awaitable, CanAwait}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
-trait Future[+A] extends Awaitable[A] {
+trait Future[+A] {
   def value: Option[Try[A]]
   def onComplete(handler: Try[A] => Unit)(implicit ex: Executor): Unit
 
@@ -31,7 +31,7 @@ trait Future[+A] extends Awaitable[A] {
   }
 
   def zip[B](fb: Future[B]): Future[(A, B)] = {
-    implicit val ex = Executors.currentThreadExecutor
+    implicit val ex: Executor = Executors.currentThreadExecutor
 
     for {
       a <- this
@@ -39,7 +39,7 @@ trait Future[+A] extends Awaitable[A] {
     } yield (a, b)
   }
 
-  def map2[B, R](fb: Future[B])(f: (A, B) => R)(implicit ex: Executor): Future[R] = zip(fb).map(f.tupled)
+  def zipMap[B, R](fb: Future[B])(f: (A, B) => R)(implicit ex: Executor): Future[R] = zip(fb).map(f.tupled)
 
   def filter(f: A => Boolean)(implicit ex: Executor): Future[A] = {
     val p = Promise[A]
@@ -49,48 +49,49 @@ trait Future[+A] extends Awaitable[A] {
 
   def withFilter(f: A => Boolean)(implicit ex: Executor): Future[A] = filter(f)
 
-  def recover[B >: A](f: PartialFunction[Throwable, B])(implicit ex: Executor): Future[B] = {
-    val p = Promise[B]
-    onComplete(value => p.complete(value.recover(f)))
-    p.future
-  }
-
-  def recoverWith[B >: A](f: PartialFunction[Throwable, Future[B]])(implicit ex: Executor): Future[B] = {
-    val p = Promise[B]
-    onComplete {
-      case Success(value) => p succeed  value
-      case Failure(e) =>
-        if (f.isDefinedAt(e)) Future.tryF(f(e)) onComplete { p complete _ }
-        else p.fail(e)
-    }
-    p.future
-  }
-
   def foreach(f: A => Unit)(implicit ex: Executor): Unit = onComplete(_.foreach(f))
+
+//  def recover[B >: A](f: PartialFunction[Throwable, B])(implicit ex: Executor): Future[B] = {
+//    val p = Promise[B]
+//    onComplete(value => p.complete(value.recover(f)))
+//    p.future
+//  }
+//
+//  def recoverWith[B >: A](f: PartialFunction[Throwable, Future[B]])(implicit ex: Executor): Future[B] = {
+//    val p = Promise[B]
+//    onComplete {
+//      case Success(value) => p succeed  value
+//      case Failure(e) =>
+//        if (f.isDefinedAt(e)) Future.tryF(f(e)) onComplete { p complete _ }
+//        else p.fail(e)
+//    }
+//    p.future
+//  }
+//
 }
 
 object Future {
-  def apply[A](value: => A)(implicit ex: Executor) = {
+  def apply[A](value: => A)(implicit ex: Executor): Future[A] = {
     val p = Promise[A]
     ex.execute(() => p.succeed(value))
     p.future
   }
-  def successful[A](value: A) = resolved(Success(value))
-  def failed[A](e: Throwable) = resolved(Failure(e))
+  def successful[A](value: A): Future[A] = resolved(Success(value))
+  def failed[A](e: Throwable): Future[Nothing] = resolved(Failure(e))
 
-  def tryF[A](f: => Future[A]) = try f catch { case NonFatal(e) => Future.failed(e) }
-
-  def resolved[A](r: Try[A]) = new Future[A] {
+  def resolved[A](r: Try[A]): Future[A] = new Future[A] {
     val value: Option[Try[A]] = Some(r)
     def onComplete(handler: Try[A] => Unit)(implicit ex: Executor): Unit = ex.execute(() => handler(r))
-
-    def ready(atMost: Duration)(implicit permit: CanAwait): this.type = this
-    def result(atMost: Duration)(implicit permit: CanAwait): A = r.get
+//
+//    def ready(atMost: Duration)(implicit permit: CanAwait): this.type = this
+//    def result(atMost: Duration)(implicit permit: CanAwait): A = r.get
   }
 
-  def firstOf[A](futures: Seq[Future[A]])(implicit ex: Executor) = {
-    val p = Promise[A]
-    futures.foreach(_.onComplete(p.complete))
-    p.future
-  }
+  def tryF[A](f: => Future[A]): Future[A] = try f catch { case NonFatal(e) => Future.failed(e) }
+
+//  def firstOf[A](futures: Seq[Future[A]])(implicit ex: Executor) = {
+//    val p = Promise[A]
+//    futures.foreach(_.onComplete(p.complete))
+//    p.future
+//  }
 }

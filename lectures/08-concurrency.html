@@ -465,31 +465,48 @@ a form of computing in which several computations are executed during overlappin
 <li>default: <code>import scala.concurrent.ExecutionContext.Implicits.global</code></li>
 </ul>
 </section>
-<section id="съществуваща-стойност-към-future" class="slide level1">
-<h1>Съществуваща стойност към <code>Future</code></h1>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Future<span class="op">.</span><span class="fu">successful</span><span class="op">(</span>value<span class="op">)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Future<span class="op">.</span><span class="fu">failed</span><span class="op">(</span>exception<span class="op">)</span></span></code></pre></div>
+<section id="полезни-функции" class="slide level1">
+<h1>Полезни функции</h1>
+<ul>
+<li><code>recover</code></li>
+<li><code>recoverWith</code></li>
+<li><code>fallbackTo</code></li>
+<li><code>Future.sequence</code></li>
+<li><code>Future.firstCompletedOf</code></li>
+</ul>
 </section>
 <section id="recover" class="slide level1">
 <h1>Recover</h1>
-<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">doSomethingForUser</span><span class="op">(</span>userId<span class="op">:</span> Id<span class="op">):</span> Future<span class="op">[</span>HttpResponse<span class="op">]</span> <span class="op">=(</span><span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  user <span class="op">&lt;-</span> <span class="fu">retrieveUser</span><span class="op">(</span>userId<span class="op">)</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  result <span class="op">&lt;-</span> <span class="fu">doService</span><span class="op">(</span>user<span class="op">,</span> input<span class="op">)</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> <span class="fu">Ok</span><span class="op">(</span><span class="fu">constructBody</span><span class="op">(</span>result<span class="op">)))</span> recover <span class="op">{</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="fu">UserNotFound</span><span class="op">(</span>userId<span class="op">)</span> <span class="op">=&gt;</span> NotFound</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> _<span class="op">:</span> ActionNotPermitted <span class="op">=&gt;</span> Unauthorized</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">doSomethingForUser</span><span class="op">(</span>userId<span class="op">:</span> Id<span class="op">):</span> Future<span class="op">[</span>HttpResponse<span class="op">]</span> <span class="op">=(</span><span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  user <span class="op">&lt;-</span> <span class="fu">retrieveUser</span><span class="op">(</span>userId<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  result <span class="op">&lt;-</span> <span class="fu">doService</span><span class="op">(</span>user<span class="op">,</span> input<span class="op">)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> <span class="fu">Ok</span><span class="op">(</span><span class="fu">constructBody</span><span class="op">(</span>result<span class="op">)))</span> recover <span class="op">{</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="fu">UserNotFound</span><span class="op">(</span>userId<span class="op">)</span> <span class="op">=&gt;</span> NotFound</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> _<span class="op">:</span> ActionNotPermitted <span class="op">=&gt;</span> Unauthorized</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </section>
 <section id="recover-with-друга-по-стабилна-алтернатива" class="slide level1">
 <h1>Recover with друга, по-стабилна алтернатива</h1>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">calculate</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">).</span>recoverWith <span class="op">{</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> ServiceFailure <span class="op">=&gt;</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">)</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="fallback-to" class="slide level1">
+<h1>Fallback to</h1>
 <div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">calculate</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">).</span>recoverWith <span class="op">{</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> ServiceFailure <span class="op">=&gt;</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">)</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">).</span><span class="fu">fallbackTo</span><span class="op">(</span><span class="fu">safeService</span><span class="op">(</span>input<span class="op">))</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="fragment">
+<p>За разлика от предишния вариант, тук <code>safeService</code> се изчислява едновременно със <code>dangerousService</code></p>
+</div>
 </section>
 <section id="състезание" class="slide level1">
 <h1>Състезание</h1>

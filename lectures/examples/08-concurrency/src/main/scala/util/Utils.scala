@@ -11,5 +11,6 @@ object Utils {
     result
   }
 
-  def doWork = (1 to 2000000).map(math.pow(2, _)).toList
+  def doWork = (1 to 4000000).map(math.pow(2, _)).toList
+  def doMoreWork = (1 to 4000000).map(math.pow(3, _)).toList
 }

@@ -3,16 +3,14 @@ package threads
 object ThreadsSharingData extends App {
   var improveCalculation = true
 
-  val thread = new Thread(new Runnable {
-    def run(): Unit = {
-      var i = 0L
+  val thread = new Thread(() => {
+    var i = 0L
 
-      while (improveCalculation) {
-        i += 1
-      }
-
-      println(s"Thread exiting: $i")
+    while (improveCalculation) {
+      i += 1
     }
+
+    println(s"Thread exiting: $i")
   })
 
   thread.start()

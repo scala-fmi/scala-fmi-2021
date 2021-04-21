@@ -383,12 +383,13 @@ Future е безопасен, само ако стойностите в него
 * Използва `ExecutionContext` вместо `Executor`
 * default: `import scala.concurrent.ExecutionContext.Implicits.global`
 
-# Съществуваща стойност към `Future`
+# Полезни функции
 
-```scala
-Future.successful(value)
-Future.failed(exception)
-```
+* `recover`
+* `recoverWith`
+* `fallbackTo`
+* `Future.sequence`
+* `Future.firstCompletedOf`
 
 # Recover
 
@@ -414,6 +415,23 @@ def calculate(input: ServiceInput): Future[Result] = {
   }
 }
 ```
+
+# Fallback to
+
+```scala
+def dangerousService(input: ServiceInput): Future[Result] = ???
+def safeService(input: ServiceInput): Future[Result] = ???
+
+def calculate(input: ServiceInput): Future[Result] = {
+  dangerousService(input).fallbackTo(safeService(input))
+}
+```
+
+::: { .fragment }
+
+За разлика от предишния вариант, тук `safeService` се изчислява едновременно със `dangerousService`
+
+:::
 
 # Състезание
 
