@@ -51,23 +51,22 @@ trait Future[+A] {
 
   def foreach(f: A => Unit)(implicit ex: Executor): Unit = onComplete(_.foreach(f))
 
-//  def recover[B >: A](f: PartialFunction[Throwable, B])(implicit ex: Executor): Future[B] = {
-//    val p = Promise[B]
-//    onComplete(value => p.complete(value.recover(f)))
-//    p.future
-//  }
-//
-//  def recoverWith[B >: A](f: PartialFunction[Throwable, Future[B]])(implicit ex: Executor): Future[B] = {
-//    val p = Promise[B]
-//    onComplete {
-//      case Success(value) => p succeed  value
-//      case Failure(e) =>
-//        if (f.isDefinedAt(e)) Future.tryF(f(e)) onComplete { p complete _ }
-//        else p.fail(e)
-//    }
-//    p.future
-//  }
-//
+  def recover[B >: A](f: PartialFunction[Throwable, B])(implicit ex: Executor): Future[B] = {
+    val p = Promise[B]
+    onComplete(value => p.complete(value.recover(f)))
+    p.future
+  }
+
+  def recoverWith[B >: A](f: PartialFunction[Throwable, Future[B]])(implicit ex: Executor): Future[B] = {
+    val p = Promise[B]
+    onComplete {
+      case Success(value) => p succeed  value
+      case Failure(e) =>
+        if (f.isDefinedAt(e)) Future.tryF(f(e)) onComplete { p complete _ }
+        else p.fail(e)
+    }
+    p.future
+  }
 }
 
 object Future {
@@ -82,16 +81,7 @@ object Future {
   def resolved[A](r: Try[A]): Future[A] = new Future[A] {
     val value: Option[Try[A]] = Some(r)
     def onComplete(handler: Try[A] => Unit)(implicit ex: Executor): Unit = ex.execute(() => handler(r))
-//
-//    def ready(atMost: Duration)(implicit permit: CanAwait): this.type = this
-//    def result(atMost: Duration)(implicit permit: CanAwait): A = r.get
   }
 
   def tryF[A](f: => Future[A]): Future[A] = try f catch { case NonFatal(e) => Future.failed(e) }
-
-//  def firstOf[A](futures: Seq[Future[A]])(implicit ex: Executor) = {
-//    val p = Promise[A]
-//    futures.foreach(_.onComplete(p.complete))
-//    p.future
-//  }
 }

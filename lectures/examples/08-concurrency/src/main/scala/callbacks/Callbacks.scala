@@ -9,7 +9,7 @@ object Callbacks {
   def execute(work: => Any): Unit = threadPool.execute(() => work)
 
   def produceProduct(onComplete: Product => Unit): Unit = execute {
-    val product = ProductFactory.produceProduct
+    val product = ProductFactory.produceProduct("Book")
 
     execute(onComplete(product))
   }

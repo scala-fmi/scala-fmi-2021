@@ -289,7 +289,7 @@ val e = a + b
 def f(x: Int): String = ???
 def g(x: String): Boolean = ???
 
-def r = f(g(a))
+def r = g(f(a))
 ```
 
 # Ефектни изрази

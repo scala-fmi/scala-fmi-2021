@@ -57,21 +57,6 @@ class Promise[A] {
     }
 
     def onComplete(handler: Try[A] => Unit)(implicit ex: Executor): Unit = executeWhenComplete(Handler(handler, ex))
-
-//    def ready(atMost: Duration)(implicit permit: CanAwait): this.type = {
-//      if (!isComplete && Duration.Zero < atMost) {
-//        val thread = Thread.currentThread
-//        onComplete(_ => LockSupport.unpark(thread))(Executors.currentThreadExecutor)
-//
-//        if (atMost == Duration.Inf) LockSupport.park()
-//        else LockSupport.parkNanos(atMost.toNanos)
-//      }
-//
-//      if (isComplete) this
-//      else throw new TimeoutException
-//    }
-//
-//    def result(atMost: Duration)(implicit permit: CanAwait): A = ready(atMost).value.get.get
   }
 
   def complete(value: Try[A]): Promise[A] = {
