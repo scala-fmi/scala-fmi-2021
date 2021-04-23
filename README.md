@@ -95,7 +95,7 @@
     * нестриктни view-та на колекции
     * lazy списъци с мемоизация
   - [Имплементация на `LazyList`](lectures/examples/05-folds-collections/lazy-list)
-* 06 – Pattern matching и алгебрични типове от данни (ADTs)
+* [06 – Pattern matching и алгебрични типове от данни (ADTs)](lectures/06-adts-are-the-root-of-all-evil.ipynb)
   - Pattern matching. Деструктуриране на обекти
   - Pattern matching на различни места
     * `case` блокове – при `match` или на мястата, където се очакват функции или частични функции. Примери с `map` и `collect`
@@ -103,7 +103,8 @@
   - Алгебрични типове от данни. Примери
     * product типове. `case` класове, наредени n-торки и други
     * sum типове. Имплементация чрез `sealed trait` и `enum`
-  - Type bounds (ограничения върху типовите параметри). Вариантност. Ковариантност и контравариантност на типове
+  - Type bounds (ограничения върху типовите параметри). 
+  - Вариантност. Ковариантност и контравариантност на типове. Вариантност при типовете за функции. [Още примери](https://www.freecodecamp.org/news/understand-scala-variances-building-restaurants/)
   - Изразяване на опционалност. `null` като грешка за милиард долара. Имплементация на `Option` тип
   - Полезни операции върху `Option`. [Използване на операции вместо pattern matching](lectures/07-effects-and-functional-error-handling.ipynb)
   - Деструктуриране чрез екстрактори. Използването им в pattern matching
