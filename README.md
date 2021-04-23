@@ -94,7 +94,7 @@
   - Lazy колекции
     * нестриктни view-та на колекции
     * lazy списъци с мемоизация
-  - Имплементация на `LazyList`
+  - [Имплементация на `LazyList`](lectures/examples/05-folds-collections/lazy-list)
 * 06 – Pattern matching и алгебрични типове от данни (ADTs)
   - Pattern matching. Деструктуриране на обекти
   - Pattern matching на различни места

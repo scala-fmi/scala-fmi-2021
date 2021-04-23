@@ -10,6 +10,18 @@ sealed trait LazyList[+A] {
 
   def isEmpty: Boolean
 
+  def take(n: Int): LazyList[A] =
+    if (n == 0) LazyNil
+    else LazyCons(head, tail.take(n - 1))
+
+  def map[B](f: A => B): LazyList[B] =
+    if (isEmpty) LazyNil
+    else LazyCons(f(head), tail.map(f))
+
+  def zip[B](that: LazyList[B]): LazyList[(A, B)] =
+    if (this.isEmpty || that.isEmpty) LazyNil
+    else LazyCons((this.head, that.head), this.tail zip that.tail)
+
   def toList: List[A] = {
     @tailrec
     def loop(xs: LazyList[A], acc: List[A]): List[A] = {
@@ -39,11 +51,14 @@ object LazyCons {
   def apply[A](h: => A, t: => LazyList[A]): LazyCons[A] = new LazyCons[A](h, t)
 }
 
-object LazyList extends App {
+object LazyList {
+  implicit class LazyListOps[A](list: => LazyList[A]) {
+    def #::(el: => A): LazyList[A] = LazyCons(el, list)
+  }
+
   def from(start: Int, step: Int = 1): LazyList[Int] = LazyCons(start, from(start + step, step))
   val naturalNumbers: LazyList[Int] = from(0)
 
-  // Can you make these work?
-  val fibs: LazyList[Long] = LazyCons(0, LazyCons(1, (fibs zip fibs.tail).map(tupled(_ + _))))
+  val fibs: LazyList[Int] = 0 #:: 1 #:: (fibs zip fibs.tail).map(tupled(_ + _))
   fibs.take(10).toList
 }
