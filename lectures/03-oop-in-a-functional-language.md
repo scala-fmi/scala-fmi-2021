@@ -1152,7 +1152,7 @@ class EnrichedInt(val n: Int) extends AnyVal {
   def squared = n * n
   def **(exp: Double) = math.pow(n, exp)
 }
-implicit intToEnrichedInt(n: Int) = new EnrichedInt(n)
+implicit def intToEnrichedInt(n: Int) = new EnrichedInt(n)
 
 3.squared // 9
 2 ** 3 // 8.0
