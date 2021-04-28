@@ -11,6 +11,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.typesafe.akka" %% "akka-http" % "10.2.4",
+
   "org.asynchttpclient" % "async-http-client" % "2.12.3",
+
+  "io.monix" %% "monix-eval" % "3.3.0",
+
   "org.scalatest" %% "scalatest" % "3.2.5" % Test
 )

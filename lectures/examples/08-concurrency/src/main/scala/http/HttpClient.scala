@@ -12,18 +12,23 @@ object HttpClient {
   def get(url: String): Future[Response] = {
     val p = Promise[Response]
 
+    println("Getting " + url)
+
+    val response = client.prepareGet(url).setFollowRedirect(true).execute()
+    response.addListener(() => p.complete(Try(response.get())), null)
+    response.addListener(() => println(s"Finished getting $url"), null)
+
+    p.future
+  }
+
+  def getScalaFuture(url: String): scala.concurrent.Future[Response] = {
+    val p = scala.concurrent.Promise[Response]()
+
     val response = client.prepareGet(url).setFollowRedirect(true).execute()
     response.addListener(() => p.complete(Try(response.get())), null)
 
     p.future
   }
-
-//  def getScalaFuture(url: String): scala.concurrent.Future[Response] = {
-//    val p = scala.concurrent.Promise[Response]
-//
-//    val response = client.prepareGet(url).setFollowRedirect(true).execute()
-//    response.addListener(() => p.complete(Try(response.get())), null)
-//
-//    p.future
-//  }
 }
+
+case class BadResponse(statusCode: Int) extends Exception

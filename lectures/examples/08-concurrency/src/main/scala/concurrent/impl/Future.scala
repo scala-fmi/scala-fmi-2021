@@ -1,15 +1,15 @@
 package concurrent.impl
 
 import java.util.concurrent.Executor
-
 import concurrent.Executors
+import util.Utils
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Awaitable, CanAwait}
+import scala.concurrent.{Await, Awaitable, CanAwait}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
-trait Future[+A] {
+trait Future[+A] extends Awaitable[A] {
   def value: Option[Try[A]]
   def onComplete(handler: Try[A] => Unit)(implicit ex: Executor): Unit
 
@@ -81,7 +81,35 @@ object Future {
   def resolved[A](r: Try[A]): Future[A] = new Future[A] {
     val value: Option[Try[A]] = Some(r)
     def onComplete(handler: Try[A] => Unit)(implicit ex: Executor): Unit = ex.execute(() => handler(r))
-  }
+
+    def ready(atMost: Duration)(implicit permit: CanAwait): this.type = this
+    def result(atMost: Duration)(implicit permit: CanAwait): A = r.get
+}
 
   def tryF[A](f: => Future[A]): Future[A] = try f catch { case NonFatal(e) => Future.failed(e) }
+}
+
+object FutureApp extends App {
+  import Executors.defaultExecutor
+
+  def calc1 = Future {
+    1 + 1
+  }
+
+  def calc2 = Future {
+    42
+  }
+
+  def double(n: Int) = Future {
+    n * 2
+  }
+
+  val combinedCalculation = for {
+    (r1, r2) <- calc1 zip calc2
+    doubled <- double(r1 + r2)
+  } yield doubled
+
+  combinedCalculation.foreach(println)
+
+  Thread.sleep(5000)
 }

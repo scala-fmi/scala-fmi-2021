@@ -457,6 +457,22 @@ a form of computing in which several computations are executed during overlappin
 <p>Как работи HTTP?</p>
 </div>
 </section>
+<section id="предния-път" class="slide level1">
+<h1>Предния път</h1>
+<div>
+<ul>
+<li class="fragment">Трансформиращи, интерактивни и реактивни системи</li>
+<li class="fragment">Конкурентност и паралелизъм</li>
+<li class="fragment">Дистрибутираност</li>
+<li class="fragment">Проблеми с нишките. Работа с нишки. Видимост между нишки</li>
+<li class="fragment">Реактивност и асинхронност чрез calllbacks</li>
+<li class="fragment">Преизползване на нишки чрез thread pools</li>
+<li class="fragment">ФП подход – композитност и безопасност чрез асинхроннен Future</li>
+<li class="fragment">Защо <code>map</code>, <code>flatMap</code>, <code>zip</code>? 🧙‍</li>
+<li class="fragment">Връзка към външния свят. Promise. Пример с адаптиране на HTTP библиотека</li>
+</ul>
+</div>
+</section>
 <section id="future-в-scala" class="slide level1">
 <h1><code>Future</code> в Scala</h1>
 <ul>
@@ -464,6 +480,24 @@ a form of computing in which several computations are executed during overlappin
 <li>Използва <code>ExecutionContext</code> вместо <code>Executor</code></li>
 <li>default: <code>import scala.concurrent.ExecutionContext.Implicits.global</code></li>
 </ul>
+</section>
+<section id="от-асинхронност-към-блокиране" class="slide level1">
+<h1>От асинхронност към блокиране?</h1>
+<div>
+<ul>
+<li class="fragment"><code>Await.result(future: Future[A], atMost: Duration): A</code></li>
+<li class="fragment">Използвайте рядко, например само при краищата на програмата или в тестове</li>
+<li class="fragment">В Scala считаме блокирането на нишки за скъпо и предпочитаме асинхронност</li>
+</ul>
+</div>
+</section>
+<section id="съществуваща-стойност-към-future" class="slide level1">
+<h1>Съществуваща стойност към Future</h1>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Future<span class="op">.</span><span class="fu">successful</span><span class="op">(</span>value<span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Future<span class="op">.</span><span class="fu">failed</span><span class="op">(</span>exception<span class="op">)</span></span></code></pre></div>
+</section>
+<section id="web-библиотека-демо" class="slide level1">
+<h1>Web библиотека (демо)</h1>
 </section>
 <section id="полезни-функции" class="slide level1">
 <h1>Полезни функции</h1>
@@ -477,74 +511,74 @@ a form of computing in which several computations are executed during overlappin
 </section>
 <section id="recover" class="slide level1">
 <h1>Recover</h1>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">doSomethingForUser</span><span class="op">(</span>userId<span class="op">:</span> Id<span class="op">):</span> Future<span class="op">[</span>HttpResponse<span class="op">]</span> <span class="op">=(</span><span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  user <span class="op">&lt;-</span> <span class="fu">retrieveUser</span><span class="op">(</span>userId<span class="op">)</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  result <span class="op">&lt;-</span> <span class="fu">doService</span><span class="op">(</span>user<span class="op">,</span> input<span class="op">)</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> <span class="fu">Ok</span><span class="op">(</span><span class="fu">constructBody</span><span class="op">(</span>result<span class="op">)))</span> recover <span class="op">{</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="fu">UserNotFound</span><span class="op">(</span>userId<span class="op">)</span> <span class="op">=&gt;</span> NotFound</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> _<span class="op">:</span> ActionNotPermitted <span class="op">=&gt;</span> Unauthorized</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">doSomethingForUser</span><span class="op">(</span>userId<span class="op">:</span> Id<span class="op">):</span> Future<span class="op">[</span>HttpResponse<span class="op">]</span> <span class="op">=(</span><span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  user <span class="op">&lt;-</span> <span class="fu">retrieveUser</span><span class="op">(</span>userId<span class="op">)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  result <span class="op">&lt;-</span> <span class="fu">doService</span><span class="op">(</span>user<span class="op">,</span> input<span class="op">)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> <span class="fu">Ok</span><span class="op">(</span><span class="fu">constructBody</span><span class="op">(</span>result<span class="op">)))</span> recover <span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="fu">UserNotFound</span><span class="op">(</span>userId<span class="op">)</span> <span class="op">=&gt;</span> NotFound</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> _<span class="op">:</span> ActionNotPermitted <span class="op">=&gt;</span> Unauthorized</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </section>
 <section id="recover-with-друга-по-стабилна-алтернатива" class="slide level1">
 <h1>Recover with друга, по-стабилна алтернатива</h1>
-<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">calculate</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">).</span>recoverWith <span class="op">{</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> ServiceFailure <span class="op">=&gt;</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">)</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="fallback-to" class="slide level1">
-<h1>Fallback to</h1>
 <div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">calculate</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">).</span><span class="fu">fallbackTo</span><span class="op">(</span><span class="fu">safeService</span><span class="op">(</span>input<span class="op">))</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">).</span>recoverWith <span class="op">{</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> ServiceFailure <span class="op">=&gt;</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="fallback-to" class="slide level1">
+<h1>Fallback to</h1>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">safeService</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">calculate</span><span class="op">(</span>input<span class="op">:</span> ServiceInput<span class="op">):</span> Future<span class="op">[</span>Result<span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dangerousService</span><span class="op">(</span>input<span class="op">).</span><span class="fu">fallbackTo</span><span class="op">(</span><span class="fu">safeService</span><span class="op">(</span>input<span class="op">))</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <div class="fragment">
 <p>За разлика от предишния вариант, тук <code>safeService</code> се изчислява едновременно със <code>dangerousService</code></p>
 </div>
 </section>
 <section id="състезание" class="slide level1">
 <h1>Състезание</h1>
-<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">algorithm1</span><span class="op">(</span>input<span class="op">:</span> String<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">algorithm2</span><span class="op">(</span>input<span class="op">:</span> String<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">calculation</span><span class="op">(</span>input<span class="op">:</span> Stirng<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  Future<span class="op">.</span><span class="fu">firstCompletedOf</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="fu">algorithm1</span><span class="op">(</span>input<span class="op">),</span> <span class="fu">algorithm2</span><span class="op">(</span>input<span class="op">)))</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">algorithm1</span><span class="op">(</span>input<span class="op">:</span> String<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">algorithm2</span><span class="op">(</span>input<span class="op">:</span> String<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">calculation</span><span class="op">(</span>input<span class="op">:</span> Stirng<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  Future<span class="op">.</span><span class="fu">firstCompletedOf</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="fu">algorithm1</span><span class="op">(</span>input<span class="op">),</span> <span class="fu">algorithm2</span><span class="op">(</span>input<span class="op">)))</span></span></code></pre></div>
 </section>
 <section id="неопределен-брой-независими-изчисления" class="slide level1">
 <h1>Неопределен брой независими изчисления</h1>
-<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">retrieveAge</span><span class="op">(</span>userId<span class="op">:</span> Id<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">averageFriendsAge</span><span class="op">(</span>user<span class="op">:</span> User<span class="op">):</span> Future<span class="op">[</span><span class="bu">Option</span><span class="op">[</span><span class="bu">Int</span><span class="op">]]</span> <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  friendIds<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>Id<span class="op">]</span> <span class="op">&lt;-</span> user<span class="op">.</span>friends</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  friendsAges<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>Future<span class="op">[</span><span class="bu">Int</span><span class="op">]]</span> <span class="op">=</span> friendIds<span class="op">.</span><span class="fu">map</span><span class="op">(</span>retrieveAge<span class="op">)</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  ages <span class="op">&lt;-</span> Future<span class="op">.</span><span class="fu">sequence</span><span class="op">(</span>friendsAges<span class="op">):</span> Future<span class="op">[</span><span class="bu">List</span><span class="op">[</span><span class="bu">Int</span><span class="op">]]</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> <span class="fu">average</span><span class="op">(</span>ages<span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">retrieveAge</span><span class="op">(</span>userId<span class="op">:</span> Id<span class="op">):</span> Future<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">averageFriendsAge</span><span class="op">(</span>user<span class="op">:</span> User<span class="op">):</span> Future<span class="op">[</span><span class="bu">Option</span><span class="op">[</span><span class="bu">Int</span><span class="op">]]</span> <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  friendIds<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>Id<span class="op">]</span> <span class="op">&lt;-</span> user<span class="op">.</span>friends</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  friendsAges<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>Future<span class="op">[</span><span class="bu">Int</span><span class="op">]]</span> <span class="op">=</span> friendIds<span class="op">.</span><span class="fu">map</span><span class="op">(</span>retrieveAge<span class="op">)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  ages <span class="op">&lt;-</span> Future<span class="op">.</span><span class="fu">sequence</span><span class="op">(</span>friendsAges<span class="op">):</span> Future<span class="op">[</span><span class="bu">List</span><span class="op">[</span><span class="bu">Int</span><span class="op">]]</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> <span class="fu">average</span><span class="op">(</span>ages<span class="op">)</span></span></code></pre></div>
 </section>
 <section id="референтна-прозрачност" class="slide level1">
 <h1>Референтна прозрачност</h1>
-<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calc<span class="op">[</span>T<span class="op">](</span>expr<span class="op">:</span> <span class="op">=&gt;</span> T<span class="op">)</span> <span class="op">=</span> Future <span class="op">{</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  Thread<span class="op">.</span><span class="fu">sleep</span><span class="op">(</span><span class="dv">4000</span><span class="op">)</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  expr</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<div class="fragment">
-<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> futureA <span class="op">=</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">)</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> futureB <span class="op">=</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calc<span class="op">[</span>T<span class="op">](</span>expr<span class="op">:</span> <span class="op">=&gt;</span> T<span class="op">)</span> <span class="op">=</span> Future <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  Thread<span class="op">.</span><span class="fu">sleep</span><span class="op">(</span><span class="dv">4000</span><span class="op">)</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  a <span class="op">&lt;-</span> futureA</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  b <span class="op">&lt;-</span> futureB</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  expr</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> futureA <span class="op">=</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> futureB <span class="op">=</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  a <span class="op">&lt;-</span> futureA</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  b <span class="op">&lt;-</span> futureB</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="fragment">
 <pre><code>&gt; 52</code></pre>
@@ -552,42 +586,48 @@ a form of computing in which several computations are executed during overlappin
 </section>
 <section id="референтна-прозрачност-1" class="slide level1">
 <h1>Референтна прозрачност</h1>
-<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calc<span class="op">[</span>T<span class="op">](</span>expr<span class="op">:</span> <span class="op">=&gt;</span> T<span class="op">)</span> <span class="op">=</span> Future <span class="op">{</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  Thread<span class="op">.</span><span class="fu">sleep</span><span class="op">(</span><span class="dv">4000</span><span class="op">)</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  expr</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  a <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">)</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  b <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calc<span class="op">[</span>T<span class="op">](</span>expr<span class="op">:</span> <span class="op">=&gt;</span> T<span class="op">)</span> <span class="op">=</span> Future <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  Thread<span class="op">.</span><span class="fu">sleep</span><span class="op">(</span><span class="dv">4000</span><span class="op">)</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  expr</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  a <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">)</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  b <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <div class="fragment">
 <pre><code>&gt; Exception in thread &quot;main&quot; java.util.concurrent.TimeoutException: Futures timed out after [5 seconds]</code></pre>
 </div>
 </section>
 <section id="правилният-начин-да-постигнем-паралелилизъм" class="slide level1">
 <h1>Правилният начин да постигнем паралелилизъм:</h1>
-<div class="sourceCode" id="cb18"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">).</span><span class="fu">zip</span><span class="op">(</span><span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">))</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">).</span><span class="fu">zip</span><span class="op">(</span><span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">))</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <pre><code>&gt; 52</code></pre>
 </section>
 <section id="как-да-се-справим-с-това" class="slide level1">
 <h1>Как да се справим с това?</h1>
 <div class="fragment">
-<p>Отговор следващия път 😊</p>
+<p>Lazy Future/IO (демо) 😊</p>
 </div>
 </section>
 <section id="въпроси" class="slide level1">
 <h1>Въпроси :)?</h1>
+</section>
+<section id="докъде-сме" class="slide level1">
+<h1>Докъде сме?</h1>
+<div class="fragment">
+<p><a href="02-fp-with-scala.html#/как-да-пишем-функционално">Аспекти на ФП</a></p>
+</div>
 </section>
     </div>
   </div>
