@@ -1332,12 +1332,12 @@ List(3, 3)
 # Изключенията не са референтно прозрачни
 
 ```scala
-def exceptionThrowingFails(x: Int): Int = {
-  val y: Int = throw new Exception()
+def exceptionThrowingFails(x: String): String = {
+  val y: String = throw new Exception()
   try {
     x + y
   } catch {
-    case _: Exception => 0
+    case _: Exception => ""
   }
 }
 ```
@@ -1345,11 +1345,11 @@ def exceptionThrowingFails(x: Int): Int = {
 ::: {.fragment}
 
 ```scala
-def exceptionThrowingComputes(n: Int): Int = {
+def exceptionThrowingComputes(x: String): String = {
   try {
-    x + throw new Exception()
+    x + (throw new Exception())
   } catch {
-    case _: Exception => 0
+    case _: Exception => ""
   }
 }
 ```

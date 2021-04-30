@@ -1173,20 +1173,20 @@ Substitution модела работи само за референтно про
 </section>
 <section id="изключенията-не-са-референтно-прозрачни" class="slide level1">
 <h1>Изключенията не са референтно прозрачни</h1>
-<div class="sourceCode" id="cb92"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">exceptionThrowingFails</span><span class="op">(</span>x<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> <span class="bu">Int</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> y<span class="op">:</span> <span class="bu">Int</span> <span class="op">=</span> <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">Exception</span><span class="op">()</span></span>
+<div class="sourceCode" id="cb92"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">exceptionThrowingFails</span><span class="op">(</span>x<span class="op">:</span> String<span class="op">):</span> String <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> y<span class="op">:</span> String <span class="op">=</span> <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">Exception</span><span class="op">()</span></span>
 <span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> <span class="op">{</span></span>
 <span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+</span> y</span>
 <span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">catch</span> <span class="op">{</span></span>
-<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> Exception <span class="op">=&gt;</span> <span class="dv">0</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> Exception <span class="op">=&gt;</span> <span class="st">&quot;&quot;</span></span>
 <span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
 <span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <div class="fragment">
-<div class="sourceCode" id="cb93"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">exceptionThrowingComputes</span><span class="op">(</span>n<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> <span class="bu">Int</span> <span class="op">=</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb93"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">exceptionThrowingComputes</span><span class="op">(</span>x<span class="op">:</span> String<span class="op">):</span> String <span class="op">=</span> <span class="op">{</span></span>
 <span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> <span class="op">{</span></span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+</span> <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">Exception</span><span class="op">()</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+</span> <span class="op">(</span><span class="cf">throw</span> <span class="kw">new</span> <span class="fu">Exception</span><span class="op">())</span></span>
 <span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">catch</span> <span class="op">{</span></span>
-<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> Exception <span class="op">=&gt;</span> <span class="dv">0</span></span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> _<span class="op">:</span> Exception <span class="op">=&gt;</span> <span class="st">&quot;&quot;</span></span>
 <span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
 <span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div>
