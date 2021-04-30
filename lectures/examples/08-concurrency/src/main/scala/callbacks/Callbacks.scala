@@ -14,10 +14,24 @@ object Callbacks {
     execute(onComplete(product))
   }
 
-  def produce2Products(onComplete: (Product, Product) => Unit): Unit = ???
+  def produce2Products(onComplete: (Product, Product) => Unit): Unit = {
+    var firstProduct: Option[Product] = None
+
+    def callback(newProduct: Product): Unit = this.synchronized {
+      firstProduct match {
+        case None =>
+          firstProduct = Some(newProduct)
+        case Some(existingProduct) =>
+          onComplete(existingProduct, newProduct)
+      }
+    }
+
+    produceProduct(callback)
+    produceProduct(callback)
+  }
 
   def main(args: Array[String]): Unit = execute {
-    produceProduct(println)
+    produce2Products((p1, p2) => println((p1, p2)))
   }
 
   def verifyProduct(product: Product)(onVerified: Verification => Unit): Unit = execute {

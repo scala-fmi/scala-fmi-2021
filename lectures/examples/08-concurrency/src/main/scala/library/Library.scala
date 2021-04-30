@@ -15,6 +15,8 @@ class Library(books: List[Book], authors: List[Author]) {
   def findBook(bookId: BookId): Future[Option[Book]] = Future.successful(bookIdToBook.get(bookId))
 
   def findAuthor(authorId: AuthorId): Future[Option[Author]] = Future.successful(authorIdToAuthor.get(authorId))
+
+  def allBooks: Future[Set[BookId]] = Future.successful(bookIdToBook.keySet)
 }
 
 object Library {

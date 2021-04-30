@@ -1,6 +1,8 @@
 package threads
 
 object ThreadsSharingData extends App {
+  // Нишката thread по-долу не вижда промените по тази променлива
+  // Ако тя се маркира като @volatila тогава видимостта ще сработи.
   var improveCalculation = true
 
   val thread = new Thread(() => {
