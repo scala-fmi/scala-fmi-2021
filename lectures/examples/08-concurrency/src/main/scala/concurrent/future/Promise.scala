@@ -1,4 +1,4 @@
-package concurrent.impl
+package concurrent.future
 
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicReference
@@ -58,6 +58,7 @@ class Promise[A] {
 
     def onComplete(handler: Try[A] => Unit)(implicit ex: Executor): Unit = executeWhenComplete(Handler(handler, ex))
 
+    // Blocks the current thread until the result is ready
     def ready(atMost: Duration)(implicit permit: CanAwait): this.type = {
       if (!isComplete && Duration.Zero < atMost) {
         val thread = Thread.currentThread

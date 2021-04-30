@@ -20,6 +20,8 @@ trait Future[A] {
   def zipMap[B, C](other: Future[B])(f: (A, B) => C)(implicit ex: Executor): Future[C]
 
   // filter, transform,
+
+  // see concurrent.future for complete implementation
 }
 
 object Future {

@@ -1,10 +1,10 @@
-package concurrent.impl
+package concurrent.future
 
 import java.util.concurrent.Executor
 import concurrent.Executors
 import util.Utils
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{Await, Awaitable, CanAwait}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
@@ -105,11 +105,14 @@ object FutureApp extends App {
   }
 
   val combinedCalculation = for {
+    n <- Future.successful(10)
     (r1, r2) <- calc1 zip calc2
     doubled <- double(r1 + r2)
-  } yield doubled
+  } yield doubled + n
 
   combinedCalculation.foreach(println)
 
-  Thread.sleep(5000)
+  Await.result(combinedCalculation, Duration.Inf)
+
+//  Thread.sleep(5000)
 }

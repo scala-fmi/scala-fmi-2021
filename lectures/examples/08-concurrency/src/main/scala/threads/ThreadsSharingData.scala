@@ -1,15 +1,14 @@
 package threads
 
-class CalculationSetting(var shouldImproveMore: Boolean)
-
 object ThreadsSharingData extends App {
-  var calculationSetting = new CalculationSetting(true)
-  @volatile var improveCalculation = true
+  // Нишката thread по-долу не вижда промените по тази променлива
+  // Ако тя се маркира като @volatila тогава видимостта ще сработи.
+  var improveCalculation = true
 
   val thread = new Thread(() => {
     var i = 0L
 
-    while (improveCalculation || calculationSetting.shouldImproveMore) {
+    while (improveCalculation) {
       i += 1
     }
 
@@ -22,7 +21,6 @@ object ThreadsSharingData extends App {
   Thread.sleep(1000)
   println("Main waking up...")
 
-  calculationSetting.shouldImproveMore = false
   improveCalculation = false
 
   thread.join()

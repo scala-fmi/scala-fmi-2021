@@ -1,11 +1,12 @@
 package http
 
-import console.Console
 import concurrent.ExecutionContexts
+import concurrent.ExecutionContexts.default
+import console.Console
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
-import ExecutionContexts.default
+import scala.util.control.NonFatal
 
 case class Author(name: String)
 case class Book(name: String, authors: List[Author], genre: String)
@@ -16,7 +17,7 @@ object LibraryApi {
   private def retrieve(path: String) =
     HttpClient.getScalaFuture(s"http://localhost:8080/$path").flatMap { response =>
       if (response.getStatusCode == 200) Future.successful(response.getResponseBody)
-      else Future.failed(new BadResponse(response.getStatusCode))
+      else Future.failed(BadResponse(response.getStatusCode))
     }
 
   def retrieveBookSummary(bookId: String): Future[BookSummary] =
@@ -30,8 +31,19 @@ object LibraryApi {
     )
   } yield books
 
-  def retrieveAuthor(authorId: String): Future[Author] = ???
-  def retrieveBook(bookId: String): Future[Book] = ???
+  def retrieveAuthor(authorId: String): Future[Author] = for {
+    name <- retrieve(s"authors/$authorId/name")
+  } yield Author(name)
+
+  def retrieveBook(bookId: String): Future[Book] = for {
+    ((name, genre), authorIds) <-
+      retrieve(s"books/$bookId/name") zip
+      retrieve(s"books/$bookId/genre") zip
+      retrieve(s"books/$bookId/authors").map(asList)
+    authors <- Future.sequence(
+      authorIds.map(retrieveAuthor)
+    )
+  } yield Book(name, authors, genre)
 
   private def asList(elementsString: String): List[String] = elementsString.split(",").toList
 }
@@ -45,8 +57,7 @@ object LibraryClient extends App {
     _ <- displayBooks(books)
 
     bookId <- promptInput("Select book id:")
-    book <- LibraryApi.retrieveBook(bookId)
-    _ <- displayBook(book)
+    _ <- retrieveAndDisplayBook(bookId)
 
     anotherBookInput <- promptInput("Select another book?")
     _ <-
@@ -57,6 +68,19 @@ object LibraryClient extends App {
   def displayBooks(books: List[BookSummary]): Future[Unit] = Future.sequence(
     books.map(b => s"ID: ${b.id}, name: ${b.name}").map(console.putStringLine)
   ).map(_ => ())
+
+  def retrieveAndDisplayBook(bookId: String): Future[Unit] = {
+    (for {
+      book <- LibraryApi.retrieveBook(bookId)
+      _ <- displayBook(book)
+    } yield ()) recoverWith {
+      case BadResponse(404) => console.putStringLine("Book not found")
+
+      // NonFatal.unapply helps us not to catch JVM errors and other exceptions
+      // that we cannot recover from and thus should never be caught
+      case NonFatal(_) => console.putStringLine("Something went wrong")
+    }
+  }
 
   def displayBook(book: Book) = for {
     _ <- console.putStringLine("Information about selected book:")

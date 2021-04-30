@@ -8,20 +8,18 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.util.control.NonFatal
 
+import ExecutionContexts.default
+
 case class Author(name: String)
 case class Book(name: String, authors: List[Author], genre: String)
 
 case class BookSummary(id: String, name: String)
 
-object LibraryClient extends App {
-  import ExecutionContexts.default
-
-  val console = new Console(ExecutionContexts.blocking)
-
-  def retrieve(path: String) =
+object LibraryApi {
+  private def retrieve(path: String) =
     HttpClient.getScalaFuture(s"http://localhost:8080/$path").flatMap { response =>
       if (response.getStatusCode == 200) Future.successful(response.getResponseBody)
-      else Future.failed(new BadResponse(response.getStatusCode))
+      else Future.failed(BadResponse(response.getStatusCode))
     }
 
   def retrieveBookSummary(bookId: String): Future[BookSummary] =
@@ -42,20 +40,26 @@ object LibraryClient extends App {
   def retrieveBook(bookId: String): Future[Book] = for {
     ((name, genre), authorIds) <-
       retrieve(s"books/$bookId/name") zip
-      retrieve(s"books/$bookId/genre") zip
-      retrieve(s"books/$bookId/authors").map(asList)
+        retrieve(s"books/$bookId/genre") zip
+        retrieve(s"books/$bookId/authors").map(asList)
     authors <- Future.sequence(
       authorIds.map(retrieveAuthor)
     )
   } yield Book(name, authors, genre)
 
+  private def asList(elementsString: String): List[String] = elementsString.split(",").toList
+}
+
+object LibraryClient extends App {
+  val console = new Console(ExecutionContexts.blocking)
+
   def selectBook: Future[Unit] = for {
-    books <- listBooks
+    books <- LibraryApi.listBooks
     _ <- console.putStringLine("Available books: ")
     _ <- displayBooks(books)
 
     bookId <- promptInput("Select book id:")
-    _ <- retrieveBook(bookId).flatMap(displayBook) recoverWith {
+    _ <- LibraryApi.retrieveBook(bookId).flatMap(displayBook) recoverWith {
       case BadResponse(404) => console.putStringLine("Book not found")
       case NonFatal(_) => console.putStringLine("Something went wrong")
     }

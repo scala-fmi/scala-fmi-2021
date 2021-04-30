@@ -11,12 +11,8 @@ object FutureReferentialTransparency extends App {
     expr
   }
 
-  val futureA = calc(42)
-  val futureB = calc(10)
-
   val sum = for {
-    a <- futureA
-    b <- futureB
+    (a, b) <- calc(42) zip calc(10)
   } yield a + b
 
   println {

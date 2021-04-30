@@ -1,8 +1,12 @@
 package concurrent.io
 
 import concurrent.ExecutionContexts
+import concurrent.io.IO.Callback
+import console.ConsoleForIO
+import monix.eval.Task
 
 import java.util.concurrent.atomic.AtomicReference
+import scala.annotation.tailrec
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success, Try}
@@ -20,7 +24,7 @@ trait IO[+A] {
 
   def unsafeRunSync: A = IO.unsafeRunSync(this)
 
-  def unsafeRunAsync(onComplete: Try[A] => Unit)(ec: ExecutionContext): Unit = IO.unsafeRunAsync(this)(onComplete)(ec)
+  def unsafeRunAsync(onComplete: Callback[A])(ec: ExecutionContext): Unit = IO.unsafeRunAsync(this)(onComplete)(ec)
 
   def unsafeRunToFuture(ec: ExecutionContext): scala.concurrent.Future[A] = {
     val p = scala.concurrent.Promise[A]()
@@ -34,7 +38,7 @@ trait IO[+A] {
 case class Pure[A](value: A) extends IO[A]
 case class Error(error: Throwable) extends IO[Nothing]
 case class Eval[A](value: () => A) extends IO[A]
-case class Async[A](registerCallback: (ExecutionContext, Try[A] => Unit) => Unit) extends IO[A]
+case class Async[A](registerCallback: (ExecutionContext, Callback[A]) => Unit) extends IO[A]
 case class BindTo[A](io: IO[A], ec: ExecutionContext) extends IO[A]
 case class FlatMap[A, B](ioA: IO[A], f: A => IO[B]) extends IO[B] {
   type AType = A
@@ -51,11 +55,16 @@ object IO {
   def of[A](value: A): IO[A] = Pure(value)
   def failed(throwable: Throwable): IO[Nothing] = Error(throwable)
 
-  def fromFuture[A](fa: => scala.concurrent.Future[A]): IO[A] = Async { (ec, callback) =>
+
+  type Callback[-A] = Try[A] => Unit
+
+  def usingCallback[A](registerCallback: (ExecutionContext, Callback[A]) => Unit): IO[A] = Async(registerCallback)
+
+  def fromFuture[A](fa: => scala.concurrent.Future[A]): IO[A] = usingCallback[A] { (ec, callback) =>
     fa.onComplete(callback)(ec)
   }
 
-  def unsafeRunAsync[T](io: IO[T])(onComplete: Try[T] => Unit)(ec: ExecutionContext): Unit = {
+  def unsafeRunAsync[T](io: IO[T])(onComplete: Callback[T])(ec: ExecutionContext): Unit = {
     def execAsync(block: => Unit): Unit = ec.execute(() => block)
 
     io match {
@@ -80,36 +89,35 @@ object IO {
         val ioA: IO[zipIo.AType] = zipIo.ioA
         val ioB: IO[zipIo.BType] = zipIo.ioB
 
-        val firstResult = new AtomicReference[Option[Either[Try[zipIo.AType], Try[zipIo.BType]]]](None)
+        val firstCompletedResult = new AtomicReference[Option[Either[Try[zipIo.AType], Try[zipIo.BType]]]](None)
 
-        def comleteA(aResult: Try[zipIo.AType]): Unit = firstResult.get() match {
-          case Some(Right(bResult)) =>
-            val result = for {
-              a <- aResult
-              b <- bResult
-            } yield (a, b)
+        def completeWith(aResult: Try[zipIo.AType], bResult: Try[zipIo.BType]): Unit = {
+          val result = for {
+            a <- aResult
+            b <- bResult
+          } yield (a, b)
 
-            onComplete(result)
+          onComplete(result)
+        }
+
+        @tailrec
+        def completeA(aResult: Try[zipIo.AType]): Unit = firstCompletedResult.get() match {
+          case Some(Right(bResult)) =>completeWith(aResult, bResult)
           case None =>
-            if (!firstResult.compareAndSet(None, Some(Left(aResult)))) comleteA(aResult)
+            if (!firstCompletedResult.compareAndSet(None, Some(Left(aResult)))) completeA(aResult)
           case _ =>
         }
 
-        def comleteB(bResult: Try[zipIo.BType]): Unit = firstResult.get() match {
-          case Some(Left(aResult)) =>
-            val result = for {
-              a <- aResult
-              b <- bResult
-            } yield (a, b)
-
-            onComplete(result)
+        @tailrec
+        def completeB(bResult: Try[zipIo.BType]): Unit = firstCompletedResult.get() match {
+          case Some(Left(aResult)) => completeWith(aResult, bResult)
           case None =>
-            if (!firstResult.compareAndSet(None, Some(Right(bResult)))) comleteB(bResult)
+            if (!firstCompletedResult.compareAndSet(None, Some(Right(bResult)))) completeB(bResult)
           case _ =>
         }
 
-        unsafeRunAsync(ioA)(comleteA)(ec)
-        unsafeRunAsync(ioB)(comleteB)(ec)
+        unsafeRunAsync(ioA)(completeA)(ec)
+        unsafeRunAsync(ioB)(completeB)(ec)
     }
   }
 
@@ -128,6 +136,8 @@ object IO {
 }
 
 object IOApp extends App {
+  val console = new ConsoleForIO(ExecutionContexts.blocking)
+
   val task = IO {
     println("runnning")
 
@@ -146,9 +156,16 @@ object IOApp extends App {
     combined <- task zip task
     (a, b) = combined
     c <- double(a + b)
+    _ <- console.putStringLine(s"(a, b) is: ${(a, b)}. The result is: $c") // console puts this in the blocking EC
   } yield c
 
-  calculation.unsafeRunAsync(println)(ExecutionContexts.default)
+  println("The plan:" + calculation)
+
+  // Everything is running synchronously on the main thread, even zip
+  calculation.unsafeRunSync
+
+  // Everything is running asynchronously on threads from the execution context
+  calculation.unsafeRunAsync(r => println(s"The final result is: $r"))(ExecutionContexts.default)
 
   Thread.sleep(10000)
 }
