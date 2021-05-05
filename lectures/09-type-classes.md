@@ -1,94 +1,14 @@
 ---
 title: Type Classes
 ---
-# Предния път – изрази
 
-```scala
-val a = 42 // независими
-val b = 4  // изчисления
+# Докъде сме?
 
-val c = a + b // операция
-val d = (a + b) * 10 // композиция на операции
-val e = f(g(a)) // композиция на функции
-```
+::: { .fragment }
 
-<p class="fragment">
-Пренесохме възможността за тези операции върху ефекта `Future`<br/>
-<span class="fragment">(и стойността в него)</span>
-</p>
-
-:::incremental
-
-* `map` – трансформация на единична стойност (напр. `val c = -a`)
-* `map2`, или още `zipMap` или `zipWith` – трансформация на две независими стойности (`val c = a + b`)<span class="fragment">. Резултатът `c` зависи от тях</span>
-* `map3`, `zipMap3`...<span class="fragment">; `mapN` дефинира зависимости</span>
-* `flatMap` – когато функциите в изразите са ефектни, напр. ако `f` и `g` връщат `Future`
-* `flatMap` – ефектна трансформация на единична стойност
+[Аспекти на ФП](02-fp-with-scala.html#/как-да-пишем-функционално)
 
 :::
-
-# Референтна прозрачност на eager vs lazy Future-и
-
-```scala
-def calc[T](expr: => T) = Future {
-  Thread.sleep(4000)
-
-  expr
-}
-```
-
-```scala
-val futureA = calc(42)
-val futureB = calc(10)
-
-val sum = for {
-  a <- futureA
-  b <- futureB
-} yield a + b
-
-println {
-  Await.result(sum, 5.seconds)
-}
-```
-
-```
-> 52
-```
-
-# Референтна прозрачност на eager vs lazy Future-и
-
-```scala
-val sum = for {
-  a <- calc(42)
-  b <- calc(10)
-} yield a + b
-
-println {
-  Await.result(sum, 5.seconds)
-}
-```
-
-```
-> Exception in thread "main" java.util.concurrent.TimeoutException: Futures timed out after [5 seconds]
-```
-
-# Референтна прозрачност на eager vs lazy Future-и
-
-```scala
-val sum = for {
-  (a, b) <- calc(42).zip(calc(10))
-} yield a + b
-
-println {
-  Await.result(sum, 5.seconds)
-}
-```
-
-```
-> 52
-```
-
-<p class="fragment">Тук вече няма значение дали Future-а е eager или lazy</p>
 
 # Абстрактност
 
@@ -106,7 +26,7 @@ println {
 
 G наричаме група, ако:
 
-<div class="fragment">
+::: incremental
 
 * асоциативност – ∀ a, b, c ∈ G:
   
@@ -123,7 +43,8 @@ G наричаме група, ако:
   ```
   a · a' = a' · a = e
   ```
-</div>
+
+:::
 
 # Моноид
 
@@ -144,19 +65,17 @@ M наричаме моноид, ако:
 
 # Реализация?
 
-<div class="fragment">
+::: { .fragment }
 
-Задача: напишете метод `sum` работещ с различни типове
+Задача: напишете метод `sum` работещ със списъци от различни типове
 
 ```scala
-def sum[A ???](xs: List[???]): A = ???
-
 sum(List(1, 3, 4))
 sum(List("a", "b", "c"))
 sum(List(Rational(1, 2), Rational(3, 4)))
 ```
 
-</div>
+:::
 
 # Контекст в програмния код
 
@@ -190,21 +109,46 @@ sum(List(Rational(1, 2), Rational(3, 4)))
 * външен scope
 * параметри
 
-#
+# Експлицитно предаване на контекст
 
-Експлицитно предаване на контекст
+# Имплицитно предаване на контекст
 
-#
+::: { .fragment }
 
-Имплицитно предаване на контекст
+В математиката: „Дадено е поле F, такова че...“
 
-<p class="fragment">В Scala чрез implicts</p>
+:::
+
+::: { .fragment }
+
+В Scala:
+
+```scala
+given Field[Double] = ???
+```
+
+:::
+
+::: { .fragment }
+
+Ама в Scala 3. В Scala 2 чрез implicts :)
+
+:::
 
 # Context bound
 
 ```scala
 def sum[A : Monoid](xs: List[A])
 ```
+
+# Логическо програмиране<br />в типовата система
+
+::: incremental
+
+* Типовата система е напълно логическа
+* Търсенето на implicit стойности от определен тип съвпада с механиката на логическите изводи, позната ни от логическото програмиране
+
+:::
 
 #
 
@@ -228,6 +172,8 @@ Type class-овете дефинират операции и аксиоми/св
 
 <p class="fragment">`fold` изисква асоциативна операция</p>
 
+# Контекст в Scala 3 { .scala3 }
+
 # ООП класове срещу type class-ове
 
 <p class="fragment">Класовете в ООП моделират обекти</p>
@@ -244,8 +190,8 @@ Type class-овете дефинират операции и аксиоми/св
 def mapTwice[A](xs: List[A])(f: A => A): List[A] =
   xs.map(f compose f)
 
-mapTwice(List(1, 2, 3)(_ * 2))
-mapTwice(List("ab", "c", "def")(str => str + str))
+mapTwice(List(1, 2, 3))(_ * 2) // List(4, 8, 12)
+mapTwice(List("ab", "c", "def"))(str => str + str) // List(abababab, cccc, defdefdefdef)
 ```
 
 # Ad hoc полиморфизъм
@@ -308,22 +254,18 @@ handle(new FileReader("file.txt"))(f => readLines(f))
 
 # Binding
 
-<div class="fragment">
+::: { .fragment }
 
 * Static (compile time) – параметричен и ad-hoc полиморфизъм
-* Late (runtime) – подтипов полиморфизъм и duck typing
+* Late (runtime) – подтипов полиморфизъм и duck typing/структурно типизиране
 
-</div>
+:::
 
-<p class="fragment">Late binding-а е фундаментален за ООП</p>
+::: { .fragment }
 
-#
+Late binding-а е фундаментален за ООП
 
-<blockquote>
-“I thought of objects being like biological cells and/or individual computers on a network, only able to communicate with messages... to communicate with messages...
-OOP to me means only messaging, local retention and protection and hiding of state-process, and extreme late-binding of all things.”
-― Alan Kay
-</blockquote>
+:::
 
 # Ретроактивност
 
@@ -331,24 +273,23 @@ OOP to me means only messaging, local retention and protection and hiding of sta
 
 # Ретроактивен полиморфизъм
 
+::: { .fragment }
+
 добавяне на интерфейс към тип<br />без промяна на кода му
 
-<p class="fragment">Type class-овете поддържат ретроактивен полиморфизъм</p>
+:::
+
+::: { .fragment }
+
+Type class-овете поддържат ретроактивен полиморфизъм
+
+:::
 
 # Numeric
 
 # Ordering
 
 # Сериализация до JSON
-
-# Логически изводи в типовата система
-
-<p class="fragment">Типовата система е логическа и търсенето на implicit стойности, отговарящи на определен тип, съвпада с механиката на изводите, познати ни от логическото програмиране</p>
-
-# Type class-ове за допълнителна информация. Compile-time type metadata
-
-* `ClassTag` – информация за класа на подадения тип 
-* `TypeTag` – пълна типова информация, включително за generic параметрите 
 
 # Езици, поддържащи type class-ове
 
@@ -366,21 +307,31 @@ OOP to me means only messaging, local retention and protection and hiding of sta
 
 # Библиотеки за type class-ове?
 
-![](images/11-type-classes/cats-cat.png){ height="520" }
+![](images/09-type-classes/cats-cat.png){ height="520" }
 
 # Библиотеки
 
-* [![](images/11-type-classes/cats-small.png){ height="40" style="vertical-align: middle" } Cats](http://typelevel.org/cats/)
+* [![](images/09-type-classes/cats-small.png){ height="40" style="vertical-align: middle" } Cats](http://typelevel.org/cats/)
 * [Spire](https://typelevel.org/spire/) – математически абстракции, използва Cats
 * [Scalaz](https://scalaz.github.io)
 
+# Категории
+
+[![](images/09-type-classes/category-theory-for-programmers.png){ height="520" }](https://github.com/hmemcpy/milewski-ctfp-pdf)
+
 # Cats
+
+::: { .fragment }
+
+Котки от най-различни категории 😸
+
+:::
 
 # Multiversal equality (`Eq`)
 
 # Scala with Cats
 
-[![Scala with Cats](images/11-type-classes/scala-with-cats.png){ height="520" }](https://underscore.io/books/scala-with-cats/)
+[![Scala with Cats](images/09-type-classes/scala-with-cats.png){ height="520" }](https://underscore.io/books/scala-with-cats/)
 
 # Spire – Линейно пространство
 

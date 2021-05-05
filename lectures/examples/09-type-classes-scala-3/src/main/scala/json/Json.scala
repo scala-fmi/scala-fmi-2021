@@ -26,12 +26,15 @@ object JsonValue {
 }
 
 trait JsonSerializable[A] {
-  def toJson(a: A): JsonValue
+  extension (a: A) {
+    def toJson: JsonValue
+    def toJsonString = JsonValue.toString(a.toJson)
+  }
 }
 
 object JsonSerializable {
-  def toJson[A](a: A)(implicit js: JsonSerializable[A]): JsonValue = js.toJson(a)
-  def toString[A : JsonSerializable](a: A) = JsonValue.toString(toJson(a))
+  def toJson[A : JsonSerializable](a: A): JsonValue = a.toJson
+  def toString[A : JsonSerializable](a: A): String = a.toJsonString
 
   object ops {
     implicit class JsonSerializableOps[A : JsonSerializable](a: A) {
@@ -40,26 +43,26 @@ object JsonSerializable {
     }
   }
 
-  implicit val intSerializable = new JsonSerializable[Int] {
-    def toJson(a: Int): JsonValue = JsonNumber(a)
+  given JsonSerializable[Int] with {
+    extension (a: Int) def toJson: JsonValue = JsonNumber(a)
   }
 
-  implicit val stringSerializable = new JsonSerializable[String] {
-    def toJson(a: String): JsonValue = JsonString(a)
+  given JsonSerializable[String] with {
+    extension (a: String) def toJson: JsonValue = JsonString(a)
   }
 
-  implicit val booleanSerializable = new JsonSerializable[Boolean] {
-    def toJson(a: Boolean): JsonValue = JsonBoolean(a)
+  given JsonSerializable[Boolean] with {
+    extension (a: Boolean) def toJson: JsonValue = JsonBoolean(a)
   }
 
-  implicit def listSerializable[A : JsonSerializable] = new JsonSerializable[List[A]] {
-    def toJson(a: List[A]): JsonValue = JsonArray(
-      a.map(value => JsonSerializable.toJson(value))
+  given [A : JsonSerializable]: JsonSerializable[List[A]] with {
+    extension (xs: List[A]) def toJson: JsonValue = JsonArray(
+      xs.map(_.toJson)
     )
   }
 
-  implicit def optionSerializable[A : JsonSerializable] = new JsonSerializable[Option[A]] {
-    def toJson(opt: Option[A]): JsonValue = opt match {
+  given [A : JsonSerializable]: JsonSerializable[Option[A]] with {
+    extension (opt: Option[A]) def toJson: JsonValue = opt match {
       case Some(a) => JsonSerializable.toJson(a)
       case _ => JsonNull
     }

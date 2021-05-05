@@ -102,7 +102,7 @@ object IO {
 
         @tailrec
         def completeA(aResult: Try[zipIo.AType]): Unit = firstCompletedResult.get() match {
-          case Some(Right(bResult)) =>completeWith(aResult, bResult)
+          case Some(Right(bResult)) => completeWith(aResult, bResult)
           case None =>
             if (!firstCompletedResult.compareAndSet(None, Some(Left(aResult)))) completeA(aResult)
           case _ =>

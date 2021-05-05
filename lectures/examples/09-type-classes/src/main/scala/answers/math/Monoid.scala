@@ -1,4 +1,4 @@
-package math
+package answers.math
 
 trait Monoid[M] extends Semigroup[M] {
   def op(a: M, b: M): M

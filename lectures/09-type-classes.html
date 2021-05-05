@@ -92,72 +92,11 @@
   <h1 class="title">Type Classes</h1>
 </section>
 
-<section id="предния-път-изрази" class="slide level1">
-<h1>Предния път – изрази</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> a <span class="op">=</span> <span class="dv">42</span> <span class="co">// независими</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> b <span class="op">=</span> <span class="dv">4</span>  <span class="co">// изчисления</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> c <span class="op">=</span> a <span class="op">+</span> b <span class="co">// операция</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> d <span class="op">=</span> <span class="op">(</span>a <span class="op">+</span> b<span class="op">)</span> <span class="op">*</span> <span class="dv">10</span> <span class="co">// композиция на операции</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> e <span class="op">=</span> <span class="fu">f</span><span class="op">(</span><span class="fu">g</span><span class="op">(</span>a<span class="op">))</span> <span class="co">// композиция на функции</span></span></code></pre></div>
-<p class="fragment">
-Пренесохме възможността за тези операции върху ефекта <code>Future</code><br/> <span class="fragment">(и стойността в него)</span>
-</p>
-<div>
-<ul>
-<li class="fragment"><code>map</code> – трансформация на единична стойност (напр. <code>val c = -a</code>)</li>
-<li class="fragment"><code>map2</code>, или още <code>zipMap</code> или <code>zipWith</code> – трансформация на две независими стойности (<code>val c = a + b</code>)<span class="fragment">. Резултатът <code>c</code> зависи от тях</span></li>
-<li class="fragment"><code>map3</code>, <code>zipMap3</code>…<span class="fragment">; <code>mapN</code> дефинира зависимости</span></li>
-<li class="fragment"><code>flatMap</code> – когато функциите в изразите са ефектни, напр. ако <code>f</code> и <code>g</code> връщат <code>Future</code></li>
-<li class="fragment"><code>flatMap</code> – ефектна трансформация на единична стойност</li>
-</ul>
+<section id="докъде-сме" class="slide level1">
+<h1>Докъде сме?</h1>
+<div class="fragment">
+<p><a href="02-fp-with-scala.html#/как-да-пишем-функционално">Аспекти на ФП</a></p>
 </div>
-</section>
-<section id="референтна-прозрачност-на-eager-vs-lazy-future-и" class="slide level1">
-<h1>Референтна прозрачност на eager vs lazy Future-и</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calc<span class="op">[</span>T<span class="op">](</span>expr<span class="op">:</span> <span class="op">=&gt;</span> T<span class="op">)</span> <span class="op">=</span> Future <span class="op">{</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  Thread<span class="op">.</span><span class="fu">sleep</span><span class="op">(</span><span class="dv">4000</span><span class="op">)</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  expr</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> futureA <span class="op">=</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> futureB <span class="op">=</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  a <span class="op">&lt;-</span> futureA</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  b <span class="op">&lt;-</span> futureB</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<pre><code>&gt; 52</code></pre>
-</section>
-<section id="референтна-прозрачност-на-eager-vs-lazy-future-и-1" class="slide level1">
-<h1>Референтна прозрачност на eager vs lazy Future-и</h1>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  a <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">)</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  b <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<pre><code>&gt; Exception in thread &quot;main&quot; java.util.concurrent.TimeoutException: Futures timed out after [5 seconds]</code></pre>
-</section>
-<section id="референтна-прозрачност-на-eager-vs-lazy-future-и-2" class="slide level1">
-<h1>Референтна прозрачност на eager vs lazy Future-и</h1>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> sum <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">calc</span><span class="op">(</span><span class="dv">42</span><span class="op">).</span><span class="fu">zip</span><span class="op">(</span><span class="fu">calc</span><span class="op">(</span><span class="dv">10</span><span class="op">))</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> b</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>println <span class="op">{</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>sum<span class="op">,</span> <span class="fl">5.</span>seconds<span class="op">)</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<pre><code>&gt; 52</code></pre>
-<p class="fragment">
-Тук вече няма значение дали Future-а е eager или lazy
-</p>
 </section>
 <section id="абстрактност" class="slide level1">
 <h1>Абстрактност</h1>
@@ -178,13 +117,13 @@
 <h1>Група</h1>
 <p>Нека G е множество с бинарна операция „·“</p>
 <p>G наричаме група, ако:</p>
-<div class="fragment">
+<div>
 <ul>
-<li><p>асоциативност – ∀ a, b, c ∈ G:</p>
+<li class="fragment"><p>асоциативност – ∀ a, b, c ∈ G:</p>
 <pre><code>(a · b) · c = a · (b · c)</code></pre></li>
-<li><p>неутрален елемент – ∃ e ∈ G, такъв че ∀ a ∈ G</p>
+<li class="fragment"><p>неутрален елемент – ∃ e ∈ G, такъв че ∀ a ∈ G</p>
 <pre><code>e · a = a · e = a</code></pre></li>
-<li><p>обратен елемент – ∀ a ∈ G, ∃ a’ ∈ G, такъв че</p>
+<li class="fragment"><p>обратен елемент – ∀ a ∈ G, ∃ a’ ∈ G, такъв че</p>
 <pre><code>a · a&#39; = a&#39; · a = e</code></pre></li>
 </ul>
 </div>
@@ -203,12 +142,10 @@
 <section id="реализация" class="slide level1">
 <h1>Реализация?</h1>
 <div class="fragment">
-<p>Задача: напишете метод <code>sum</code> работещ с различни типове</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sum<span class="op">[</span>A <span class="op">???](</span>xs<span class="op">:</span> <span class="bu">List</span><span class="op">[???]):</span> A <span class="op">=</span> <span class="op">???</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">))</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="st">&quot;a&quot;</span><span class="op">,</span> <span class="st">&quot;b&quot;</span><span class="op">,</span> <span class="st">&quot;c&quot;</span><span class="op">))</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="fu">Rational</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">),</span> <span class="fu">Rational</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">)))</span></span></code></pre></div>
+<p>Задача: напишете метод <code>sum</code> работещ със списъци от различни типове</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">))</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="st">&quot;a&quot;</span><span class="op">,</span> <span class="st">&quot;b&quot;</span><span class="op">,</span> <span class="st">&quot;c&quot;</span><span class="op">))</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="fu">Rational</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">),</span> <span class="fu">Rational</span><span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">)))</span></span></code></pre></div>
 </div>
 </section>
 <section id="контекст-в-програмния-код" class="slide level1">
@@ -264,22 +201,36 @@ context
 <li>параметри</li>
 </ul>
 </section>
-<section id="section-1" class="slide level1">
-<h1></h1>
-<p>Експлицитно предаване на контекст</p>
+<section id="експлицитно-предаване-на-контекст" class="slide level1">
+<h1>Експлицитно предаване на контекст</h1>
 </section>
-<section id="section-2" class="slide level1">
-<h1></h1>
-<p>Имплицитно предаване на контекст</p>
-<p class="fragment">
-В Scala чрез implicts
-</p>
+<section id="имплицитно-предаване-на-контекст" class="slide level1">
+<h1>Имплицитно предаване на контекст</h1>
+<div class="fragment">
+<p>В математиката: „Дадено е поле F, такова че…“</p>
+</div>
+<div class="fragment">
+<p>В Scala:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>given Field<span class="op">[</span>Double<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<p>Ама в Scala 3. В Scala 2 чрез implicts :)</p>
+</div>
 </section>
 <section id="context-bound" class="slide level1">
 <h1>Context bound</h1>
-<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sum<span class="op">[</span>A <span class="op">:</span> Monoid<span class="op">](</span>xs<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">])</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sum<span class="op">[</span>A <span class="op">:</span> Monoid<span class="op">](</span>xs<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">])</span></span></code></pre></div>
 </section>
-<section id="section-3" class="slide level1">
+<section id="логическо-програмиране-в-типовата-система" class="slide level1">
+<h1>Логическо програмиране<br />в типовата система</h1>
+<div>
+<ul>
+<li class="fragment">Типовата система е напълно логическа</li>
+<li class="fragment">Търсенето на implicit стойности от определен тип съвпада с механиката на логическите изводи, позната ни от логическото програмиране</li>
+</ul>
+</div>
+</section>
+<section id="section-1" class="slide level1">
 <h1></h1>
 <p>Type class-овете дефинират операции и аксиоми/свойства, които даден тип трябва да притежава.</p>
 <p class="fragment">
@@ -296,10 +247,13 @@ context
 </section>
 <section id="fold-vs-foldleft" class="slide level1">
 <h1><code>fold</code> vs <code>foldLeft</code></h1>
-<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">(</span><span class="dv">1</span> to <span class="dv">100000000</span><span class="op">).</span>par<span class="op">.</span><span class="fu">fold</span><span class="op">(</span><span class="dv">0</span><span class="op">)(</span>_ <span class="op">+</span> _<span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">(</span><span class="dv">1</span> to <span class="dv">100000000</span><span class="op">).</span>par<span class="op">.</span><span class="fu">fold</span><span class="op">(</span><span class="dv">0</span><span class="op">)(</span>_ <span class="op">+</span> _<span class="op">)</span></span></code></pre></div>
 <p class="fragment">
 <code>fold</code> изисква асоциативна операция
 </p>
+</section>
+<section id="контекст-в-scala-3" class="slide level1 scala3">
+<h1 class="scala3">Контекст в Scala 3</h1>
 </section>
 <section id="ооп-класове-срещу-type-class-ове" class="slide level1">
 <h1>ООП класове срещу type class-ове</h1>
@@ -318,11 +272,11 @@ Type class-овете моделират типове
 </section>
 <section id="параметричен-полиморфизъм-generics" class="slide level1">
 <h1>Параметричен полиморфизъм (generics)</h1>
-<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mapTwice<span class="op">[</span>A<span class="op">](</span>xs<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> A<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">]</span> <span class="op">=</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  xs<span class="op">.</span><span class="fu">map</span><span class="op">(</span>f compose f<span class="op">)</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mapTwice</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)(</span>_ <span class="op">*</span> <span class="dv">2</span><span class="op">))</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mapTwice</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="st">&quot;ab&quot;</span><span class="op">,</span> <span class="st">&quot;c&quot;</span><span class="op">,</span> <span class="st">&quot;def&quot;</span><span class="op">)(</span>str <span class="op">=&gt;</span> str <span class="op">+</span> str<span class="op">))</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mapTwice<span class="op">[</span>A<span class="op">](</span>xs<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> A<span class="op">):</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  xs<span class="op">.</span><span class="fu">map</span><span class="op">(</span>f compose f<span class="op">)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mapTwice</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">))(</span>_ <span class="op">*</span> <span class="dv">2</span><span class="op">)</span> <span class="co">// List(4, 8, 12)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mapTwice</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="st">&quot;ab&quot;</span><span class="op">,</span> <span class="st">&quot;c&quot;</span><span class="op">,</span> <span class="st">&quot;def&quot;</span><span class="op">))(</span>str <span class="op">=&gt;</span> str <span class="op">+</span> str<span class="op">)</span> <span class="co">// List(abababab, cccc, defdefdefdef)</span></span></code></pre></div>
 </section>
 <section id="ad-hoc-полиморфизъм" class="slide level1">
 <h1>Ad hoc полиморфизъм</h1>
@@ -330,67 +284,61 @@ Type class-овете моделират типове
 </section>
 <section id="ad-hoc-полиморфизъм-overloading" class="slide level1">
 <h1>Ad hoc полиморфизъм – overloading</h1>
-<div class="sourceCode" id="cb18"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">stringify</span><span class="op">(</span>n<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> n<span class="op">.</span>toString</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">stringify</span><span class="op">(</span>n<span class="op">:</span> Rational<span class="op">)</span> <span class="op">=</span> <span class="ss">s&quot;$n</span><span class="st">.numer/</span><span class="ss">$n</span><span class="st">.denom</span><span class="ss">&quot;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stringify</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span> <span class="co">// &quot;1&quot;</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stringify</span><span class="op">(</span><span class="fu">Rational</span><span class="op">(</span><span class="dv">1</span><span class="op">))</span> <span class="co">// &quot;1/1&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">stringify</span><span class="op">(</span>n<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> n<span class="op">.</span>toString</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">stringify</span><span class="op">(</span>n<span class="op">:</span> Rational<span class="op">)</span> <span class="op">=</span> <span class="ss">s&quot;$n</span><span class="st">.numer/</span><span class="ss">$n</span><span class="st">.denom</span><span class="ss">&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stringify</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span> <span class="co">// &quot;1&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stringify</span><span class="op">(</span><span class="fu">Rational</span><span class="op">(</span><span class="dv">1</span><span class="op">))</span> <span class="co">// &quot;1/1&quot;</span></span></code></pre></div>
 </section>
 <section id="ad-hoc-полиморфизъм-type-classes" class="slide level1">
 <h1>Ad hoc полиморфизъм – type classes</h1>
 <p>Пример: реализацията на <code>Monoid</code> се избира конкретно според типа</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="fu">Rational</span><span class="op">(</span><span class="dv">2</span><span class="op">),</span> <span class="fu">Rational</span><span class="op">(</span><span class="dv">4</span><span class="op">)))</span> <span class="co">// rationalMonoid</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">4</span><span class="op">))</span> <span class="co">// intMonoid</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="fu">Rational</span><span class="op">(</span><span class="dv">2</span><span class="op">),</span> <span class="fu">Rational</span><span class="op">(</span><span class="dv">4</span><span class="op">)))</span> <span class="co">// rationalMonoid</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">4</span><span class="op">))</span> <span class="co">// intMonoid</span></span></code></pre></div>
 </section>
 <section id="подтипов-полиморфизъм" class="slide level1">
 <h1>Подтипов полиморфизъм</h1>
-<div class="sourceCode" id="cb20"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Figure <span class="op">{</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> area<span class="op">:</span> Double</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> circumference<span class="op">:</span> Double</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Circle</span><span class="op">(</span>radius<span class="op">:</span> Double<span class="op">)</span> <span class="kw">extends</span> Figure <span class="op">{</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> area<span class="op">:</span> Double <span class="op">=</span> Pi <span class="op">*</span> radius <span class="op">*</span> radius</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> circumference<span class="op">:</span> Double <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> Pi <span class="op">*</span> radius</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Square</span><span class="op">(</span>side<span class="op">:</span> Double<span class="op">)</span> <span class="kw">extends</span> Figure <span class="op">{</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> area<span class="op">:</span> Double <span class="op">=</span> side <span class="op">*</span> side</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> circumference<span class="op">:</span> Double <span class="op">=</span> <span class="dv">4</span> <span class="op">*</span> side</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> figure <span class="op">=</span> <span class="fu">getRandomFigure</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>figure<span class="op">.</span>area <span class="co">// 100</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Figure <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> area<span class="op">:</span> Double</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> circumference<span class="op">:</span> Double</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Circle</span><span class="op">(</span>radius<span class="op">:</span> Double<span class="op">)</span> <span class="kw">extends</span> Figure <span class="op">{</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> area<span class="op">:</span> Double <span class="op">=</span> Pi <span class="op">*</span> radius <span class="op">*</span> radius</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> circumference<span class="op">:</span> Double <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> Pi <span class="op">*</span> radius</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Square</span><span class="op">(</span>side<span class="op">:</span> Double<span class="op">)</span> <span class="kw">extends</span> Figure <span class="op">{</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> area<span class="op">:</span> Double <span class="op">=</span> side <span class="op">*</span> side</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> circumference<span class="op">:</span> Double <span class="op">=</span> <span class="dv">4</span> <span class="op">*</span> side</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> figure <span class="op">=</span> <span class="fu">getRandomFigure</span><span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>figure<span class="op">.</span>area <span class="co">// 100</span></span></code></pre></div>
 <p class="fragment">
 Липсва информация за конкретния тип, но се изпълнява конкретна имплементация
 </p>
 </section>
 <section id="duck-typing-и-структурно-подтипизиране" class="slide level1">
 <h1>Duck typing и структурно подтипизиране</h1>
-<div class="sourceCode" id="cb21"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Closable <span class="op">=</span> <span class="op">{</span> <span class="kw">def</span> <span class="fu">close</span><span class="op">():</span> <span class="bu">Unit</span> <span class="op">}</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> handle<span class="op">[</span>A <span class="op">&lt;:</span> Closable<span class="op">,</span> B<span class="op">](</span>resource<span class="op">:</span> A<span class="op">)(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> B <span class="op">=</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> <span class="fu">f</span><span class="op">(</span>resource<span class="op">)</span> <span class="cf">finally</span> resource<span class="op">.</span><span class="fu">close</span><span class="op">()</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">handle</span><span class="op">(</span><span class="kw">new</span> <span class="fu">FileReader</span><span class="op">(</span><span class="st">&quot;file.txt&quot;</span><span class="op">))(</span>f <span class="op">=&gt;</span> <span class="fu">readLines</span><span class="op">(</span>f<span class="op">))</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Closable <span class="op">=</span> <span class="op">{</span> <span class="kw">def</span> <span class="fu">close</span><span class="op">():</span> <span class="bu">Unit</span> <span class="op">}</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> handle<span class="op">[</span>A <span class="op">&lt;:</span> Closable<span class="op">,</span> B<span class="op">](</span>resource<span class="op">:</span> A<span class="op">)(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> B <span class="op">=</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> <span class="fu">f</span><span class="op">(</span>resource<span class="op">)</span> <span class="cf">finally</span> resource<span class="op">.</span><span class="fu">close</span><span class="op">()</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">handle</span><span class="op">(</span><span class="kw">new</span> <span class="fu">FileReader</span><span class="op">(</span><span class="st">&quot;file.txt&quot;</span><span class="op">))(</span>f <span class="op">=&gt;</span> <span class="fu">readLines</span><span class="op">(</span>f<span class="op">))</span></span></code></pre></div>
 </section>
 <section id="binding" class="slide level1">
 <h1>Binding</h1>
 <div class="fragment">
 <ul>
 <li>Static (compile time) – параметричен и ad-hoc полиморфизъм</li>
-<li>Late (runtime) – подтипов полиморфизъм и duck typing</li>
+<li>Late (runtime) – подтипов полиморфизъм и duck typing/структурно типизиране</li>
 </ul>
 </div>
-<p class="fragment">
-Late binding-а е фундаментален за ООП
-</p>
-</section>
-<section id="section-4" class="slide level1">
-<h1></h1>
-<blockquote>
-“I thought of objects being like biological cells and/or individual computers on a network, only able to communicate with messages… to communicate with messages… OOP to me means only messaging, local retention and protection and hiding of state-process, and extreme late-binding of all things.” ― Alan Kay
-</blockquote>
+<div class="fragment">
+<p>Late binding-а е фундаментален за ООП</p>
+</div>
 </section>
 <section id="ретроактивност" class="slide level1">
 <h1>Ретроактивност</h1>
@@ -398,10 +346,12 @@ Late binding-а е фундаментален за ООП
 </section>
 <section id="ретроактивен-полиморфизъм" class="slide level1">
 <h1>Ретроактивен полиморфизъм</h1>
+<div class="fragment">
 <p>добавяне на интерфейс към тип<br />без промяна на кода му</p>
-<p class="fragment">
-Type class-овете поддържат ретроактивен полиморфизъм
-</p>
+</div>
+<div class="fragment">
+<p>Type class-овете поддържат ретроактивен полиморфизъм</p>
+</div>
 </section>
 <section id="numeric" class="slide level1">
 <h1>Numeric</h1>
@@ -411,19 +361,6 @@ Type class-овете поддържат ретроактивен полимор
 </section>
 <section id="сериализация-до-json" class="slide level1">
 <h1>Сериализация до JSON</h1>
-</section>
-<section id="логически-изводи-в-типовата-система" class="slide level1">
-<h1>Логически изводи в типовата система</h1>
-<p class="fragment">
-Типовата система е логическа и търсенето на implicit стойности, отговарящи на определен тип, съвпада с механиката на изводите, познати ни от логическото програмиране
-</p>
-</section>
-<section id="type-class-ове-за-допълнителна-информация.-compile-time-type-metadata" class="slide level1">
-<h1>Type class-ове за допълнителна информация. Compile-time type metadata</h1>
-<ul>
-<li><code>ClassTag</code> – информация за класа на подадения тип</li>
-<li><code>TypeTag</code> – пълна типова информация, включително за generic параметрите</li>
-</ul>
 </section>
 <section id="езици-поддържащи-type-class-ове" class="slide level1">
 <h1>Езици, поддържащи type class-ове</h1>
@@ -435,32 +372,39 @@ Type class-овете поддържат ретроактивен полимор
 <li>…</li>
 </ul>
 </section>
-<section id="section-5" class="slide level1">
+<section id="section-2" class="slide level1">
 <h1></h1>
 <p>В Haskell всеки type class може да има само една инстанция за определен тип.</p>
 <p>В Scala липсва такова ограничение, което е едновременно и плюс и минус.</p>
 </section>
 <section id="библиотеки-за-type-class-ове" class="slide level1">
 <h1>Библиотеки за type class-ове?</h1>
-<p><img data-src="images/11-type-classes/cats-cat.png" height="520" /></p>
+<p><img data-src="images/09-type-classes/cats-cat.png" height="520" /></p>
 </section>
 <section id="библиотеки" class="slide level1">
 <h1>Библиотеки</h1>
 <ul>
-<li><a href="http://typelevel.org/cats/"><img data-src="images/11-type-classes/cats-small.png" style="vertical-align: middle" height="40" /> Cats</a></li>
+<li><a href="http://typelevel.org/cats/"><img data-src="images/09-type-classes/cats-small.png" style="vertical-align: middle" height="40" /> Cats</a></li>
 <li><a href="https://typelevel.org/spire/">Spire</a> – математически абстракции, използва Cats</li>
 <li><a href="https://scalaz.github.io">Scalaz</a></li>
 </ul>
 </section>
+<section id="категории" class="slide level1">
+<h1>Категории</h1>
+<p><a href="https://github.com/hmemcpy/milewski-ctfp-pdf"><img data-src="images/09-type-classes/category-theory-for-programmers.png" height="520" /></a></p>
+</section>
 <section id="cats" class="slide level1">
 <h1>Cats</h1>
+<div class="fragment">
+<p>Котки от най-различни категории 😸</p>
+</div>
 </section>
 <section id="multiversal-equality-eq" class="slide level1">
 <h1>Multiversal equality (<code>Eq</code>)</h1>
 </section>
 <section id="scala-with-cats" class="slide level1">
 <h1>Scala with Cats</h1>
-<p><a href="https://underscore.io/books/scala-with-cats/"><img data-src="images/11-type-classes/scala-with-cats.png" height="520" alt="Scala with Cats" /></a></p>
+<p><a href="https://underscore.io/books/scala-with-cats/"><img data-src="images/09-type-classes/scala-with-cats.png" height="520" alt="Scala with Cats" /></a></p>
 </section>
 <section id="spire-линейно-пространство" class="slide level1">
 <h1>Spire – Линейно пространство</h1>

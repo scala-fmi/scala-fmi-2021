@@ -1,4 +1,4 @@
-package json
+package answers.json
 
 import scala.language.implicitConversions
 
@@ -63,5 +63,16 @@ object JsonSerializable {
       case Some(a) => JsonSerializable.toJson(a)
       case _ => JsonNull
     }
+  }
+
+  // Utilities for easier creation of object serializables
+  // We will use a simple trick with a wrapper
+  case class JsonValueWrapper(value: JsonValue)
+
+  implicit def toJsonValueWrapper[A : JsonSerializable](value: A): JsonValueWrapper =
+    JsonValueWrapper(JsonSerializable.toJson(value))
+
+  def jsonObj(fields: (String, JsonValueWrapper)*): JsonObject = JsonObject {
+    fields.toMap.view.mapValues(_.value).toMap
   }
 }

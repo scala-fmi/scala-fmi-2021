@@ -1,15 +1,20 @@
 package parallel
 
-import math.Monoid
-import math.Monoid.ops._
+import answers.math.Monoid
+import answers.math.Monoid.ops._
 import parallel.Utils.time
 
 import scala.collection.GenSeq
+import scala.collection.parallel.CollectionConverters._
+import scala.collection.parallel.ParSeq
 
 object ParallelCollections extends App {
-  def sum[A : Monoid](xs: GenSeq[A]): A = {
+  def sum[A : Monoid](xs: Seq[A]): A = {
     xs.fold(Monoid[A].identity)(_ |+| _)
-//    xs.foldLeft(Monoid[A].identity)(_ |+| _)
+  }
+
+  def sum[A : Monoid](xs: ParSeq[A]): A = {
+    xs.fold(Monoid[A].identity)(_ |+| _)
   }
 
   val seq = 1 to 900000000

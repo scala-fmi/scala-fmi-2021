@@ -44,4 +44,9 @@ object Rational {
   def apply(n: Int, d: Int = 1) = new Rational(n, d)
 
   implicit def intToRational(n: Int): Rational = new Rational(n)
+
+  given Monoid[Rational] with {
+    extension (a: Rational) def |+|(b: Rational): Rational = a + b
+    val identity: Rational = 0
+  }
 }
