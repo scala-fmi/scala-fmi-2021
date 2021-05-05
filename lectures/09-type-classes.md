@@ -124,14 +124,14 @@ sum(List(Rational(1, 2), Rational(3, 4)))
 В Scala:
 
 ```scala
-given Field[Double] = ???
+given f: Field[Double] = ???
 ```
 
 :::
 
 ::: { .fragment }
 
-Ама в Scala 3. В Scala 2 чрез implicts :)
+Ама в Scala 3. В Scala 2 чрез implicits :)
 
 :::
 
@@ -183,6 +183,8 @@ Type class-овете дефинират операции и аксиоми/св
 # Полиморфизъм
 
 <p class="fragment">Използването на един и същи интерфейс с различни типове</p>
+
+# Полиморфизъм в Scala
 
 # Параметричен полиморфизъм (generics)
 
@@ -291,19 +293,29 @@ Type class-овете поддържат ретроактивен полимор
 
 # Сериализация до JSON
 
+::: { .fragment }
+
+По-късно в курса ще разгледаме библиотеката [`Circe`](https://circe.github.io/circe/)
+
+:::
+
 # Езици, поддържащи type class-ове
 
 * Haskell
 * Scala
-* [Rust](https://rustbyexample.com/trait.html)
+* Rust
 * Idris
 * ...
 
 #
 
-В Haskell всеки type class може да има само една инстанция за определен тип.
+В Haskell всеки type class може да има<br />само една инстанция за определен тип.
+
+::: { .fragment }
 
 В Scala липсва такова ограничение, което е едновременно и плюс и минус.
+
+:::
 
 # Библиотеки за type class-ове?
 
@@ -311,33 +323,49 @@ Type class-овете поддържат ретроактивен полимор
 
 # Библиотеки
 
-* [![](images/09-type-classes/cats-small.png){ height="40" style="vertical-align: middle" } Cats](http://typelevel.org/cats/)
-* [Spire](https://typelevel.org/spire/) – математически абстракции, използва Cats
-* [Scalaz](https://scalaz.github.io)
+::: incremental
+
+* Общи
+  * [![](images/09-type-classes/cats-small.png){ height="40" style="vertical-align: middle" } Cats](http://typelevel.org/cats/)
+  * [Scalaz](https://scalaz.github.io)
+* В конкретен домейн
+  * [Spire](https://typelevel.org/spire/) – математически абстракции, използва Cats
+  * [Cats Effects](https://typelevel.org/cats-effect/) – абстракции за асинхронност
+  * ...
+
+:::
 
 # Категории
 
 [![](images/09-type-classes/category-theory-for-programmers.png){ height="520" }](https://github.com/hmemcpy/milewski-ctfp-pdf)
 
+::: { .fragment }
+
+[лекции в Youtube](https://www.youtube.com/watch?v=I8LbkfSSR58&list=PLbgaMIhjbmEnaH_LTkxLI7FMa2HsnawM_)
+
+:::
+
 # Cats
 
 ::: { .fragment }
 
-Котки от най-различни категории 😸
+Различни видове котк... категории 😸
 
 :::
 
-# Multiversal equality (`Eq`)
+::: { .fragment }
+
+![Vivian – Scala Magician](images/09-type-classes/vivian-boyan-cat.jpg){ height=480 }
+
+:::
+
+# Моноид в Cats
+
+# Multiversal equality в Cats (`Eq`)
 
 # Scala with Cats
 
 [![Scala with Cats](images/09-type-classes/scala-with-cats.png){ height="520" }](https://underscore.io/books/scala-with-cats/)
-
-# Spire – Линейно пространство
-
-Type class-ове на повече типове
-
-<p class="fragment">Дефинират type class релация между няколко типа</p>
 
 # В заключение
 
@@ -350,6 +378,6 @@ Type class-овете:
 * или още – общ език, чрез който да мислим и боравим с тези типове
 * позволяват ad hoc полиморфизъм
 * наблягат на композитността и декларативността
-* не изискват промяна на кода на типа и в Scala могат да бъдат контекстно-зависими
+* ретроактивно се добавят към типовете и в Scala могат да бъдат контекстно-зависими
 
 :::

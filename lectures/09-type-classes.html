@@ -211,10 +211,10 @@ context
 </div>
 <div class="fragment">
 <p>В Scala:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>given Field<span class="op">[</span>Double<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>given f<span class="op">:</span> Field<span class="op">[</span>Double<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span></code></pre></div>
 </div>
 <div class="fragment">
-<p>Ама в Scala 3. В Scala 2 чрез implicts :)</p>
+<p>Ама в Scala 3. В Scala 2 чрез implicits :)</p>
 </div>
 </section>
 <section id="context-bound" class="slide level1">
@@ -269,6 +269,9 @@ Type class-овете моделират типове
 <p class="fragment">
 Използването на един и същи интерфейс с различни типове
 </p>
+</section>
+<section id="полиморфизъм-в-scala" class="slide level1">
+<h1>Полиморфизъм в Scala</h1>
 </section>
 <section id="параметричен-полиморфизъм-generics" class="slide level1">
 <h1>Параметричен полиморфизъм (generics)</h1>
@@ -361,21 +364,26 @@ Type class-овете моделират типове
 </section>
 <section id="сериализация-до-json" class="slide level1">
 <h1>Сериализация до JSON</h1>
+<div class="fragment">
+<p>По-късно в курса ще разгледаме библиотеката <a href="https://circe.github.io/circe/"><code>Circe</code></a></p>
+</div>
 </section>
 <section id="езици-поддържащи-type-class-ове" class="slide level1">
 <h1>Езици, поддържащи type class-ове</h1>
 <ul>
 <li>Haskell</li>
 <li>Scala</li>
-<li><a href="https://rustbyexample.com/trait.html">Rust</a></li>
+<li>Rust</li>
 <li>Idris</li>
 <li>…</li>
 </ul>
 </section>
 <section id="section-2" class="slide level1">
 <h1></h1>
-<p>В Haskell всеки type class може да има само една инстанция за определен тип.</p>
+<p>В Haskell всеки type class може да има<br />само една инстанция за определен тип.</p>
+<div class="fragment">
 <p>В Scala липсва такова ограничение, което е едновременно и плюс и минус.</p>
+</div>
 </section>
 <section id="библиотеки-за-type-class-ове" class="slide level1">
 <h1>Библиотеки за type class-ове?</h1>
@@ -383,35 +391,49 @@ Type class-овете моделират типове
 </section>
 <section id="библиотеки" class="slide level1">
 <h1>Библиотеки</h1>
+<div>
 <ul>
-<li><a href="http://typelevel.org/cats/"><img data-src="images/09-type-classes/cats-small.png" style="vertical-align: middle" height="40" /> Cats</a></li>
-<li><a href="https://typelevel.org/spire/">Spire</a> – математически абстракции, използва Cats</li>
-<li><a href="https://scalaz.github.io">Scalaz</a></li>
+<li class="fragment">Общи
+<ul>
+<li class="fragment"><a href="http://typelevel.org/cats/"><img data-src="images/09-type-classes/cats-small.png" style="vertical-align: middle" height="40" /> Cats</a></li>
+<li class="fragment"><a href="https://scalaz.github.io">Scalaz</a></li>
+</ul></li>
+<li class="fragment">В конкретен домейн
+<ul>
+<li class="fragment"><a href="https://typelevel.org/spire/">Spire</a> – математически абстракции, използва Cats</li>
+<li class="fragment"><a href="https://typelevel.org/cats-effect/">Cats Effects</a> – абстракции за асинхронност</li>
+<li class="fragment">…</li>
+</ul></li>
 </ul>
+</div>
 </section>
 <section id="категории" class="slide level1">
 <h1>Категории</h1>
 <p><a href="https://github.com/hmemcpy/milewski-ctfp-pdf"><img data-src="images/09-type-classes/category-theory-for-programmers.png" height="520" /></a></p>
+<div class="fragment">
+<p><a href="https://www.youtube.com/watch?v=I8LbkfSSR58&amp;list=PLbgaMIhjbmEnaH_LTkxLI7FMa2HsnawM_">лекции в Youtube</a></p>
+</div>
 </section>
 <section id="cats" class="slide level1">
 <h1>Cats</h1>
 <div class="fragment">
-<p>Котки от най-различни категории 😸</p>
+<p>Различни видове котк… категории 😸</p>
+</div>
+<div class="fragment">
+<figure>
+<img data-src="images/09-type-classes/vivian-boyan-cat.jpg" height="480" alt="Vivian – Scala Magician" /><figcaption aria-hidden="true">Vivian – Scala Magician</figcaption>
+</figure>
 </div>
 </section>
-<section id="multiversal-equality-eq" class="slide level1">
-<h1>Multiversal equality (<code>Eq</code>)</h1>
+<section id="моноид-в-cats" class="slide level1">
+<h1>Моноид в Cats</h1>
+</section>
+<section id="multiversal-equality-в-cats-eq" class="slide level1">
+<h1>Multiversal equality в Cats (<code>Eq</code>)</h1>
 </section>
 <section id="scala-with-cats" class="slide level1">
 <h1>Scala with Cats</h1>
 <p><a href="https://underscore.io/books/scala-with-cats/"><img data-src="images/09-type-classes/scala-with-cats.png" height="520" alt="Scala with Cats" /></a></p>
-</section>
-<section id="spire-линейно-пространство" class="slide level1">
-<h1>Spire – Линейно пространство</h1>
-<p>Type class-ове на повече типове</p>
-<p class="fragment">
-Дефинират type class релация между няколко типа
-</p>
 </section>
 <section id="в-заключение" class="slide level1">
 <h1>В заключение</h1>
@@ -423,7 +445,7 @@ Type class-овете моделират типове
 <li class="fragment">или още – общ език, чрез който да мислим и боравим с тези типове</li>
 <li class="fragment">позволяват ad hoc полиморфизъм</li>
 <li class="fragment">наблягат на композитността и декларативността</li>
-<li class="fragment">не изискват промяна на кода на типа и в Scala могат да бъдат контекстно-зависими</li>
+<li class="fragment">ретроактивно се добавят към типовете и в Scala могат да бъдат контекстно-зависими</li>
 </ul>
 </div>
 </section>

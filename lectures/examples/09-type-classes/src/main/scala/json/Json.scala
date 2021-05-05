@@ -31,12 +31,12 @@ trait JsonSerializable[A] {
 
 object JsonSerializable {
   def toJson[A](a: A)(implicit js: JsonSerializable[A]): JsonValue = js.toJson(a)
-  def toString[A : JsonSerializable](a: A) = JsonValue.toString(toJson(a))
+  def toString[A : JsonSerializable](a: A): String = JsonValue.toString(toJson(a))
 
   object ops {
     implicit class JsonSerializableOps[A : JsonSerializable](a: A) {
-      def toJson = JsonSerializable.toJson(a)
-      def toJsonString = JsonSerializable.toString(a)
+      def toJson: JsonValue = JsonSerializable.toJson(a)
+      def toJsonString: String = JsonSerializable.toString(a)
     }
   }
 
@@ -50,18 +50,5 @@ object JsonSerializable {
 
   implicit val booleanSerializable = new JsonSerializable[Boolean] {
     def toJson(a: Boolean): JsonValue = JsonBoolean(a)
-  }
-
-  implicit def listSerializable[A : JsonSerializable] = new JsonSerializable[List[A]] {
-    def toJson(a: List[A]): JsonValue = JsonArray(
-      a.map(value => JsonSerializable.toJson(value))
-    )
-  }
-
-  implicit def optionSerializable[A : JsonSerializable] = new JsonSerializable[Option[A]] {
-    def toJson(opt: Option[A]): JsonValue = opt match {
-      case Some(a) => JsonSerializable.toJson(a)
-      case _ => JsonNull
-    }
   }
 }

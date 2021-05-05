@@ -10,6 +10,5 @@ object OrderingTypeClassDemo extends App {
     }
   }
 
-
   quickSort(List(5, 1, 2, 3))
 }
