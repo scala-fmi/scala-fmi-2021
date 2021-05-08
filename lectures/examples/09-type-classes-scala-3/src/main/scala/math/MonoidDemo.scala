@@ -1,7 +1,11 @@
 package math
 
+import Monoid.given
+// Or specify just the givens you are going to use:
+// import Monoid.{ given Monoid[Int], given Monoid[(_, _)] }
+
 object MonoidDemo extends App {
-  def sum[A : Monoid](xs: List[A]) = {
+  def sum[A](xs: List[A])(using Monoid[A]) = {
     xs.fold(Monoid[A].identity)(_ |+| _)
   }
 
@@ -23,4 +27,6 @@ object MonoidDemo extends App {
     Some(Rational(3, 8)),
     None
   ))
+
+  (1, 2) |+| (3, 4)
 }

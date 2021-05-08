@@ -1,7 +1,11 @@
 package math
 
+import scala.math.abs
+
 object OrderingTypeClassDemo extends App {
-  def quickSort(xs: List[Int]): List[Int] = {
+  def quickSort[T](xs: List[T])(implicit m: Ordering[T]): List[T] = {
+    import m.mkOrderingOps
+
     xs match {
       case Nil => Nil
       case x :: rest =>
@@ -10,5 +14,9 @@ object OrderingTypeClassDemo extends App {
     }
   }
 
-  quickSort(List(5, 1, 2, 3))
+  implicit val intOrdering = Ordering[Int].reverse
+
+  quickSort(List(5, 1, 2, 3)) // List(5, 3, 2, 1)
+  quickSort(List(-5, 1, 2, -2, 3)) // List(3, 2, 1, -2, -5)
+  quickSort(List(-5, 1, 2, -2, 3))(Ordering.by(abs)) // List(-5, 3, 2, -2, 1)
 }

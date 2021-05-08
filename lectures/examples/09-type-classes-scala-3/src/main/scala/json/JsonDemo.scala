@@ -33,7 +33,7 @@ object JsonDemo extends App {
     }
   }
 
-  // We can implement this for deserialization, too. play-json is an example for library that implements this pattern
-  // and provides many utilities to ease the creation of (de)serializers.
+  // We can implement this for deserialization, too. circe and play-json are libraries that implements this pattern
+  // and provide many utilities to ease the creation of (de)serializers.
   // Since the mapping depends on only compile-time information the implementation is faster than e.g. Jackson (which uses reflection)
 }

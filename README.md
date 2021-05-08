@@ -120,7 +120,7 @@
     * моделиране на грешките като домейн структури и домейн логика
   - Ефект за вход/изход. IO. Предимства на IO
   - Разделение на чисто функционално композитно изграждане на план (без странични ефекти) от изпълнение на плана (водещо до странични ефекти)
-* [08 – Конкурентност](https://scala-fmi.github.io/scala-fmi-2021/lectures/08-concurrency.html)  \[[код](lectures/examples/08-concurrency)\]
+* [08 – Конкурентност](https://scala-fmi.github.io/scala-fmi-2021/lectures/08-concurrency.html) \[[код](lectures/examples/08-concurrency)\]
   - Трансформиращи, интерактивни и реактивни системи
   - Характеристики на физическия свят 
   - Цел: моделиране на програми, които да са част от физическия свят и да взаимодействат с него
@@ -148,6 +148,25 @@
     * асинхронен интерпретатор на IO
     * синхронен интерпретатор на IO
   - Предимства на lazy IO през eager Future
+* [09 – Type classes](https://scala-fmi.github.io/scala-fmi-2021/lectures/09-type-classes.html) \[[код](lectures/examples/09-type-classes)\]
+  - Абстрактност като помощно средство в програмирането. Абстрактност в математиката
+  - Какво е type class. Пример чрез моноид
+  - Контекст в програмния код. Контекстност на type class-овете в Scala
+  - Характеристики на type class-овете. Операции, композитност, аксиоми
+  - Context bound
+  - Логически изводи при търсене на implicit стойности, логическа типова система
+  - Защо спазването на аксиомите е важно. Пример с паралелен `fold`
+  - [Реализация на type class-ове в Scala 3 чрез `given`](lectures/examples/09-type-classes-scala-3)
+  - Сравнение между ООП класовете и type class-овете
+  - Полиморфизъм и видове полиморфизъм. Static и late binding. Ретроактивност
+  - Примери за type class-ове в стандартната библитека на Scala – `Numeric`, `Ordering`
+  - Примери в други езици – [Haskell](lectures/examples/09-type-classes/other/monoid.hs) и [Rust](lectures/examples/09-type-classes/other/monoid.rs) (и [още Rust](lectures/examples/09-type-classes/other/shapes.rs)). Сравнение на тях и Scala
+  - Библиотеки за type class-ове. Теория на категории
+  - Type class-ове за форматиране и сериализация, пример за JSON сериализация
+  - `Monoid` и `Semigroup` в библиотеката Cats
+  - Допълнителни примери (непокрити на лекциите)
+    * Multiversal срещу universal equality, [`Eq` в Cats](lectures/examples/09-type-classes/src/main/scala/cats/EqDemo.scala)
+    * Пример за type class-ове на повече типове, [линейно пространство в Spire](lectures/examples/09-type-classes/src/main/scala/spire/VectorSpaceDemo.scala)
 ## Ресурси
 
 * [Таблица на елементите, съставящи типовата система на Scala](resources/type-elements-in-scala.md)

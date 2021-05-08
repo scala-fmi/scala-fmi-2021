@@ -1,7 +1,5 @@
 package math
 
-// Compiles only in scala 3
-
 trait Monoid[M] {
   extension (a: M) def |+|(b: M): M
   def identity: M

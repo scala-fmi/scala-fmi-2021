@@ -1,7 +1,7 @@
-package answers.math
+package math
 
 trait Monoid[M] extends Semigroup[M] {
-  def op(a: M, b: M): M
+  def op(a: M, b: M): M // no need to repeat this one from Semigroup, it's here just for completeness
   def identity: M
 }
 
@@ -9,8 +9,8 @@ object Monoid {
   def apply[A](implicit m: Monoid[A]): Monoid[A] = m
 
   object ops {
-    implicit class MonoidOps[A](val a: A) extends AnyVal {
-      def |+|(b: A)(implicit m: Monoid[A]) = m.op(a, b)
+    implicit class MonoidOps[A](val a: A)(implicit m: Monoid[A]) {
+      def |+|(b: A): A = m.op(a, b)
     }
   }
 

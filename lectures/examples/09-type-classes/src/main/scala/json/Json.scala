@@ -51,4 +51,17 @@ object JsonSerializable {
   implicit val booleanSerializable = new JsonSerializable[Boolean] {
     def toJson(a: Boolean): JsonValue = JsonBoolean(a)
   }
+
+  implicit def optionSerializable[A : JsonSerializable] = new JsonSerializable[Option[A]] {
+    def toJson(opt: Option[A]): JsonValue = opt match {
+      case Some(a) => JsonSerializable.toJson(a)
+      case _ => JsonNull
+    }
+  }
+
+  implicit def listSerializable[A : JsonSerializable] = new JsonSerializable[List[A]] {
+    def toJson(a: List[A]): JsonValue = JsonArray(
+      a.map(value => JsonSerializable.toJson(value))
+    )
+  }
 }

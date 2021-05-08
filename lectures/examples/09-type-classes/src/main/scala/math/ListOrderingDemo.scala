@@ -1,4 +1,4 @@
-package answers.math
+package math
 
 object ListOrderingDemo extends App {
   implicit def listOrdering[A : Ordering]: Ordering[List[A]] = new Ordering[List[A]] {
