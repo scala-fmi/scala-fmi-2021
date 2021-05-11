@@ -1,6 +1,6 @@
 package effects.cats
 
-import cats.Monad
+import cats.{Monad, MonadError}
 import effects.maybe.{Just, Maybe, Nthng}
 
 object MonadExample extends App {

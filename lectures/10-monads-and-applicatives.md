@@ -31,28 +31,9 @@ title: Monads and Applicatives
 * Task[A] – (lazy) асихронност
 * State[S, A] – състояние
 
-# Операции върху ефекти - might delete
-
-```scala
-val a = 42 // независими
-val b = 4  // изчисления
-
-val c = a + b // операция
-val d = (a + b) * 10 // композиция на операции
-val e = f(g(a)) // композиция на функции
-```
-
-Пренесохме възможността за тези операции върху ефекта `Future`<br/>
-(и стойността в него)
-
-* `map` – трансформация на единична стойност (напр. `val c = -a`)
-* `map2` (или `zipMap`) – трансформация на две независими стойности (`val c = a + b`). Резултатът `c` зависи от тях
-* `map3`, `zipMap3`...; `mapN` дефинира зависимости
-* `flatMap` – ефектна трансформация на единична стойност
-
 #
 
-Нека да генерализираме тези операции в type class-ове
+Нека да генерализираме познатите ни от тях операции в type class-ове
 
 Предния път постигнахме подобна генерализация за прости типове, нека сега се опитаме да го направим и за ефекти.
 
@@ -269,6 +250,8 @@ compose((_: Unit) => fa, f)(())
 
 # Но какво точно е Монада?
 
+::: incremental
+
 * Видяхме, че има няколко възможни набори от основни операции
   - `unit` и `flatMap` 
   - `unit` и `compose`
@@ -276,18 +259,33 @@ compose((_: Unit) => fa, f)(())
   
 * Освен това имаме 2 закона, които могат да бъдат формулирани по няколко начина - за асоциативност и идентитет
   
-* Малко по-ясна дефиниция от предната:
+* По-ясна дефиниция от предната:
+
+<div class="fragment">
+
 > A monad is an implementation of one of the minimal sets of monadic
 combinators, satisfying the laws of associativity and identity.
 
+</div>
+
 * Всъщност се разбират много по-добре в даден контекст - с примери
 
+:::
+
 # Id монада
+
+::: incremental
+
+`effects/id/Id.scala`
 
 * Тук ефекта на `flatMap` за `Id` е просто именуване на стойности (variable substitution)
 * monads provide a context for introducing and binding variables, and performing variable substitution.
 
-# State монада - still not done
+:::
+
+# State монада
+
+`effects/state/State.scala`
 
 # Генерализация на монадите – функтори
 
@@ -319,16 +317,109 @@ trait Monad[F[_]] extends Functor[F] {
 map(x)(a => a) == x
 ```
 
-
 # Еквиваленти в Cats
 
-`effects/cats/MonadExample`
+`monads/effects/cats/MonadExample`
 
-# 
+# Грешни състояния на монади
+
+Някои монади си имат и грешни състояния, които биха прекъснали цялата композиция
+
+Примери:
+
+* `Option` - `None`
+* `Either` - `Left(error)`
+* `Try` - `Failure(throwable)`
+
+# Грешни състояния на монади
+
+Композицията става по-трудна ако работим с библиотеки, които ползват
+различни монади за връщане на грешките
+
+```scala
+def readFile(): Try[String] = ???
+
+def toJson(str: String): Either[Throwable, Json] = ???
+
+for {
+    fileContent <- readFile()
+    parsedFile <- toJson(fileContent)  //does not compile
+} yield parsedFile 
+```
+
+Това също може да се генерализира като използваме `MonadError[F[_], E]`,
+  но няма да го разглеждаме подробно. Повече детайли [тук](https://blog.codacy.com/error-handling-monad-error-for-the-rest-of-us/#:~:text=MonadError%20is%20a%20type%20class,of%20the%20MonadError%20type%20class.)
 
 
+# Валидиране и натрупване на грешки
+
+::: incremental
+
+* Нека разгледаме примера от домашното и се опитаме да използваме монада за Validated
+* Можем да получим друга абстракция ако използваме `unit` & `map2` за основни операции
+
+:::
+
+# Applicative
+
+```scala
+trait Applicative[F[_]] extends Functor[F] {
+
+  // primitive
+  def map2[A, B, C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C]
+  def unit[A](a: => A): F[A]
+
+  // derived
+  def map[A, B](fa: F[A])(f: A => B): F[B] = map2(fa, unit(()))((a, _) => f(a))
+  
+}
+```
+
+# Какво ни дава Applicative?
+
+::: increment
+
+* Дава ни възможност за независимост и паралелизъм (за разлика от монадата, която е sequential)
+* Нека отново разгледаме примера с Validated
+
+:::
+
+# Алтернативна дефиниция<br />чрез `apply`
 
 
+```scala
+trait Applicative[F[_]] extends Functor[F] {
+  
+  def apply[A, B](fab: F[A => B])(fa: F[A]): F[B]
+  def unit[A](a: => A): F[A]
+
+}
+```
+
+`apply` може да се изрази чрез `map2`
+```scala
+def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = map2(fab, fa)(_(_))
+```
+
+# map3, 4 ... N
+
+Бихме могли да дефинираме `map` и за повече от 2 апликатива
+
+```scala
+def map3[A,B,C,D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
+  val fbcd = map(fa)(f.curried)
+  val fcd = apply(fbcd)(fb)
+  apply(fcd)(fc)
+}
+
+def map4[A,B,C,D,E](fa: F[A],
+                    fb: F[B],
+                    fc: F[C],
+                    fd: F[D])(f: (A, B, C, D) => E): F[E] =
+  apply(apply(apply(apply(unit(f.curried))(fa))(fb))(fc))(fd)
+```
+
+# sequence & traverse
 
 # Композитност на функтори, монади и апликативи
 

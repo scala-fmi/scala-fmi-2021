@@ -24,6 +24,7 @@ trait Monad[F[_]] {
   def map2[A, B, C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] = ???
 
   def sequence[A](xs: List[F[A]]): F[List[A]] = ???
+  def traverse[A,B](as: List[A])(f: A => F[B]): F[List[B]] = ???
 
 }
 
@@ -52,7 +53,7 @@ object Monad {
   }
 
   /*
-  Exercise 4: Define Monad instances for types Option, State
+  Exercise 4: Define Monad instances for type Option
    */
 
 }
