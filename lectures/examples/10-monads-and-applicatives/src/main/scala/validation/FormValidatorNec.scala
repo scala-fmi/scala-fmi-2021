@@ -35,7 +35,7 @@ object FormValidatorNec {
 }
 
 object FormValidatorNecDemo extends App {
-  println{
+  println {
     FormValidatorNec.validateForm(
       username = "fake$Us#rname",
       password = "password"

@@ -32,8 +32,6 @@ object MaybeDemo extends App {
   } yield a * b * d
   println(result)
 
-
-
   val maybe1: Maybe[Int] = Just(42)
   val maybe2: Maybe[Int] = Just(10)
 
@@ -41,8 +39,5 @@ object MaybeDemo extends App {
 
   val listOfMaybes = List(Just(1), Nthng, Just(2))
 
-  println(
-    Monad.sequence(listOfMaybes),
-    listOfMaybes.sequence
-  )
+
 }

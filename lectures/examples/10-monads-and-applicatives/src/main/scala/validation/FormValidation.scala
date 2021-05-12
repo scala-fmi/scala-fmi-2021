@@ -16,7 +16,6 @@ sealed trait FormValidator {
     )
 
   def validateForm(username: String, password: String): Either[DomainValidation, RegistrationData] = {
-
     for {
       validatedUserName <- validateUserName(username)
       validatedPassword <- validatePassword(password)

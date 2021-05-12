@@ -15,25 +15,12 @@ case class RNG(seed: Long) {
 }
 
 object RNG {
-  type StateRNG[T] = State[RNG, T]
-
-  val nextInt: StateRNG[Int] = State((rng: RNG) => rng.nextInt)
+  val nextInt = State((rng: RNG) => rng.nextInt)
   val nextBoolean = nextInt.map(_ > 0)
 }
 
 object RNGDemo extends App {
   import RNG._
-
-  stateMonad.flatMap(nextInt)(i => nextInt)
-
-  val randomTuple = for {
-    a <- nextInt
-    b <- nextInt
-    c <- nextBoolean
-  } yield (a, b, a + b, c)
-
-  println(randomTuple.run(RNG(System.currentTimeMillis)))
-
 
   // Without State we have to do this:
   val (rng1, next1) = RNG(System.currentTimeMillis).nextInt
@@ -41,4 +28,20 @@ object RNGDemo extends App {
   val (rng3, next3) = rng2.nextInt
 
   println(next1, next2, next3)
+
+
+  //With state
+  val randomTuple = for {
+    a <- nextInt
+    b <- nextInt
+    c <- nextBoolean
+    d <- nextBoolean
+  } yield {
+    (a, b, a + b, c)
+  }
+
+  println(randomTuple.run(RNG(System.currentTimeMillis)))
+
+  val b = nextInt.flatMap(i => nextBoolean)
+
 }

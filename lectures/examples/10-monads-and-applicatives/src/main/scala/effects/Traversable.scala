@@ -11,7 +11,6 @@ trait Traversable[F[_]] extends Functor[F] {
   def sequence[G[_]: Applicative, A](fga: F[G[A]]): G[F[A]] =
     traverse(fga)(ga => ga)
 
-
   def map[A,B](fa: F[A])(f: A => B): F[B] = {
     type Id[A] = A
 
@@ -69,10 +68,17 @@ object TraversableDemo extends App {
   }
 
   println {
-    val optionOfValidated: Option[ValidationResult[RegistrationData]] = Some(FormValidatorNecApplicative.validateForm(
+    val optionOfValidated: Option[ValidationResult[RegistrationData]] = Some(
+      FormValidatorNecApplicative.validateForm(
       username = "correctUsername",
       password = "Password123#"
     )(Answers.validatedApplicative))
+
+    Traversable[Option].sequence(optionOfValidated)(Answers.validatedApplicative)
+  }
+
+  println {
+    val optionOfValidated: Option[ValidationResult[RegistrationData]] = None
 
     Traversable[Option].sequence(optionOfValidated)(Answers.validatedApplicative)
   }

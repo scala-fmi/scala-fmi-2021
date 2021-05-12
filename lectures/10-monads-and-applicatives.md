@@ -26,16 +26,15 @@ title: Monads and Applicatives
 * Either[E, A] – успех/грешки
 * Validated[E, A] – валидация с множествено грешки
 * List[A] – недетерминизъм, множественост
-* IO[A] – вход/изход
 * Future[A] – (eager) асинхронност
-* Task[A] – (lazy) асихронност
+* IO[A] – (lazy) асихронност
 * State[S, A] – състояние
 
 #
 
 Нека да генерализираме познатите ни от тях операции в type class-ове
 
-Предния път постигнахме подобна генерализация за прости типове, нека сега се опитаме да го направим и за ефекти.
+Предния път постигнахме подобна генерализация за обикновени типове, нека сега се опитаме да го направим и за ефекти.
 
 <p class="fragment">Ще започнем от една различна гледна точка</p>
 
@@ -258,22 +257,26 @@ compose((_: Unit) => fa, f)(())
 
 ::: incremental
 
-* Видяхме, че има няколко възможни набори от основни операции
-  - `unit` и `flatMap` 
-  - `unit` и `compose`
-  - `unit`, `map`, и `flatten`
-  
-* Освен това имаме 2 закона, които могат да бъдат формулирани по няколко начина - за асоциативност и идентитет
-  
 * По-ясна дефиниция от предната:
 
 <div class="fragment">
 
-> A monad is an implementation of one of the minimal sets of monadic
-combinators, satisfying the laws of associativity and identity.
+> Монадата ни позволява да опишем последователни изчисления върху ефекти
 
 </div>
 
+<div class="fragment">
+
+> Или още казано - да композираме ефектни изчисления едно след друго
+
+</div>
+
+* Видяхме, че има няколко възможни набори от основни операции
+  - `unit` и `flatMap`
+  - `unit` и `compose`
+  - `unit`, `map`, и `flatten`
+
+* Освен това имаме 2 закона, които могат да бъдат формулирани по няколко начина - за асоциативност и идентитет
 * Всъщност се разбират много по-добре в даден контекст - с примери
 
 :::
@@ -283,9 +286,6 @@ combinators, satisfying the laws of associativity and identity.
 ::: incremental
 
 `effects/id/Id.scala`
-
-* Тук ефекта на `flatMap` за `Id` е просто именуване на стойности (variable substitution)
-* monads provide a context for introducing and binding variables, and performing variable substitution.
 
 :::
 
@@ -323,10 +323,6 @@ trait Monad[F[_]] extends Functor[F] {
 map(x)(a => a) == x
 ```
 
-# Еквиваленти в Cats
-
-`monads/effects/cats/MonadExample`
-
 # Грешни състояния на монади
 
 Някои монади си имат и грешни състояния, които биха прекъснали цялата композиция
@@ -354,8 +350,7 @@ for {
 ```
 
 Това също може да се генерализира като използваме `MonadError[F[_], E]`,
-  но няма да го разглеждаме подробно. Повече детайли [тук](https://blog.codacy.com/error-handling-monad-error-for-the-rest-of-us/#:~:text=MonadError%20is%20a%20type%20class,of%20the%20MonadError%20type%20class.)
-
+  но няма да го разглеждаме подробно.
 
 # Валидиране и натрупване на грешки
 
@@ -377,9 +372,15 @@ trait Applicative[F[_]] extends Functor[F] {
 
   // derived
   def map[A, B](fa: F[A])(f: A => B): F[B] = map2(fa, unit(()))((a, _) => f(a))
-  
+  def zip[A,B](fa: F[A], fb: F[B]): F[(A,B)] = map2(fa, fb)((_,_))
 }
 ```
+
+::: { .fragment }
+
+Алтернативни базови операции са `map`, `zip`, `unit`
+
+:::
 
 # Разликите между Monad и Applicative
 
@@ -426,57 +427,8 @@ val o: Option[String] =
 * С апликатива структурата на програмата е фиксирана,
   а с монадата резултатите от предните изчисления могат да повлияят
   кои изчисления да се изпълняват по-нататък.
-* Монадата е sequential, докато апликатива ни дава възможност за независимост и паралелизъм
+* Монадата е sequential, докато апликатива ни дава **възможност** за независимост и паралелизъм
 * Нека отново разгледаме примера с Validated
-
-:::
-
-# Алтернативна дефиниция<br />чрез `apply`
-
-```scala
-trait Applicative[F[_]] extends Functor[F] {
-  
-  def apply[A, B](fab: F[A => B])(fa: F[A]): F[B]
-  def unit[A](a: => A): F[A]
-
-}
-```
-
-`apply` може да се изрази чрез `map2`, както и обратното
-```scala
-def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = map2(fab, fa)(_(_))
-
-def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] =
-  apply(map(fa)(f.curried))(fb)
-```
-
-# Аксиомите за Applicative
-
-::: incremental
-
-* Очакваме аксиомите на функтор да се спазват
-* Ляв и десен идентитет
-  ```scala
-    map2(unit(()), fa)((_,a) => a) == fa
-    map2(fa, unit(()))((a,_) => a) == fa
-  ```
-* Асоциативност
-  ```scala
-    product(product(fa,fb),fc) == map(product(fa, product(fb,fc)))(assoc)
-  ```
-* Натуралност
-  ```scala
-    map2(a,b)(productF(f,g)) == product(map(a)(f), map(b)(g))
-  ```
-  където
-  ```scala
-    def product[A,B](fa: F[A], fb: F[B]): F[(A,B)] =
-      map2(fa, fb)((_,_))
-    def assoc[A,B,C](p: (A,(B,C))): ((A,B), C) =
-      p match { case (a, (b, c)) => ((a,b), c) }
-    def productF[I,O,I2,O2](f: I => O, g: I2 => O2): (I,I2) => (O,O2) =
-      (i,i2) => (f(i), g(i2))
-  ```
 
 :::
 
@@ -487,9 +439,10 @@ def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] =
 
 ```scala
 def map3[A,B,C,D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
-  val fbcd = map(fa)(f.curried)
-  val fcd = apply(fbcd)(fb)
-  apply(fcd)(fc)
+  val product = zip(zip(fa, fb), fc)
+  map(product) {
+    case ((a, b), c) => f(a, b, c)
+  }
 }
 ```
 
@@ -499,8 +452,7 @@ def map3[A,B,C,D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
 def map4[A,B,C,D,E](fa: F[A],
                     fb: F[B],
                     fc: F[C],
-                    fd: F[D])(f: (A, B, C, D) => E): F[E] =
-  apply(apply(apply(apply(unit(f.curried))(fa))(fb))(fc))(fd)
+                    fd: F[D])(f: (A, B, C, D) => E): F[E]
 ```
 
 </div>
@@ -521,15 +473,7 @@ def map4[A,B,C,D,E](fa: F[A],
 
 Примери: `effects/ApplicativeSequenceDemo` & `effects/ApplicativeTraverseDemo`
 
-# Предимства на Applicative
 
-::: incremental
-
-* По-добре е да имплементираме комбинатори като `sequence` & `traverse` използвайки възможно най-малко предположения
-* Апликатива е "по-слаб" от монада => имаме повече свобода за имплементация
-* Апликативите могат да се комбинират помежду си, докато монадите в общия случай - не
-
-:::
 
 # Traversable
 
@@ -543,7 +487,7 @@ def map4[A,B,C,D,E](fa: F[A],
 # Traversable
 
 ```scala
-trait Traverse[F[_]] extends Functor[F] {
+trait Traversable[F[_]] extends Functor[F] {
   def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
   
   def sequence[G[_]:Applicative,A](fga: F[G[A]]): G[F[A]] =

@@ -13,13 +13,14 @@ trait Applicative[F[_]] extends Functor[F] {
 
   def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = map2(fab, fa)(_(_))
 
-  def product[A,B](fa: F[A], fb: F[B]): F[(A,B)] =
+  def zip[A,B](fa: F[A], fb: F[B]): F[(A,B)] =
     map2(fa, fb)((_,_))
 
   def map3[A,B,C,D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
-    val fbcd = map(fa)(f.curried)
-    val fcd = apply(fbcd)(fb)
-    apply(fcd)(fc)
+    val product = zip(zip(fa, fb), fc)
+    map(product) {
+      case ((a, b), c) => f(a, b, c)
+    }
   }
 
   /*
