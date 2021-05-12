@@ -105,11 +105,11 @@
 </ul>
 </div>
 </section>
-<section id="ефекти" class="slide level1">
-<h1>Ефекти</h1>
-<p><img data-src="images/10-monads-and-applicatives/impure-logo.png" /></p>
+<section id="днес---монади-и-апликативи" class="slide level1">
+<h1>Днес - Монади и Апликативи</h1>
+<p><img data-src="images/10-monads-and-applicatives/big-cat-burrito.jpeg" /></p>
 </section>
-<section id="ефекти-1" class="slide level1">
+<section id="ефекти" class="slide level1">
 <h1>Ефекти</h1>
 <ul>
 <li>Option[A] – частичност</li>
@@ -220,9 +220,14 @@ h ∘ g ∘ f?
 <p class="fragment">
 higher-kinded polymorphism
 </p>
-<p class="fragment">
-<img data-src="images/10-monads-and-applicatives/impure-logo.png" height="220" />
+<div class="fragment">
+<p>
+<img data-src="images/10-monads-and-applicatives/impure-logo.png" height="130" />
 </p>
+<p>
+<a href="https://blog.plover.com/prog/burritos.html">Monads are like burritos</a>
+</p>
+</div>
 </section>
 <section id="монада-аксиоми" class="slide level1">
 <h1>Монада – аксиоми</h1>
@@ -232,7 +237,7 @@ higher-kinded polymorphism
 <pre><code>compose(compose(f, g), h) == compose(f, compose(g, h))</code></pre></li>
 <li class="fragment"><p>неутрален елемент, за който имаме left identity &amp; right identity</p>
 <pre><code>compose(unit, f) == compose(f, unit) == f</code></pre></li>
-<li class="fragment"><p>Много приличат на аксиомите за моноид, но е с функции</p></li>
+<li class="fragment"><p>Много приличат на аксиомите за моноид, но с функции</p></li>
 </ul>
 <div class="fragment">
 <blockquote>
@@ -407,61 +412,173 @@ higher-kinded polymorphism
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </section>
-<section id="какво-ни-дава-applicative" class="slide level1">
-<h1>Какво ни дава Applicative?</h1>
-<div class="increment">
+<section id="разликите-между-monad-и-applicative" class="slide level1">
+<h1>Разликите между Monad и Applicative</h1>
+<p>Applicative</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> F<span class="op">:</span> Applicative<span class="op">[</span><span class="bu">Option</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> depts<span class="op">:</span> Map<span class="op">[</span>String<span class="op">,</span> String<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> salaries<span class="op">:</span> Map<span class="op">[</span>String<span class="op">,</span> Double<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">// two independent lookups</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> o<span class="op">:</span> <span class="bu">Option</span><span class="op">[</span>String<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  F<span class="op">.</span><span class="fu">map2</span><span class="op">(</span>depts<span class="op">.</span><span class="fu">get</span><span class="op">(</span><span class="st">&quot;Alice&quot;</span><span class="op">),</span> salaries<span class="op">.</span><span class="fu">get</span><span class="op">(</span><span class="st">&quot;Alice&quot;</span><span class="op">))(</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>dept<span class="op">,</span> salary<span class="op">)</span> <span class="op">=&gt;</span> <span class="ss">s&quot;</span><span class="st">Alice in </span><span class="ss">$dept</span><span class="st"> makes </span><span class="ss">$salary</span><span class="st"> per year</span><span class="ss">&quot;</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">)</span></span></code></pre></div>
+</section>
+<section id="разликите-между-monad-и-applicative-1" class="slide level1">
+<h1>Разликите между Monad и Applicative</h1>
+<p>Monad</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> F<span class="op">:</span> Monad<span class="op">[</span><span class="bu">Option</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> idsByName<span class="op">:</span> Map<span class="op">[</span>String<span class="op">,</span> <span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> depts<span class="op">:</span> Map<span class="op">[</span><span class="bu">Int</span><span class="op">,</span> String<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> salaries<span class="op">:</span> Map<span class="op">[</span><span class="bu">Int</span><span class="op">,</span> Double<span class="op">]</span> <span class="op">=</span> <span class="op">???</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">// the results of one lookup affect what lookup we do next</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> o<span class="op">:</span> <span class="bu">Option</span><span class="op">[</span>String<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  idsByName<span class="op">.</span><span class="fu">get</span><span class="op">(</span><span class="st">&quot;Bob&quot;</span><span class="op">).</span>flatMap <span class="op">{</span> id <span class="op">=&gt;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    F<span class="op">.</span><span class="fu">map2</span><span class="op">(</span>depts<span class="op">.</span><span class="fu">get</span><span class="op">(</span>id<span class="op">),</span> salaries<span class="op">.</span><span class="fu">get</span><span class="op">(</span>id<span class="op">))(</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>dept<span class="op">,</span> salary<span class="op">)</span> <span class="op">=&gt;</span> <span class="ss">s&quot;</span><span class="st">Bob in </span><span class="ss">$dept</span><span class="st"> makes </span><span class="ss">$salary</span><span class="st"> per year</span><span class="ss">&quot;</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="разликите-между-monad-и-applicative-2" class="slide level1">
+<h1>Разликите между Monad и Applicative</h1>
+<div>
 <ul>
-<li>Дава ни възможност за независимост и паралелизъм (за разлика от монадата, която е sequential)</li>
-<li>Нека отново разгледаме примера с Validated</li>
+<li class="fragment">Монадата добавя допълнителни възможности над Applicative - <code>join</code> или <code>flatMap</code></li>
+<li class="fragment">С апликатива може да комбинираме независими стойности, докато с монадата моделираме зависимост между такива.</li>
+<li class="fragment">С апликатива структурата на програмата е фиксирана, а с монадата резултатите от предните изчисления могат да повлияят кои изчисления да се изпълняват по-нататък.</li>
+<li class="fragment">Монадата е sequential, докато апликатива ни дава възможност за независимост и паралелизъм</li>
+<li class="fragment">Нека отново разгледаме примера с Validated</li>
 </ul>
 </div>
 </section>
 <section id="алтернативна-дефиниция-чрез-apply" class="slide level1">
 <h1>Алтернативна дефиниция<br />чрез <code>apply</code></h1>
-<div class="sourceCode" id="cb18"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Applicative<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> Functor<span class="op">[</span>F<span class="op">]</span> <span class="op">{</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> apply<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fab<span class="op">:</span> F<span class="op">[</span>A <span class="op">=&gt;</span> B<span class="op">])(</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">]):</span> F<span class="op">[</span>B<span class="op">]</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="dt">unit</span><span class="op">[</span>A<span class="op">](</span>a<span class="op">:</span> <span class="op">=&gt;</span> A<span class="op">):</span> F<span class="op">[</span>A<span class="op">]</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><code>apply</code> може да се изрази чрез <code>map2</code></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fab<span class="op">:</span> F<span class="op">[</span>A <span class="op">=&gt;</span> B<span class="op">])(</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">]):</span> F<span class="op">[</span>B<span class="op">]</span> <span class="op">=</span> <span class="fu">map2</span><span class="op">(</span>fab<span class="op">,</span> fa<span class="op">)(</span><span class="fu">_</span><span class="op">(</span>_<span class="op">))</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Applicative<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> Functor<span class="op">[</span>F<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> apply<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fab<span class="op">:</span> F<span class="op">[</span>A <span class="op">=&gt;</span> B<span class="op">])(</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">]):</span> F<span class="op">[</span>B<span class="op">]</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="dt">unit</span><span class="op">[</span>A<span class="op">](</span>a<span class="op">:</span> <span class="op">=&gt;</span> A<span class="op">):</span> F<span class="op">[</span>A<span class="op">]</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><code>apply</code> може да се изрази чрез <code>map2</code>, както и обратното</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fab<span class="op">:</span> F<span class="op">[</span>A <span class="op">=&gt;</span> B<span class="op">])(</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">]):</span> F<span class="op">[</span>B<span class="op">]</span> <span class="op">=</span> <span class="fu">map2</span><span class="op">(</span>fab<span class="op">,</span> fa<span class="op">)(</span><span class="fu">_</span><span class="op">(</span>_<span class="op">))</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map2<span class="op">[</span>A<span class="op">,</span>B<span class="op">,</span>C<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">])(</span>f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> B<span class="op">)</span> <span class="op">=&gt;</span> C<span class="op">):</span> F<span class="op">[</span>C<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span>fa<span class="op">)(</span>f<span class="op">.</span>curried<span class="op">))(</span>fb<span class="op">)</span></span></code></pre></div>
+</section>
+<section id="аксиомите-за-applicative" class="slide level1">
+<h1>Аксиомите за Applicative</h1>
+<div>
+<ul>
+<li class="fragment"><p>Очакваме аксиомите на функтор да се спазват</p></li>
+<li class="fragment"><p>Ляв и десен идентитет</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map2</span><span class="op">(</span><span class="dt">unit</span><span class="op">(()),</span> fa<span class="op">)((</span>_<span class="op">,</span>a<span class="op">)</span> <span class="op">=&gt;</span> a<span class="op">)</span> <span class="op">==</span> fa</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map2</span><span class="op">(</span>fa<span class="op">,</span> <span class="dt">unit</span><span class="op">(()))((</span>a<span class="op">,</span>_<span class="op">)</span> <span class="op">=&gt;</span> a<span class="op">)</span> <span class="op">==</span> fa</span></code></pre></div></li>
+<li class="fragment"><p>Асоциативност</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">product</span><span class="op">(</span><span class="fu">product</span><span class="op">(</span>fa<span class="op">,</span>fb<span class="op">),</span>fc<span class="op">)</span> <span class="op">==</span> <span class="fu">map</span><span class="op">(</span><span class="fu">product</span><span class="op">(</span>fa<span class="op">,</span> <span class="fu">product</span><span class="op">(</span>fb<span class="op">,</span>fc<span class="op">)))(</span>assoc<span class="op">)</span></span></code></pre></div></li>
+<li class="fragment"><p>Натуралност</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map2</span><span class="op">(</span>a<span class="op">,</span>b<span class="op">)(</span><span class="fu">productF</span><span class="op">(</span>f<span class="op">,</span>g<span class="op">))</span> <span class="op">==</span> <span class="fu">product</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span>a<span class="op">)(</span>f<span class="op">),</span> <span class="fu">map</span><span class="op">(</span>b<span class="op">)(</span>g<span class="op">))</span></span></code></pre></div>
+<p>където</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> product<span class="op">[</span>A<span class="op">,</span>B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">]):</span> F<span class="op">[(</span>A<span class="op">,</span>B<span class="op">)]</span> <span class="op">=</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map2</span><span class="op">(</span>fa<span class="op">,</span> fb<span class="op">)((</span>_<span class="op">,</span>_<span class="op">))</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> assoc<span class="op">[</span>A<span class="op">,</span>B<span class="op">,</span>C<span class="op">](</span>p<span class="op">:</span> <span class="op">(</span>A<span class="op">,(</span>B<span class="op">,</span>C<span class="op">))):</span> <span class="op">((</span>A<span class="op">,</span>B<span class="op">),</span> C<span class="op">)</span> <span class="op">=</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    p <span class="cf">match</span> <span class="op">{</span> <span class="cf">case</span> <span class="op">(</span>a<span class="op">,</span> <span class="op">(</span>b<span class="op">,</span> c<span class="op">))</span> <span class="op">=&gt;</span> <span class="op">((</span>a<span class="op">,</span>b<span class="op">),</span> c<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> productF<span class="op">[</span>I<span class="op">,</span>O<span class="op">,</span>I2<span class="op">,</span>O2<span class="op">](</span>f<span class="op">:</span> I <span class="op">=&gt;</span> O<span class="op">,</span> g<span class="op">:</span> I2 <span class="op">=&gt;</span> O2<span class="op">):</span> <span class="op">(</span>I<span class="op">,</span>I2<span class="op">)</span> <span class="op">=&gt;</span> <span class="op">(</span>O<span class="op">,</span>O2<span class="op">)</span> <span class="op">=</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>i<span class="op">,</span>i2<span class="op">)</span> <span class="op">=&gt;</span> <span class="op">(</span><span class="fu">f</span><span class="op">(</span>i<span class="op">),</span> <span class="fu">g</span><span class="op">(</span>i2<span class="op">))</span></span></code></pre></div></li>
+</ul>
+</div>
 </section>
 <section id="map3-4-n" class="slide level1">
 <h1>map3, 4 … N</h1>
-<p>Бихме могли да дефинираме <code>map</code> и за повече от 2 апликатива</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map3<span class="op">[</span>A<span class="op">,</span>B<span class="op">,</span>C<span class="op">,</span>D<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">],</span> fc<span class="op">:</span> F<span class="op">[</span>C<span class="op">])(</span>f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> B<span class="op">,</span> C<span class="op">)</span> <span class="op">=&gt;</span> D<span class="op">):</span> F<span class="op">[</span>D<span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> fbcd <span class="op">=</span> <span class="fu">map</span><span class="op">(</span>fa<span class="op">)(</span>f<span class="op">.</span>curried<span class="op">)</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> fcd <span class="op">=</span> <span class="fu">apply</span><span class="op">(</span>fbcd<span class="op">)(</span>fb<span class="op">)</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span><span class="op">(</span>fcd<span class="op">)(</span>fc<span class="op">)</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map4<span class="op">[</span>A<span class="op">,</span>B<span class="op">,</span>C<span class="op">,</span>D<span class="op">,</span>E<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                    fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">],</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                    fc<span class="op">:</span> F<span class="op">[</span>C<span class="op">],</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                    fd<span class="op">:</span> F<span class="op">[</span>D<span class="op">])(</span>f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> B<span class="op">,</span> C<span class="op">,</span> D<span class="op">)</span> <span class="op">=&gt;</span> E<span class="op">):</span> F<span class="op">[</span>E<span class="op">]</span> <span class="op">=</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span><span class="op">(</span><span class="fu">apply</span><span class="op">(</span><span class="fu">apply</span><span class="op">(</span><span class="fu">apply</span><span class="op">(</span><span class="dt">unit</span><span class="op">(</span>f<span class="op">.</span>curried<span class="op">))(</span>fa<span class="op">))(</span>fb<span class="op">))(</span>fc<span class="op">))(</span>fd<span class="op">)</span></span></code></pre></div>
+<p>Бихме могли да дефинираме и повече от <code>map2</code></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map3<span class="op">[</span>A<span class="op">,</span>B<span class="op">,</span>C<span class="op">,</span>D<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">],</span> fc<span class="op">:</span> F<span class="op">[</span>C<span class="op">])(</span>f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> B<span class="op">,</span> C<span class="op">)</span> <span class="op">=&gt;</span> D<span class="op">):</span> F<span class="op">[</span>D<span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> fbcd <span class="op">=</span> <span class="fu">map</span><span class="op">(</span>fa<span class="op">)(</span>f<span class="op">.</span>curried<span class="op">)</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> fcd <span class="op">=</span> <span class="fu">apply</span><span class="op">(</span>fbcd<span class="op">)(</span>fb<span class="op">)</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span><span class="op">(</span>fcd<span class="op">)(</span>fc<span class="op">)</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb27"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> map4<span class="op">[</span>A<span class="op">,</span>B<span class="op">,</span>C<span class="op">,</span>D<span class="op">,</span>E<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                    fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">],</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                    fc<span class="op">:</span> F<span class="op">[</span>C<span class="op">],</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                    fd<span class="op">:</span> F<span class="op">[</span>D<span class="op">])(</span>f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> B<span class="op">,</span> C<span class="op">,</span> D<span class="op">)</span> <span class="op">=&gt;</span> E<span class="op">):</span> F<span class="op">[</span>E<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span><span class="op">(</span><span class="fu">apply</span><span class="op">(</span><span class="fu">apply</span><span class="op">(</span><span class="fu">apply</span><span class="op">(</span><span class="dt">unit</span><span class="op">(</span>f<span class="op">.</span>curried<span class="op">))(</span>fa<span class="op">))(</span>fb<span class="op">))(</span>fc<span class="op">))(</span>fd<span class="op">)</span></span></code></pre></div>
+</div>
 </section>
 <section id="sequence-traverse" class="slide level1">
 <h1>sequence &amp; traverse</h1>
+<p>Когато не знаем колко е N</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> sequence<span class="op">[</span>A<span class="op">](</span>lfa<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>F<span class="op">[</span>A<span class="op">]]):</span> F<span class="op">[</span><span class="bu">List</span><span class="op">[</span>A<span class="op">]]</span> <span class="op">=</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">traverse</span><span class="op">(</span>lfa<span class="op">)(</span>fa <span class="op">=&gt;</span> fa<span class="op">)</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> traverse<span class="op">[</span>A<span class="op">,</span>B<span class="op">](</span>as<span class="op">:</span> <span class="bu">List</span><span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> F<span class="op">[</span>B<span class="op">]):</span> F<span class="op">[</span><span class="bu">List</span><span class="op">[</span>B<span class="op">]]</span> <span class="op">=</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    as<span class="op">.</span><span class="fu">foldRight</span><span class="op">(</span><span class="dt">unit</span><span class="op">(</span><span class="bu">List</span><span class="op">[</span>B<span class="op">]()))((</span>a<span class="op">,</span> mbs<span class="op">)</span> <span class="op">=&gt;</span> <span class="fu">map2</span><span class="op">(</span><span class="fu">f</span><span class="op">(</span>a<span class="op">),</span> mbs<span class="op">)(</span>_ <span class="op">::</span> _<span class="op">))</span></span></code></pre></div>
+</section>
+<section id="sequence-traverse-1" class="slide level1">
+<h1>sequence &amp; traverse</h1>
+<p>Примери: <code>effects/ApplicativeSequenceDemo</code> &amp; <code>effects/ApplicativeTraverseDemo</code></p>
+</section>
+<section id="предимства-на-applicative" class="slide level1">
+<h1>Предимства на Applicative</h1>
+<div>
+<ul>
+<li class="fragment">По-добре е да имплементираме комбинатори като <code>sequence</code> &amp; <code>traverse</code> използвайки възможно най-малко предположения</li>
+<li class="fragment">Апликатива е “по-слаб” от монада =&gt; имаме повече свобода за имплементация</li>
+<li class="fragment">Апликативите могат да се комбинират помежду си, докато монадите в общия случай - не</li>
+</ul>
+</div>
+</section>
+<section id="traversable" class="slide level1">
+<h1>Traversable</h1>
+<div>
+<ul>
+<li class="fragment">В дефиницията на <code>sequence</code> &amp; <code>traverse</code> виждаме конкретен тип, който може да бъде генерализиран</li>
+<li class="fragment">Това е <code>List</code> - нека се абстрахираме от него</li>
+</ul>
+</div>
+</section>
+<section id="traversable-1" class="slide level1">
+<h1>Traversable</h1>
+<div class="sourceCode" id="cb29"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Traverse<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> Functor<span class="op">[</span>F<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> traverse<span class="op">[</span>G<span class="op">[</span>_<span class="op">]:</span> Applicative<span class="op">,</span> A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> G<span class="op">[</span>B<span class="op">]):</span> G<span class="op">[</span>F<span class="op">[</span>B<span class="op">]]</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> sequence<span class="op">[</span>G<span class="op">[</span>_<span class="op">]:</span>Applicative<span class="op">,</span>A<span class="op">](</span>fga<span class="op">:</span> F<span class="op">[</span>G<span class="op">[</span>A<span class="op">]]):</span> G<span class="op">[</span>F<span class="op">[</span>A<span class="op">]]</span> <span class="op">=</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">traverse</span><span class="op">(</span>fga<span class="op">)(</span>ga <span class="op">=&gt;</span> ga<span class="op">)</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><code>traverse</code> също може да се изрази чрез <code>sequence</code></p>
+<p><code>map</code> може да се изрази чрез <code>traverse</code></p>
 </section>
 <section id="композитност-на-функтори-монади-и-апликативи" class="slide level1">
 <h1>Композитност на функтори, монади и апликативи</h1>
 </section>
 <section id="section-3" class="slide level1">
 <h1></h1>
-<div class="fragment">
 <p>Функторите могат да бъдат композирани:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>Functor</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>implicits<span class="op">.</span>_</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> listOption <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="bu">Some</span><span class="op">(</span><span class="dv">1</span><span class="op">),</span> <span class="bu">None</span><span class="op">,</span> <span class="bu">Some</span><span class="op">(</span><span class="dv">2</span><span class="op">))</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">// listOption: List[Option[Int]] = List(Some(1), None, Some(2))</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Through Functor#compose</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>Functor<span class="op">[</span><span class="bu">List</span><span class="op">].</span>compose<span class="op">[</span><span class="bu">Option</span><span class="op">].</span><span class="fu">map</span><span class="op">(</span>listOption<span class="op">)(</span>_ <span class="op">+</span> <span class="dv">1</span><span class="op">)</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: List[Option[Int]] = List(Some(2), None, Some(3))</span></span></code></pre></div>
-</div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>Functor</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>implicits<span class="op">.</span>_</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> listOption <span class="op">=</span> <span class="bu">List</span><span class="op">(</span><span class="bu">Some</span><span class="op">(</span><span class="dv">1</span><span class="op">),</span> <span class="bu">None</span><span class="op">,</span> <span class="bu">Some</span><span class="op">(</span><span class="dv">2</span><span class="op">))</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">// listOption: List[Option[Int]] = List(Some(1), None, Some(2))</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Through Functor#compose</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>Functor<span class="op">[</span><span class="bu">List</span><span class="op">].</span>compose<span class="op">[</span><span class="bu">Option</span><span class="op">].</span><span class="fu">map</span><span class="op">(</span>listOption<span class="op">)(</span>_ <span class="op">+</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">// res1: List[Option[Int]] = List(Some(2), None, Some(3))</span></span></code></pre></div>
+</section>
+<section id="section-4" class="slide level1">
+<h1></h1>
+<p>Апликативите също</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>data<span class="op">.</span>Nested</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>implicits<span class="op">.</span>_</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>concurrent<span class="op">.</span>Future</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>concurrent<span class="op">.</span>ExecutionContext<span class="op">.</span>Implicits<span class="op">.</span>global</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> x<span class="op">:</span> Future<span class="op">[</span><span class="bu">Option</span><span class="op">[</span><span class="bu">Int</span><span class="op">]]</span> <span class="op">=</span> Future<span class="op">.</span><span class="fu">successful</span><span class="op">(</span><span class="bu">Some</span><span class="op">(</span><span class="dv">5</span><span class="op">))</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> y<span class="op">:</span> Future<span class="op">[</span><span class="bu">Option</span><span class="op">[</span><span class="bu">Char</span><span class="op">]]</span> <span class="op">=</span> Future<span class="op">.</span><span class="fu">successful</span><span class="op">(</span><span class="bu">Some</span><span class="op">(</span><span class="ch">&#39;a&#39;</span><span class="op">))</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> composed <span class="op">=</span> Applicative<span class="op">[</span>Future<span class="op">].</span>compose<span class="op">[</span><span class="bu">Option</span><span class="op">].</span><span class="fu">map2</span><span class="op">(</span>x<span class="op">,</span> y<span class="op">)(</span>_ <span class="op">+</span> _<span class="op">)</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co">// composed: Future[Option[Int]] = Future(Success(Some(102)))</span></span></code></pre></div>
 <p class="fragment">
 В общия случай монадите не могат да се композират. Но много могат
 </p>
@@ -474,11 +591,11 @@ higher-kinded polymorphism
 </section>
 <section id="functional-programming-in-scala" class="slide level1">
 <h1>Functional Programming in Scala</h1>
-<p><a href="https://www.manning.com/books/functional-programming-in-scala"><img data-src="images/12-monads-and-functors/functional-programming-in-scala.jpg" height="520" /></a></p>
+<p><a href="https://www.manning.com/books/functional-programming-in-scala"><img data-src="images/10-monads-and-applicatives/functional-programming-in-scala.jpeg" height="520" /></a></p>
 </section>
 <section id="теория-на-категориите" class="slide level1">
 <h1>Теория на категориите</h1>
-<p><a href="https://github.com/hmemcpy/milewski-ctfp-pdf"><img data-src="images/12-monads-and-functors/47271389-8eea0900-d581-11e8-8e81-5b932e336336.png" height="520" /></a></p>
+<p><a href="https://github.com/hmemcpy/milewski-ctfp-pdf"><img data-src="images/10-monads-and-applicatives/category-theory-for-programmers.png" height="520" /></a></p>
 </section>
     </div>
   </div>

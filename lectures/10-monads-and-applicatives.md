@@ -15,9 +15,9 @@ title: Monads and Applicatives
 
 :::
 
-# Ефекти
+# Днес - Монади и Апликативи
 
-![](images/10-monads-and-applicatives/impure-logo.png)
+![](images/10-monads-and-applicatives/big-cat-burrito.jpeg)
 
 # Ефекти
 
@@ -136,9 +136,15 @@ trait Monad[F[_]] {
 
 <p class="fragment">higher-kinded polymorphism</p>
 
-<p class="fragment">
-![](images/10-monads-and-applicatives/impure-logo.png){ height="220" }
+<div class="fragment">
+<p>
+![](images/10-monads-and-applicatives/impure-logo.png){ height="130" }
 </p>
+
+<p>
+[Monads are like burritos](https://blog.plover.com/prog/burritos.html)
+</p>
+</div>
 
 
 # Монада – аксиоми
@@ -155,7 +161,7 @@ trait Monad[F[_]] {
   ```
   compose(unit, f) == compose(f, unit) == f
   ```
-* Много приличат на аксиомите за моноид, но е с функции
+* Много приличат на аксиомите за моноид, но с функции
 
 <div class="fragment">
 
@@ -375,17 +381,57 @@ trait Applicative[F[_]] extends Functor[F] {
 }
 ```
 
-# Какво ни дава Applicative?
+# Разликите между Monad и Applicative
 
-::: increment
+Applicative
+```scala
+val F: Applicative[Option] = ???
 
-* Дава ни възможност за независимост и паралелизъм (за разлика от монадата, която е sequential)
+val depts: Map[String, String] = ???
+val salaries: Map[String, Double] = ???
+
+// two independent lookups
+val o: Option[String] =
+  F.map2(depts.get("Alice"), salaries.get("Alice"))(
+    (dept, salary) => s"Alice in $dept makes $salary per year"
+  )
+```
+
+# Разликите между Monad и Applicative
+
+Monad
+```scala
+val F: Monad[Option] = ???
+
+val idsByName: Map[String, Int] = ???
+val depts: Map[Int, String] = ???
+val salaries: Map[Int, Double] = ???
+
+// the results of one lookup affect what lookup we do next
+val o: Option[String] =
+  idsByName.get("Bob").flatMap { id =>
+    F.map2(depts.get(id), salaries.get(id))(
+      (dept, salary) => s"Bob in $dept makes $salary per year"
+    )
+  }
+```
+
+# Разликите между Monad и Applicative
+
+::: incremental
+
+* Монадата добавя допълнителни възможности над Applicative - `join` или `flatMap`
+* С апликатива може да комбинираме независими стойности, докато с монадата
+  моделираме зависимост между такива.
+* С апликатива структурата на програмата е фиксирана,
+  а с монадата резултатите от предните изчисления могат да повлияят
+  кои изчисления да се изпълняват по-нататък.
+* Монадата е sequential, докато апликатива ни дава възможност за независимост и паралелизъм
 * Нека отново разгледаме примера с Validated
 
 :::
 
 # Алтернативна дефиниция<br />чрез `apply`
-
 
 ```scala
 trait Applicative[F[_]] extends Functor[F] {
@@ -396,14 +442,48 @@ trait Applicative[F[_]] extends Functor[F] {
 }
 ```
 
-`apply` може да се изрази чрез `map2`
+`apply` може да се изрази чрез `map2`, както и обратното
 ```scala
 def apply[A, B](fab: F[A => B])(fa: F[A]): F[B] = map2(fab, fa)(_(_))
+
+def map2[A,B,C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C] =
+  apply(map(fa)(f.curried))(fb)
 ```
+
+# Аксиомите за Applicative
+
+::: incremental
+
+* Очакваме аксиомите на функтор да се спазват
+* Ляв и десен идентитет
+  ```scala
+    map2(unit(()), fa)((_,a) => a) == fa
+    map2(fa, unit(()))((a,_) => a) == fa
+  ```
+* Асоциативност
+  ```scala
+    product(product(fa,fb),fc) == map(product(fa, product(fb,fc)))(assoc)
+  ```
+* Натуралност
+  ```scala
+    map2(a,b)(productF(f,g)) == product(map(a)(f), map(b)(g))
+  ```
+  където
+  ```scala
+    def product[A,B](fa: F[A], fb: F[B]): F[(A,B)] =
+      map2(fa, fb)((_,_))
+    def assoc[A,B,C](p: (A,(B,C))): ((A,B), C) =
+      p match { case (a, (b, c)) => ((a,b), c) }
+    def productF[I,O,I2,O2](f: I => O, g: I2 => O2): (I,I2) => (O,O2) =
+      (i,i2) => (f(i), g(i2))
+  ```
+
+:::
+
 
 # map3, 4 ... N
 
-Бихме могли да дефинираме `map` и за повече от 2 апликатива
+Бихме могли да дефинираме и повече от `map2`
 
 ```scala
 def map3[A,B,C,D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
@@ -411,7 +491,11 @@ def map3[A,B,C,D](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => D): F[D] = {
   val fcd = apply(fbcd)(fb)
   apply(fcd)(fc)
 }
+```
 
+<div class="fragment">
+
+```scala
 def map4[A,B,C,D,E](fa: F[A],
                     fb: F[B],
                     fc: F[C],
@@ -419,13 +503,64 @@ def map4[A,B,C,D,E](fa: F[A],
   apply(apply(apply(apply(unit(f.curried))(fa))(fb))(fc))(fd)
 ```
 
+</div>
+
 # sequence & traverse
+
+Когато не знаем колко е N
+
+```scala
+  def sequence[A](lfa: List[F[A]]): F[List[A]] =
+    traverse(lfa)(fa => fa)
+
+  def traverse[A,B](as: List[A])(f: A => F[B]): F[List[B]] =
+    as.foldRight(unit(List[B]()))((a, mbs) => map2(f(a), mbs)(_ :: _))
+```
+
+# sequence & traverse
+
+Примери: `effects/ApplicativeSequenceDemo` & `effects/ApplicativeTraverseDemo`
+
+# Предимства на Applicative
+
+::: incremental
+
+* По-добре е да имплементираме комбинатори като `sequence` & `traverse` използвайки възможно най-малко предположения
+* Апликатива е "по-слаб" от монада => имаме повече свобода за имплементация
+* Апликативите могат да се комбинират помежду си, докато монадите в общия случай - не
+
+:::
+
+# Traversable
+
+::: incremental
+
+* В дефиницията на `sequence` & `traverse` виждаме конкретен тип, който може да бъде генерализиран
+* Това е `List` - нека се абстрахираме от него
+
+:::
+
+# Traversable
+
+```scala
+trait Traverse[F[_]] extends Functor[F] {
+  def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
+  
+  def sequence[G[_]:Applicative,A](fga: F[G[A]]): G[F[A]] =
+    traverse(fga)(ga => ga)
+}
+```
+
+`traverse` също може да се изрази чрез `sequence`
+
+`map` може да се изрази чрез `traverse`
+
+
 
 # Композитност на функтори, монади и апликативи
 
 #
 
-<div class="fragment">
 
 Функторите могат да бъдат композирани:
 
@@ -441,7 +576,22 @@ Functor[List].compose[Option].map(listOption)(_ + 1)
 // res1: List[Option[Int]] = List(Some(2), None, Some(3))
 ```
 
-</div>
+#
+
+Апликативите също
+
+```scala
+import cats.data.Nested
+import cats.implicits._
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
+val x: Future[Option[Int]] = Future.successful(Some(5))
+val y: Future[Option[Char]] = Future.successful(Some('a'))
+
+val composed = Applicative[Future].compose[Option].map2(x, y)(_ + _)
+// composed: Future[Option[Int]] = Future(Success(Some(102)))
+```
 
 <p class="fragment">В общия случай монадите не могат да се композират. Но много могат</p>
 
@@ -451,8 +601,8 @@ Functor[List].compose[Option].map(listOption)(_ + 1)
 
 # Functional Programming in Scala
 
-[![](images/12-monads-and-functors/functional-programming-in-scala.jpg){ height="520" }](https://www.manning.com/books/functional-programming-in-scala)
+[![](images/10-monads-and-applicatives/functional-programming-in-scala.jpeg){ height="520" }](https://www.manning.com/books/functional-programming-in-scala)
 
 # Теория на категориите
 
-[![](images/12-monads-and-functors/47271389-8eea0900-d581-11e8-8e81-5b932e336336.png){ height="520" }](https://github.com/hmemcpy/milewski-ctfp-pdf)
+[![](images/10-monads-and-applicatives/category-theory-for-programmers.png){ height="520" }](https://github.com/hmemcpy/milewski-ctfp-pdf)

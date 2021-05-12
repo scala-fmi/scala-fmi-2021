@@ -1,7 +1,5 @@
 package exersices.effects
 
-import effects.Monad
-
 trait Monad[F[_]] {
 
   /*
@@ -13,8 +11,26 @@ trait Monad[F[_]] {
 
   def compose[A, B, C](f: A => F[B], g: B => F[C]): A => F[C] = ???
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /*
-  Exercise 2: Implement the functions bellow
+  Exercise 2: Implement the functions bellow using the primitives
    */
 
   def map[A, B](fa: F[A])(f: A => B): F[B] = ???
@@ -28,9 +44,11 @@ trait Monad[F[_]] {
 
 }
 
-object MonadTest extends App {
-  val optionMonad: Monad[Option] = ???
-}
+
+
+
+
+
 
 object Monad {
   def apply[F[_]](implicit m: Monad[F]) = m
@@ -51,9 +69,4 @@ object Monad {
   object ops {
 
   }
-
-  /*
-  Exercise 4: Define Monad instances for type Option
-   */
-
 }

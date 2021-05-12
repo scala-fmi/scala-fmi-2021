@@ -1,15 +1,19 @@
 package effects.cats
 
-object FunctorCompositionDemo extends App {
-//  val listOfOptions = List(Some(1), None, Some(2))
-//
-//  println {
-//    // composition
-//    Functor[List].compose[Option].map(listOfOptions)(_ + 1)
-//  }
+import cats.Functor
+import cats.data.Nested
+import cats.implicits.toFunctorOps
 
-//  // Cats utilities:
-//  println {
-//    Nested(listOfOptions).map(_ + 1)
-//  }
+object FunctorCompositionDemo extends App {
+  val listOfOptions = List(Some(1), None, Some(2))
+
+  println {
+    // composition
+    Functor[List].compose[Option].map(listOfOptions)(_ + 1)
+  }
+
+  // Cats utilities:
+  println {
+    Nested(listOfOptions).map(_ + 1)
+  }
 }

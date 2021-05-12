@@ -3,7 +3,7 @@ package effects.maybe
 import effects.Monad
 import Monad.ops._
 
-trait Maybe[+A]
+sealed trait Maybe[+A]
 case class Just[+A](a: A) extends Maybe[A]
 case object Nthng extends Maybe[Nothing]
 

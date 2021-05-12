@@ -1,6 +1,7 @@
 package validation
 
 import effects.Applicative
+import validation.FormValidatorNecApplicative.ValidationResult
 
 object FormValidatorNecApplicative {
   import cats.data._
@@ -16,10 +17,7 @@ object FormValidatorNecApplicative {
     if (password.matches("(?=^.{10,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$")) password.validNec
     else PasswordDoesNotMeetCriteria.invalidNec
 
-
-  implicit val validatedApplicative: Applicative[ValidationResult] = ???
-
-  def validateForm(username: String, password: String): ValidationResult[RegistrationData] = {
+  def validateForm(username: String, password: String)(implicit validatedApplicative: Applicative[ValidationResult]): ValidationResult[RegistrationData] = {
     validatedApplicative.map2(
       validateUserName(username),
       validatePassword(password)
@@ -28,6 +26,8 @@ object FormValidatorNecApplicative {
 }
 
 object FormValidatorNecApplicativeDemo extends App {
+  implicit val validatedApplicative: Applicative[ValidationResult] = ???
+
   println{
     FormValidatorNecApplicative.validateForm(
       username = "fake$Us#rname",
