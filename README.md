@@ -167,6 +167,27 @@
   - Допълнителни примери (непокрити на лекциите)
     * Multiversal срещу universal equality, [`Eq` в Cats](lectures/examples/09-type-classes/src/main/scala/cats/EqDemo.scala)
     * Пример за type class-ове на повече типове, [линейно пространство в Spire](lectures/examples/09-type-classes/src/main/scala/spire/VectorSpaceDemo.scala)
+* [10 – Монади и апликативи](https://scala-fmi.github.io/scala-fmi-2021/lectures/10-monads-and-applicatives.html) \[[код](lectures/examples/10-monads-and-applicatives)\]
+  - Ефекти. Абстракция над общите операции на ефекти
+  - Композиране на функции. Аксиоми
+  - Ефектни функции
+  - Монада – type class за композиране на ефектни функции
+  - Дефиниция на монада чрез compose и unit. Аксиоми
+  - Дефиниция чрез flatMap и unit. Аксиоми
+  - Производни операции на монади. `map`, `flatten`, `zip`, `map2`, `sequence` и други. Алтернативни дефиници
+  - Реализация на type class за монада, с помощни операции
+  - Монадни инстанции на основни ефектни типове
+  - Реализация на Maybe (алтернативно име на Option), монадна инстанция към Maybe и пример за работа с получените монадни операции
+  - `Id` монада
+  - [State монада](lectures/examples/10-monads-and-applicatives/src/main/scala/effects/state/state-monad.md)
+  - Функтори като генерализация на монадите. Аксиоми
+  - Грешни състояния на монади
+  - [Пример](lectures/examples/10-monads-and-applicatives/src/main/scala/validation/FormValidatorNec.scala) за валидация с натрупване на грешките с използване на монада за `Validated`  
+  - Апликатив. Разликите между монада и апликатив.
+  - [Пример](lectures/examples/10-monads-and-applicatives/src/main/scala/validation/FormValidatorNecApplicative.scala) за валидация с натрупване на грешки с апликатив
+  - Производни операции на апликативи. `map3`, `map4`, `sequence`, `traverse`.
+  - Апликативни инстанции на основни ефектни типове
+  - `Traversable` - генерализация на `sequence` и `traverse`
 ## Ресурси
 
 * [Таблица на елементите, съставящи типовата система на Scala](resources/type-elements-in-scala.md)
