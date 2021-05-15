@@ -1,16 +1,22 @@
 package math
 
 object ListOrderingDemo extends App {
-  implicit def listOrdering[A : Ordering]: Ordering[List[A]] = new Ordering[List[A]] {
+  implicit def listOrdering[A: Ordering]: Ordering[List[A]] = new Ordering[List[A]] {
     def compare(x: List[A], y: List[A]): Int = {
       val aOrdering = Ordering[A]
+      import aOrdering.mkOrderingOps
 
-      if (x == y) 0
-      else if (x.isEmpty) -1
-      else if (y.isEmpty) 1
-      else if (x.isEmpty || aOrdering.lt(x.head, y.head)) -1
-      else if (y.isEmpty || aOrdering.gt(x.head, y.head)) -1
-      else compare(x.tail, y.tail)
+      @tailrec
+      def loop(x: List[A], y: List[A]): Int = {
+        if (x.isEmpty && y.isEmpty) 0
+        else if (x.isEmpty) -1
+        else if (y.isEmpty) 1
+        else if (x.head < y.head) -1
+        else if (y.head < x.head) 1
+        else loop(x.tail, y.tail)
+      }
+
+      loop(x, y)
     }
   }
 
