@@ -1,5 +1,6 @@
 package cats
 
+import cats.arrow.FunctionK
 import cats.data.{Nested, Validated}
 import math.Rational
 import cats.instances.all._
@@ -18,10 +19,16 @@ import cats.syntax.option._
 import cats.syntax.functor._
 import cats.syntax.parallel._
 import cats.syntax.monoid._
+import cats.~>
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object CatsMonoidDemo extends App {
+  Parallel
+//  Apply[List].map()
+//  Applicative[List].map()
+//  Traverse[List].map()
+
 
 //  val a2: Parallel[Option] = ???
 
@@ -41,6 +48,8 @@ object CatsMonoidDemo extends App {
   println {
     (List(1, 2, 3), List(10, 20, 30), List(100, 200, 300)).parMapN((x, y, z) => x + y + z)
   }
+
+  (List(1, 2, 3), List(10, 20, 30), List(100, 200, 300)).sequence
 
   val a = (a: Int, b: String) => b * a
 

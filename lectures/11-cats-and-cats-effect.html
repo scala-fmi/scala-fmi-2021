@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Cats и Cats Effects</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal-js/dist/reset.css">
+  <link rel="stylesheet" href="reveal-js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="reveal-js/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="theme/theme.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Cats и Cats Effects</h1>
+</section>
+
+<section id="section" class="slide level1">
+<h1></h1>
+<p><a href="https://typelevel.org/projects/"><img data-src="images/11-cats-and-cats-effects/typelevel.svg" width="520" /></a></p>
+</section>
+<section id="cats" class="slide level1">
+<h1>Cats <img data-src="images/10-monads-and-applicatives/impure-logo.png" style="vertical-align: middle" height="64" /></h1>
+<p><a href="https://typelevel.org/cats/"><img data-src="images/09-type-classes/cats.png" /></a></p>
+</section>
+<section id="cats-book" class="slide level1">
+<h1>Cats Book</h1>
+<p><a href="https://www.scalawithcats.com/"><img data-src="images/09-type-classes/scala-with-cats.png" height="520" /></a></p>
+</section>
+<section id="cats-1" class="slide level1">
+<h1>Cats</h1>
+<p>Предоставя:</p>
+<ul>
+<li><a href="https://typelevel.org/cats/typeclasses.html">Type class-ове</a></li>
+<li>Инстанции на тези type class-ове</li>
+<li><a href="https://typelevel.org/cats/nomenclature.html">Синтаксис</a> (предимно под формата на extension methods)</li>
+<li><a href="https://typelevel.org/cats/datatypes.html">Data types</a></li>
+<li><a href="https://typelevel.org/cats/typeclasses/lawtesting.html">тестване на аксиоми</a></li>
+</ul>
+</section>
+<section id="data-types" class="slide level1">
+<h1>Data types</h1>
+<ul>
+<li><a href="https://typelevel.org/cats/datatypes/chain.html">Chain</a></li>
+<li><a href="https://typelevel.org/cats/datatypes/validated.html">Validated</a></li>
+<li><a href="https://typelevel.org/cats/datatypes/id.html">Id монада</a></li>
+<li><a href="https://typelevel.org/cats/datatypes/state.html">State монада</a></li>
+<li><code>FunctionK</code> (a.k.a. <code>~&gt;</code>), <code>Nested</code>, <code>Free</code> –<br />ще разгледаме допълнително</li>
+<li>…</li>
+</ul>
+</section>
+<section id="синтаксис" class="slide level1">
+<h1>Синтаксис</h1>
+</section>
+<section id="синтаксис-option" class="slide level1">
+<h1>Синтаксис – Option</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>syntax<span class="op">.</span>option<span class="op">.</span>_</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> maybeOne <span class="op">=</span> <span class="fl">1.</span>some <span class="co">// Some(1): Option[Int]</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> maybeN <span class="op">=</span> none<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="co">// None: Option[Int]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> either <span class="op">=</span> maybeOne<span class="op">.</span><span class="fu">toRightNec</span><span class="op">(</span><span class="st">&quot;It&#39;s not there :(&quot;</span><span class="op">)</span> <span class="co">// Right(1): Either[String, Int]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> validated <span class="op">=</span> maybeOne<span class="op">.</span><span class="fu">toValidNec</span><span class="op">(</span><span class="st">&quot;It&#39;s not there :(&quot;</span><span class="op">)</span> <span class="co">// Left(&quot;...&quot;): Either[String, Int]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> integer <span class="op">=</span> maybeN<span class="op">.</span>orEmpty <span class="co">// 0</span></span></code></pre></div>
+</section>
+<section id="синтаксис-either-и-validated" class="slide level1">
+<h1>Синтаксис – Either и Validated</h1>
+<div class="fragment">
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>syntax<span class="op">.</span>either<span class="op">.</span>_</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> eitherOne <span class="op">=</span> <span class="fl">1.</span>asRight</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> eitherN <span class="op">=</span> <span class="st">&quot;Error&quot;</span><span class="op">.</span>asLeft</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> eitherOneChain <span class="op">=</span> <span class="fl">1.</span>rightNec</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> eitherNChain <span class="op">=</span> <span class="st">&quot;Error&quot;</span><span class="op">.</span>leftNec</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> recoveredEither <span class="op">=</span> eitherN<span class="op">.</span>recover <span class="op">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="st">&quot;Error&quot;</span> <span class="op">=&gt;</span> <span class="fl">42.</span>asRight</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>eitherOneChain<span class="op">.</span>toValidated</span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>syntax<span class="op">.</span>validated<span class="op">.</span>_</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> validatedOne <span class="op">=</span> <span class="fl">1.</span>validNec</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> validatedN <span class="op">=</span> <span class="st">&quot;Error&quot;</span><span class="op">.</span>invalidNec</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>validatedOne<span class="op">.</span>toEither</span></code></pre></div>
+</div>
+</section>
+<section id="type-class-ове" class="slide level1">
+<h1>Type class-ове</h1>
+<p><a href="https://cdn.rawgit.com/tpolecat/cats-infographic/master/cats.svg">Поглед над йеархиите</a></p>
+</section>
+<section id="сравнение-и-наредба" class="slide level1">
+<h1>Сравнение и наредба</h1>
+<div class="fragment">
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Eq<span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">eqv</span><span class="op">(</span>x<span class="op">:</span> A<span class="op">,</span> y<span class="op">:</span> A<span class="op">):</span> Boolean</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">neqv</span><span class="op">(</span>x<span class="op">:</span> A<span class="op">,</span> y<span class="op">:</span> A<span class="op">):</span> Boolean <span class="op">=</span> <span class="op">!</span><span class="fu">eqv</span><span class="op">(</span>x<span class="op">,</span> y<span class="op">)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+</section>
+<section id="semigroup-и-monoid" class="slide level1">
+<h1>Semigroup и Monoid</h1>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Semigroup<span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">combine</span><span class="op">(</span>x<span class="op">:</span> A<span class="op">,</span> y<span class="op">:</span> A<span class="op">):</span> A</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Monoid<span class="op">[</span>A<span class="op">]</span> <span class="kw">extends</span> Semigroup<span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> empty<span class="op">:</span> A</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="semigroup-и-monoid-синтаксис" class="slide level1">
+<h1>Semigroup и Monoid синтаксис</h1>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>syntax<span class="op">.</span>monoid<span class="op">.</span>_</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="op">|+|</span> <span class="dv">2</span> <span class="co">// 3</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;ab&quot;</span><span class="op">.</span><span class="fu">combineN</span><span class="op">(</span><span class="dv">3</span><span class="op">)</span> <span class="co">// &quot;ababab&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fl">0.</span>isEmpty <span class="co">// true</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>Semigroup<span class="op">[</span><span class="bu">Int</span><span class="op">].</span><span class="fu">combineAllOption</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">))</span> <span class="co">// Some(6)</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>Monoid<span class="op">[</span><span class="bu">Int</span><span class="op">].</span><span class="fu">combineAll</span><span class="op">(</span><span class="bu">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">))</span> <span class="co">// 6</span></span></code></pre></div>
+</section>
+<section id="тестване-на-аксиоми" class="slide level1">
+<h1>Тестване на аксиоми</h1>
+</section>
+<section id="foldable" class="slide level1">
+<h1>Foldable</h1>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Foldable<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> foldLeft<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> b<span class="op">:</span> B<span class="op">)(</span>f<span class="op">:</span> <span class="op">(</span>B<span class="op">,</span> A<span class="op">)</span> <span class="op">=&gt;</span> B<span class="op">):</span> B</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> foldRight<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> lb<span class="op">:</span> Eval<span class="op">[</span>B<span class="op">])(</span>f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> Eval<span class="op">[</span>B<span class="op">])</span> <span class="op">=&gt;</span> Eval<span class="op">[</span>B<span class="op">]):</span> Eval<span class="op">[</span>B<span class="op">]</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="section-1" class="slide level1">
+<h1></h1>
+<ul>
+<li>Функтор</li>
+<li>Апликатив</li>
+<li>Монада</li>
+</ul>
+</section>
+<section id="functor" class="slide level1">
+<h1>Functor</h1>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Functor<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> map<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> F<span class="op">[</span>B<span class="op">]</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="apply" class="slide level1">
+<h1>Apply</h1>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Apply<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> Functor<span class="op">[</span>F<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> ap<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>ff<span class="op">:</span> F<span class="op">[</span>A <span class="op">=&gt;</span> B<span class="op">])(</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">]):</span> F<span class="op">[</span>B<span class="op">]</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> product<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">]):</span> F<span class="op">[(</span>A<span class="op">,</span> B<span class="op">)]</span> <span class="op">=</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ap</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span>fa<span class="op">)(</span>a <span class="op">=&gt;</span> <span class="op">(</span>b<span class="op">:</span> B<span class="op">)</span> <span class="op">=&gt;</span> <span class="op">(</span>a<span class="op">,</span> b<span class="op">)))(</span>fb<span class="op">)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> map2<span class="op">[</span>A<span class="op">,</span> B<span class="op">,</span> Z<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">],</span> fb<span class="op">:</span> F<span class="op">[</span>B<span class="op">])(</span>f<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> B<span class="op">)</span> <span class="op">=&gt;</span> Z<span class="op">):</span> F<span class="op">[</span>Z<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span><span class="op">(</span><span class="fu">product</span><span class="op">(</span>fa<span class="op">,</span> fb<span class="op">))(</span>f<span class="op">.</span>tupled<span class="op">)</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="applicative" class="slide level1">
+<h1>Applicative</h1>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Applicative<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> Apply<span class="op">[</span>F<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> pure<span class="op">[</span>A<span class="op">](</span>x<span class="op">:</span> A<span class="op">):</span> F<span class="op">[</span>A<span class="op">]</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> map<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> B<span class="op">):</span> F<span class="op">[</span>B<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ap</span><span class="op">(</span><span class="fu">pure</span><span class="op">(</span>f<span class="op">))(</span>fa<span class="op">)</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="traverse" class="slide level1">
+<h1>Traverse</h1>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Traverse<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> Functor<span class="op">[</span>F<span class="op">]</span> <span class="kw">with</span> Foldable<span class="op">[</span>F<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> traverse<span class="op">[</span>G<span class="op">[</span>_<span class="op">]</span> <span class="op">:</span> Applicative<span class="op">,</span> A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> G<span class="op">[</span>B<span class="op">]):</span> G<span class="op">[</span>F<span class="op">[</span>B<span class="op">]]</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> sequence<span class="op">[</span>G<span class="op">[</span>_<span class="op">]:</span> Applicative<span class="op">,</span> A<span class="op">](</span>fga<span class="op">:</span> F<span class="op">[</span>G<span class="op">[</span>A<span class="op">]]):</span> G<span class="op">[</span>F<span class="op">[</span>A<span class="op">]]</span> <span class="op">=</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">traverse</span><span class="op">(</span>fga<span class="op">)(</span>ga <span class="op">=&gt;</span> ga<span class="op">)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="apply-applicative-traverse-синтаксис" class="slide level1">
+<h1>Apply, Applicative, Traverse синтаксис</h1>
+</section>
+<section id="flatmap" class="slide level1">
+<h1>FlatMap</h1>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> FlatMap<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> Apply<span class="op">[</span>F<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> flatMap<span class="op">[</span>A<span class="op">,</span> B<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> A <span class="op">=&gt;</span> F<span class="op">[</span>B<span class="op">]):</span> F<span class="op">[</span>B<span class="op">]</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="monad" class="slide level1">
+<h1>Monad</h1>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Monad<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> FlatMap<span class="op">[</span>F<span class="op">]</span> <span class="kw">with</span> Applicative<span class="op">[</span>F<span class="op">]</span></span></code></pre></div>
+</section>
+<section id="monaderror" class="slide level1">
+<h1>MonadError</h1>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> MonadError<span class="op">[</span>F<span class="op">[</span>_<span class="op">],</span> E<span class="op">]</span> <span class="kw">extends</span> ApplicativeError<span class="op">[</span>F<span class="op">,</span> E<span class="op">]</span> <span class="kw">with</span> Monad<span class="op">[</span>F<span class="op">]</span></span></code></pre></div>
+<p>Абстрактни членове:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> raiseError<span class="op">[</span>A<span class="op">](</span>e<span class="op">:</span> E<span class="op">):</span> F<span class="op">[</span>A<span class="op">]</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> handleErrorWith<span class="op">[</span>A<span class="op">](</span>fa<span class="op">:</span> F<span class="op">[</span>A<span class="op">])(</span>f<span class="op">:</span> E <span class="op">=&gt;</span> F<span class="op">[</span>A<span class="op">]):</span> F<span class="op">[</span>A<span class="op">]</span></span></code></pre></div>
+</section>
+<section id="flatmap-monad-и-monaderror-синтаксис" class="slide level1">
+<h1>FlatMap, Monad и MonadError синтаксис</h1>
+</section>
+<section id="parallel" class="slide level1">
+<h1>Parallel</h1>
+<div class="fragment">
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Parallel<span class="op">[</span>M<span class="op">[</span>_<span class="op">]]</span> <span class="kw">extends</span> NonEmptyParallel<span class="op">[</span>M<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">type</span> F<span class="op">[</span>_<span class="op">]</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> applicative<span class="op">:</span> Applicative<span class="op">[</span>F<span class="op">]</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> monad<span class="op">:</span> Monad<span class="op">[</span>M<span class="op">]</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> sequential<span class="op">:</span> F <span class="op">~&gt;</span> M</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> parallel<span class="op">:</span> M <span class="op">~&gt;</span> F</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+</section>
+<section id="композиция-на-функтор-апликатив-и-монада" class="slide level1">
+<h1>Композиция на функтор, апликатив и монада</h1>
+</section>
+<section id="композиция-на-монади-optiont-и-eithert" class="slide level1">
+<h1>Композиция на монади – <code>OptionT</code> и <code>EitherT</code></h1>
+<div class="fragment">
+<p><a href="https://github.com/scala-fmi/scala-fmi-2021/blob/master/lectures/07-effects-and-functional-error-handling.ipynb">EitherT от лекцията за ефекти</a></p>
+</div>
+</section>
+<section id="free-монада" class="slide level1">
+<h1>Free Монада:</h1>
+<p>Повече на следните ресурси:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=aKUQUIHRGec">Free as in Monads</a></li>
+<li><a href="https://www.youtube.com/watch?v=M258zVn4m2M">Composable application architecture with reasonably priced monads</a></li>
+<li><a href="https://www.youtube.com/watch?v=ycrpJrcWMp4">Free Monads</a></li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal-js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal-js/plugin/notes/notes.js"></script>
+  <script src="reveal-js/plugin/search/search.js"></script>
+  <script src="reveal-js/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
