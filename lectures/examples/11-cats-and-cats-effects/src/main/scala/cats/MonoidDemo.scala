@@ -1,6 +1,7 @@
 package cats
 
 import cats.syntax.monoid._
+import cats.instances.all._
 
 object MonoidDemo extends App {
   1 |+| 2

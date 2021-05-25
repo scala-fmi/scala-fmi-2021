@@ -1,6 +1,6 @@
 package cats
 
-import cats.data.OptionT
+import cats.data.{Chain, OptionT}
 import cats.instances.all._
 import cats.syntax.apply._
 import cats.syntax.functor._
@@ -19,10 +19,17 @@ object Composition extends App {
   val ex3 = listOfOptions.map2(anotherListOfOptions)((a, b) => a.map2(b)(_ + _))
   val ex4 = Applicative[List].compose[Option].map2(listOfOptions, anotherListOfOptions)(_ + _)
 
+  println(ex2)
+  println(ex4)
+
   val ex5 = listOfOptions.nested.map(_ + 1).value
   val ex6 = listOfOptions.nested.map2(anotherListOfOptions.nested)(_ + _).value
 
+  println(ex5)
+
   def monadComposition: Future[Option[String]] = {
+    Chain(1, 2, 3).flatMap()
+
     val greetingFO: Future[Option[String]] = Future.successful(Some("Hello"))
 
     val firstnameF: Future[String] = Future.successful("Jane")
@@ -38,22 +45,22 @@ object Composition extends App {
     greeting.value
   }
 
-//  def composedMonad[F[_], G[_]](implicit fm: Monad[F], gm: Monad[G]) =
-//    new Monad[({type FG[A] = F[G[A]]})#FG] {
-//      def pure[A](x: A): F[G[A]] = fm.pure(gm.pure(x))
-//
-////      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
-////        gm.map(ga)(f)
-////      }
-//
+  def composedMonad[F[_], G[_]](implicit fm: Monad[F], gm: Monad[G]) =
+    new Monad[({type FG[A] = F[G[A]]})#FG] {
+      def pure[A](x: A): F[G[A]] = fm.pure(gm.pure(x))
+
 //      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
-//        val fApplied = gm.map(ga)(f)
-//        val fggb = sequence(fApplied)
-//        fm.map(fggb)(gm.flatten)
+//        gm.map(ga)(f)
 //      }
-//
-//      def sequence[A](fga: G[F[A]]): F[G[A]] = ???
-//
-//      def tailRecM[A, B](a: A)(f: A => F[G[Either[A, B]]]): F[G[B]] = ???
-//    }
+
+      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
+        val fApplied = gm.map(ga)(f)
+        val fggb = sequence(fApplied)
+        fm.map(fggb)(gm.flatten)
+      }
+
+      def sequence[A](fga: G[F[A]]): F[G[A]] = ???
+
+      def tailRecM[A, B](a: A)(f: A => F[G[Either[A, B]]]): F[G[B]] = ???
+    }
 }

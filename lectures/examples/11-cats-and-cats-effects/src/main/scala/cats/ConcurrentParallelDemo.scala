@@ -3,6 +3,7 @@ package cats
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import cats.syntax.apply._
+import cats.syntax.parallel._
 
 import scala.concurrent.duration.DurationInt
 
@@ -37,7 +38,7 @@ object ConcurrentParallelDemo extends App {
   def square(n: Int): IO[Int] = IO.sleep(1.second) *> IO(n * n)
 
   val calc = for {
-    combined <- (square(2), square(10), square(20)).tupled
+    combined <- (square(2), square(10), square(20)).parTupled
     (a, b, c) = combined
     d <- double(a + b + c)
   } yield d

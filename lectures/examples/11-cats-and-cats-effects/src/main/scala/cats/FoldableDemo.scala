@@ -12,4 +12,5 @@ object FoldableDemo extends App {
   }
 
   doSomething(List(10, 20, 30, 42))
+
 }
