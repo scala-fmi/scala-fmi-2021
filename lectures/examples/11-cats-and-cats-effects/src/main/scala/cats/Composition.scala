@@ -28,8 +28,6 @@ object Composition extends App {
   println(ex5)
 
   def monadComposition: Future[Option[String]] = {
-    Chain(1, 2, 3).flatMap()
-
     val greetingFO: Future[Option[String]] = Future.successful(Some("Hello"))
 
     val firstnameF: Future[String] = Future.successful("Jane")
@@ -45,22 +43,22 @@ object Composition extends App {
     greeting.value
   }
 
-  def composedMonad[F[_], G[_]](implicit fm: Monad[F], gm: Monad[G]) =
-    new Monad[({type FG[A] = F[G[A]]})#FG] {
-      def pure[A](x: A): F[G[A]] = fm.pure(gm.pure(x))
-
+//  def composedMonad[F[_], G[_]](implicit fm: Monad[F], gm: Monad[G]) =
+//    new Monad[({type FG[A] = F[G[A]]})#FG] {
+//      def pure[A](x: A): F[G[A]] = fm.pure(gm.pure(x))
+//
+////      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
+////        gm.map(ga)(f)
+////      }
+//
 //      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
-//        gm.map(ga)(f)
+//        val fApplied = gm.map(ga)(f)
+//        val fggb = sequence(fApplied)
+//        fm.map(fggb)(gm.flatten)
 //      }
-
-      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
-        val fApplied = gm.map(ga)(f)
-        val fggb = sequence(fApplied)
-        fm.map(fggb)(gm.flatten)
-      }
-
-      def sequence[A](fga: G[F[A]]): F[G[A]] = ???
-
-      def tailRecM[A, B](a: A)(f: A => F[G[Either[A, B]]]): F[G[B]] = ???
-    }
+//
+//      def sequence[A](fga: G[F[A]]): F[G[A]] = ???
+//
+//      def tailRecM[A, B](a: A)(f: A => F[G[Either[A, B]]]): F[G[B]] = ???
+//    }
 }

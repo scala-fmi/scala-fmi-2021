@@ -256,3 +256,7 @@ trait Parallel[M[_]] extends NonEmptyParallel[M] {
 * [Free as in Monads](https://www.youtube.com/watch?v=aKUQUIHRGec)
 * [Composable application architecture with reasonably priced monads](https://www.youtube.com/watch?v=M258zVn4m2M)
 * [Free Monads](https://www.youtube.com/watch?v=ycrpJrcWMp4)
+
+# Cats Effect
+
+[![](images/11-cats-and-cats-effects/hierarchy-impure.jpeg){ height=520 }](https://typelevel.org/cats-effect/)

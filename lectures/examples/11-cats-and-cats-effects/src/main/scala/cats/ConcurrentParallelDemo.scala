@@ -43,7 +43,7 @@ object ConcurrentParallelDemo extends App {
     d <- double(a + b + c)
   } yield d
 
-  Utils.time("IO run")(println(calc.unsafeRunSync))
+  Utils.time("IO run")(println(calc.unsafeRunSync()))
 }
 
 object Utils {
