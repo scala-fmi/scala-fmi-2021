@@ -1,7 +1,8 @@
 package http4s
 
+import cats.data.Kleisli
 import cats.effect.{ExitCode, IO, IOApp}
-import org.http4s.{HttpRoutes, Response, Status}
+import org.http4s.{HttpApp, HttpRoutes, Request, Response, Status}
 import org.http4s.dsl.io._
 import org.http4s.implicits._
 import cats.syntax.semigroupk._
@@ -18,7 +19,7 @@ object Example1_HttpRoutes {
   }
 
   val helloRoutes = HttpRoutes.of[IO] {
-    case GET -> Root / "hello" / name =>
+    case GET -> Root / "hello" / name =>  //   GET /hello/zdravko
       Ok(s"Hello, $name.")
     case GET -> Root / "hola" / name =>
       Ok(s"¡Hola, $name!")
@@ -29,11 +30,10 @@ object Example1_HttpRoutes {
   // Or define them under different path prefixes like that
   Router("/" -> helloRoutes, "/simple" -> mostSimpleRoute)
 
-  val httpApp = combined.orNotFound
+  val httpApp: HttpApp[IO] = helloRoutes.orNotFound
 }
 
 object HelloWorldApp extends IOApp {
-
   def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO](global)
       .bindHttp(8080, "localhost")

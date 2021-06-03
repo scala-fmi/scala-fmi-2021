@@ -10,7 +10,4 @@ final case class Joke(joke: String) extends AnyVal
 
 object Joke {
   implicit val jokeCodec: Codec[Joke] = deriveCodec[Joke]
-
-  implicit val jokeEntityDecoder: EntityDecoder[IO, Joke] = jsonOf
-  implicit val jokeEntityEncoder: EntityEncoder[IO, Joke] = jsonEncoderOf
 }

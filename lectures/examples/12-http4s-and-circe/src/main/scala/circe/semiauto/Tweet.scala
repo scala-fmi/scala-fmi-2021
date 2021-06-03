@@ -9,11 +9,8 @@ case class Tweet(id: Int, content: String, likes: Int = 0)
 object Tweet {
   import io.circe.generic.semiauto._
 
-  implicit val tweetEncoder: Encoder[Tweet] = deriveEncoder
-  implicit val tweetDecoder: Decoder[Tweet] = deriveDecoder
-
   // or both at the same time
-//  val tweetCodec: Codec[Tweet] = deriveCodec
+  implicit val tweetCodec: Codec[Tweet] = deriveCodec
 
 }
 

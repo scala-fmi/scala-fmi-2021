@@ -5,6 +5,8 @@ import org.http4s._
 import org.http4s.client.Client
 import org.http4s.implicits.http4sLiteralsSyntax
 
+import org.http4s.circe.CirceEntityCodec.circeEntityDecoder
+
 final case class JokeError(e: Throwable) extends RuntimeException
 
 class JokeService(client: Client[IO]) {

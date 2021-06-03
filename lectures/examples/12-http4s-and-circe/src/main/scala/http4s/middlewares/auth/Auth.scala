@@ -14,7 +14,8 @@ object Auth {
     Ok("Logged in!").map(_.addCookie(ResponseCookie("authcookie", userId.toString)))
 
 
-  def retrieveUser(id: Int) = UserDatabase(id).map(_.toRight("User not found"))
+  def retrieveUser(id: Int) =
+    UserDatabase(id).map(_.toRight("User not found"))
 
   val authUser: Kleisli[IO, Request[IO], Either[String, User]] =
     Kleisli { request =>
@@ -31,6 +32,6 @@ object Auth {
 
 
   val onFailure: AuthedRoutes[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.context)))
-  val middleware = AuthMiddleware(authUser, onFailure)
+  val middleware: AuthMiddleware[IO, User] = AuthMiddleware(authUser, onFailure)
 
 }

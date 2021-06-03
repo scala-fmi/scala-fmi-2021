@@ -33,7 +33,6 @@ object Example3_QueryParameters extends App {
 
 
   // Optional Query Parameters
-  /*
   object OptionalYearQueryParamMatcher extends OptionalQueryParamDecoderMatcher[Year]("year")
 
   def getAverageTemperatureForCurrentYear: IO[String] = IO("15.13")
@@ -48,10 +47,8 @@ object Example3_QueryParameters extends App {
           Ok(getAverageTemperatureForYear(year))
       }
   }
-  */
 
   // Validating query parameters
-  /*
   val validatingYearQueryParamDecoder: QueryParamDecoder[Year] =
     QueryParamDecoder[Int].emap(i => Try(Year.of(i)).toEither.leftMap(t => ParseFailure(t.getMessage, t.getMessage)))
 
@@ -71,5 +68,4 @@ object Example3_QueryParameters extends App {
 
   // Optional Validating Query Parameters
   object LongParamMatcher extends OptionalValidatingQueryParamDecoderMatcher[Long]("long")
-  */
 }
