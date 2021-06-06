@@ -233,3 +233,12 @@ resourceProcessor.countHttpResourceWords("http://example.org")
 # Doobie – сериализация/десериализация към/от заявка
 
 [Anatomy of a Doobie query](https://cdn.rawgit.com/tpolecat/doobie-infographic/v0.6.0/doobie.svg)
+
+# Потоци
+
+* [Fs2](https://fs2.io/)
+* [Akka Streams](https://doc.akka.io/docs/akka/current/stream/index.html)
+* [Monix](https://monix.io/)
+* [Play Iteratees](https://www.playframework.com/documentation/2.8.x/Iteratees)
+
+# Fs2 – Демо
