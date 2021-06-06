@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Изграждане на Scala приложение</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal-js/dist/reset.css">
+  <link rel="stylesheet" href="reveal-js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="reveal-js/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="theme/theme.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Изграждане на Scala приложение</h1>
+</section>
+
+<section id="scala" class="slide level1">
+<h1>Scala</h1>
+<p>Вече познаваме Scala доста добре</p>
+<p><img data-src="images/02-fp-with-scala/functional-wizard.png" height="420" /></p>
+<div class="fragment">
+<p>Вече всички можем да се наречен функционални магьосници :)</p>
+</div>
+</section>
+<section id="моделиране-на-домейни" class="slide level1">
+<h1>Моделиране на домейни</h1>
+<div>
+<ul>
+<li class="fragment">в последните лекции бяхме малко по-абстрактни</li>
+<li class="fragment">но най-силно ползата от ФП се проличава когато приложим изразните му средства в конкретни домейни</li>
+<li class="fragment">Днес и следващия път ще опитаме да изградим цялостно конкретно приложение
+<ul>
+<li class="fragment">Функционално</li>
+<li class="fragment">с HTTP, JSON, SQL база</li>
+<li class="fragment">с бизнес домейн (уеб магазин)</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="избор-на-io-ефект-асинхронност-и-конурентност" class="slide level1">
+<h1>Избор на IO ефект<br />(асинхронност и конурентност)</h1>
+<ul>
+<li><a href="https://typelevel.org/cats-effect">Cats Effect IO</a></li>
+<li><a href="https://zio.dev/">ZIO</a></li>
+<li><a href="https://monix.io/docs/current/eval/task.html">Monix Task</a></li>
+<li>Future</li>
+</ul>
+<div class="fragment">
+<p>Първите три предоставят имплементация на Cats Effect type class-овете</p>
+</div>
+</section>
+<section id="още-един-поглед-към-cats-effect-io" class="slide level1">
+<h1>Още един поглед към Cats Effect IO</h1>
+</section>
+<section id="cats-effect-type-class-ове" class="slide level1">
+<h1>Cats Effect Type Class-ове</h1>
+<p><a href="https://typelevel.org/cats-effect/docs/typeclasses/"><img data-src="images/11-cats-and-cats-effects/hierarchy-impure.jpeg" height="520" /></a></p>
+</section>
+<section id="безопасно-боравене-с-resource-и" class="slide level1">
+<h1>Безопасно боравене с Resource-и</h1>
+<div class="fragment">
+<p>Тоест функционален вариант на <a href="04-key-fp-approaches.html#/%D0%B8%D0%BC%D0%BF%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%D0%B8%D1%80%D0%B0%D0%BD%D0%B5-%D0%BD%D0%B0-%D1%81%D0%BE%D0%B1%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%B8-%D0%BA%D0%BE%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D0%B8-1/0">using</a></p>
+</div>
+</section>
+<section id="структуриране-на-кода" class="slide level1">
+<h1>Структуриране на кода</h1>
+</section>
+<section id="зависимости" class="slide level1">
+<h1>Зависимости</h1>
+<p>Чистите функции често рефирират към други конкретни функции.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">countHttpResourceWords</span><span class="op">(</span>url<span class="op">:</span> String<span class="op">):</span> IO<span class="op">[</span>Long<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  HttpUtils<span class="op">.</span><span class="fu">get</span><span class="op">(</span>url<span class="op">).</span><span class="fu">map</span><span class="op">(</span>_<span class="op">.</span>body<span class="op">).</span><span class="fu">map</span><span class="op">(</span>countWords<span class="op">)</span></span></code></pre></div>
+<div class="fragment">
+<p>Често обаче бихме желали да се абстрахираме от конкретната имплементация на тези функции</p>
+</div>
+</section>
+<section id="зависимости-1" class="slide level1">
+<h1>Зависимости</h1>
+<p>Във ФП това може да постигнем като функцията се подава като параметър:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">countHttpResourceWords</span><span class="op">(</span>retrieveUrl<span class="op">:</span> String <span class="op">=&gt;</span> HttpResponse<span class="op">)(</span>url<span class="op">:</span> String<span class="op">):</span> IO<span class="op">[</span>Long<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">retrieveUrl</span><span class="op">(</span>url<span class="op">).</span><span class="fu">map</span><span class="op">(</span>_<span class="op">.</span>body<span class="op">).</span><span class="fu">map</span><span class="op">(</span>countWords<span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> asyncHttpCountHttpResourceWords <span class="op">=</span> <span class="fu">countHttpResourceWords</span><span class="op">(</span>AsyncHttpClient<span class="op">.</span>get<span class="op">)</span> _</span></code></pre></div>
+</section>
+<section id="dependency-injection" class="slide level1">
+<h1>Dependency injection</h1>
+<div>
+<ul>
+<li class="fragment">Този подход наричаме със сложното име “Dependency injection”</li>
+<li class="fragment">Вид inversion of control – функцията вече не създава/реферира изрично конкретна зависимост, ами я приема като параметър</li>
+</ul>
+</div>
+</section>
+<section id="dependency-injection-чрез-ооп-модулност" class="slide level1">
+<h1>Dependency injection чрез ООП модулност</h1>
+<div class="fragment">
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> HttpClient <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">get</span><span class="op">(</span>url<span class="op">:</span> String<span class="op">):</span> IO<span class="op">[</span>HttpResponse<span class="op">]</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">post</span><span class="op">(</span>url<span class="op">:</span> String<span class="op">)(</span>entity<span class="op">:</span> Entity<span class="op">):</span> IO<span class="op">[</span>HttpResponse<span class="op">]</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="fu">ResourceProcessor</span><span class="op">(</span>httpClient<span class="op">:</span> HttpClient<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">countHttpResourceWords</span><span class="op">(</span>url<span class="op">:</span> String<span class="op">):</span> IO<span class="op">[</span>Long<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    httpClient<span class="op">.</span><span class="fu">get</span><span class="op">(</span>url<span class="op">).</span><span class="fu">map</span><span class="op">(</span>_<span class="op">.</span>body<span class="op">).</span><span class="fu">map</span><span class="op">(</span>countWords<span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> httpClient <span class="op">=</span> <span class="kw">new</span> AsyncHttpClient</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> resourceProcessor <span class="op">=</span> <span class="kw">new</span> <span class="fu">ResourceProcessor</span><span class="op">(</span>httpClient<span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>resourceProcessor<span class="op">.</span><span class="fu">countHttpResourceWords</span><span class="op">(</span><span class="st">&quot;http://example.org&quot;</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section>
+<section id="защо-dependency-injection" class="slide level1">
+<h1>Защо dependency injection?</h1>
+<ul>
+<li>Less coupling
+<ul>
+<li>не сме зависими от конкретна имплементация</li>
+<li>винаги можем да я сменим с друга</li>
+<li>зависими сме единствено от конкретен интерфейс</li>
+</ul></li>
+<li>позволява тестване</li>
+<li>зависимостите на всеки компонент стават по-явни</li>
+</ul>
+</section>
+<section id="кой-навързва-зависимостите" class="slide level1">
+<h1>Кой навързва зависимостите?</h1>
+<div>
+<ul>
+<li class="fragment">По време на изпълнение – популярно в Java света (<a href="https://github.com/google/guice">Guice</a>, <a href="https://spring.io/">Spring</a>)</li>
+<li class="fragment">По време на компилация</li>
+</ul>
+</div>
+</section>
+<section id="compile-time-dependency-injection-демо" class="slide level1">
+<h1>Compile-time dependency injection – демо</h1>
+</section>
+<section id="thin-cake-pattern" class="slide level1">
+<h1>Thin cake pattern</h1>
+</section>
+<section id="как-да-определим-кои-да-са-модулите" class="slide level1">
+<h1>Как да определим кои да са модулите</h1>
+<div>
+<ul>
+<li class="fragment">инфраструктурни/библиотечни – занимаващи се с конкретна библиотека или конкретна част от инфраструктурата на приложението</li>
+<li class="fragment">домейн модули – за всеки домейн/поддомейн</li>
+</ul>
+</div>
+</section>
+<section id="уеб-магазин" class="slide level1">
+<h1>Уеб магазин</h1>
+<p>Домейни:</p>
+<ul>
+<li>Управление на потребителите (регистрация, информация за потребителите, аутентикация)</li>
+<li>Инвентар (продукти, наличност и т.н.)</li>
+<li>Магазин и поръчки</li>
+</ul>
+<div class="fragment">
+<p>Подход:</p>
+<div>
+<ul>
+<li class="fragment">Всеки от тях може да бъде отделен модул, развиващ се сравнително самостоятелно</li>
+<li class="fragment">Една промяна обикновено засяга един модул, който в бъдеще може да бъде отделен и в отделен service</li>
+<li class="fragment">Напълно естествено разделение</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="разделение-по-слоеве" class="slide level1">
+<h1>Разделение по слоеве?</h1>
+<div>
+<ul>
+<li class="fragment">Например model, repository, service, controller</li>
+<li class="fragment">Почти винаги не работи добре за по-големи приложения</li>
+<li class="fragment">Една промяна често засяга няколко модула/пакета</li>
+<li class="fragment">Компоненти с по-силна връзка помежду си остават по-отдалечени</li>
+<li class="fragment">Понякога може да е полезно като второстепенно разделение</li>
+</ul>
+</div>
+</section>
+<section id="още-информация" class="slide level1">
+<h1>Още информация</h1>
+<p><a href="https://di-in-scala.github.io/">DI in Scala guide</a></p>
+</section>
+<section id="глобални-ресурси" class="slide level1">
+<h1>Глобални ресурси?</h1>
+<div>
+<ul>
+<li class="fragment">Много често приложенията съдържат ресурси, които трябва да се инициализират (при стартиране) и зачистват (при спиране)
+<ul>
+<li class="fragment">thread pools</li>
+<li class="fragment">връзки към базата</li>
+<li class="fragment">уеб сървър</li>
+<li class="fragment">…</li>
+</ul></li>
+<li class="fragment">Масово в JVM приложение се среща това да не се прави</li>
+<li class="fragment">При подхода за DI, който разгледахме, това изисква известно количество mutability</li>
+<li class="fragment">По-късно ще разгледам как лесно може да постигнем безопасност чрез Resource</li>
+</ul>
+</div>
+</section>
+<section id="връзка-със-sql-база-от-данни" class="slide level1">
+<h1>Връзка със SQL база от данни</h1>
+<ul>
+<li><a href="https://tpolecat.github.io/doobie/">Doobie</a></li>
+<li><a href="https://tpolecat.github.io/skunk//">Skunk</a></li>
+<li><a href="https://getquill.io/">Quill</a></li>
+<li><a href="https://scala-slick.org/">Slick</a></li>
+<li><a href="https://softwaremill.com/comparing-scala-relational-database-access-libraries/">Сравнение</a></li>
+</ul>
+</section>
+<section id="doobie" class="slide level1">
+<h1>Doobie</h1>
+<div>
+<ul>
+<li class="fragment">стъпва върху Cats и Cats Effect</li>
+<li class="fragment">вътрешно използва JDBC</li>
+</ul>
+</div>
+</section>
+<section id="doobie-демо" class="slide level1">
+<h1>Doobie – Демо</h1>
+</section>
+<section id="doobie-сериализациядесериализация-къмот-заявка" class="slide level1">
+<h1>Doobie – сериализация/десериализация към/от заявка</h1>
+<p><a href="https://cdn.rawgit.com/tpolecat/doobie-infographic/v0.6.0/doobie.svg">Anatomy of a Doobie query</a></p>
+</section>
+<section id="json-библиотеки" class="slide level1">
+<h1>JSON библиотеки</h1>
+<ul>
+<li><a href="https://circe.github.io/circe/">circe</a> - базира се на cats</li>
+<li><a href="https://github.com/playframework/play-json">play-json</a> - първоначално част от Play Framework, извадена в последствие. Използва jackson.</li>
+<li><a href="https://github.com/json4s/json4s">json4s</a> - “This project aims to provide a single AST to be used by other scala json libraries”</li>
+</ul>
+</section>
+<section id="circe" class="slide level1">
+<h1><a href="https://circe.github.io/circe/">Circe</a></h1>
+<p>A JSON library for Scala powered by Cats</p>
+</section>
+<section id="json-types" class="slide level1">
+<h1>JSON types</h1>
+<p><img data-src="images/12-building-a-scala-app/circe-json-data-types.jpeg" /></p>
+</section>
+<section id="circe-workflow" class="slide level1">
+<h1>Circe workflow</h1>
+<p>Encoding<br/> <code>Data Model -&gt; Encoder -&gt; Json -&gt; String</code></p>
+<p><br/></p>
+<p>Decoding<br/> <code>String -&gt; Parser -&gt; Json -&gt; HCursor -&gt; Decoder -&gt; Data Model</code></p>
+</section>
+<section id="encoders" class="slide level1">
+<h1>Encoders</h1>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Encoder<span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>a<span class="op">:</span> A<span class="op">):</span> Json</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">implicit</span> <span class="kw">class</span> EncoderOps<span class="op">[</span>A<span class="op">](</span><span class="kw">val</span> wrappedEncodeable<span class="op">:</span> A<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">asJson</span><span class="op">(</span><span class="kw">implicit</span> encoder<span class="op">:</span> Encoder<span class="op">[</span>A<span class="op">]):</span> Json <span class="op">=</span> <span class="fu">encoder</span><span class="op">(</span>wrappedEncodeable<span class="op">)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">asJsonObject</span><span class="op">(</span><span class="kw">implicit</span> encoder<span class="op">:</span> ObjectEncoder<span class="op">[</span>A<span class="op">]):</span> JsonObject <span class="op">=</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    encoder<span class="op">.</span><span class="fu">encodeObject</span><span class="op">(</span>wrappedEncodeable<span class="op">)</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="encoder-examples" class="slide level1">
+<h1>Encoder examples</h1>
+<p><code>circe/examples/IdCard</code></p>
+</section>
+<section id="decoding" class="slide level1">
+<h1>Decoding</h1>
+<p><code>String -&gt; Parser -&gt; Json -&gt; HCursor -&gt; Decoder -&gt; Data Model</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Parser <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">parse</span><span class="op">(</span>input<span class="op">:</span> String<span class="op">):</span> Either<span class="op">[</span>ParsingFailure<span class="op">,</span> Json<span class="op">]</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> decode<span class="op">[</span>A<span class="op">:</span> Decoder<span class="op">](</span>input<span class="op">:</span> String<span class="op">):</span> Either<span class="op">[</span>Error<span class="op">,</span> A<span class="op">]</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Decoder<span class="op">[</span>A<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>c<span class="op">:</span> HCursor<span class="op">):</span> Decoder<span class="op">.</span>Result<span class="op">[</span>A<span class="op">]</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="добавяне-на-circe-към-проект" class="slide level1">
+<h1>Добавяне на circe към проект</h1>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> circeVersion <span class="op">=</span> <span class="st">&quot;0.14.1&quot;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>libraryDependencies <span class="op">++=</span> <span class="bu">Seq</span><span class="op">(</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;io.circe&quot;</span> <span class="op">%%</span> <span class="st">&quot;circe-core&quot;</span><span class="op">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;io.circe&quot;</span> <span class="op">%%</span> <span class="st">&quot;circe-generic&quot;</span><span class="op">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;io.circe&quot;</span> <span class="op">%%</span> <span class="st">&quot;circe-parser&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">).</span><span class="fu">map</span><span class="op">(</span>_ <span class="op">%</span> circeVersion<span class="op">)</span></span></code></pre></div>
+<ul>
+<li><code>circe-core</code> - core data type and type classes</li>
+<li><code>circe-generic</code> - uses Shapeless to auto-generate Decoder/Encoder for case classes.</li>
+<li><code>circe-parser</code> - Parser type class for decoding JSON</li>
+</ul>
+</section>
+<section id="http-библиотеки" class="slide level1">
+<h1>HTTP библиотеки</h1>
+<ul>
+<li><a href="https://http4s.org/">http4s</a> - based on cats-effect and fs2 (streaming)</li>
+<li><a href="https://doc.akka.io/docs/akka-http/current/index.html">akka-http</a> - full server- and client-side HTTP stack on top of akka-actor and akka-stream</li>
+<li><a href="https://www.playframework.com/">Play Framework</a> - build on Akka</li>
+<li><a href="http://scalatra.org/">Scalatra</a> - influenced on Ruby’s Sinatra. “microframework”</li>
+</ul>
+</section>
+<section id="http4s" class="slide level1">
+<h1>http4s</h1>
+<blockquote>
+<p>Http applications are just a Kleisli function from a streaming request to a polymorphic effect of a streaming response. So what’s the problem?</p>
+</blockquote>
+<div class="fragment">
+<p>Нека разгледаме как е изграден http4s</p>
+</div>
+</section>
+<section id="започваме-просто" class="slide level1">
+<h1>Започваме просто</h1>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Request</span><span class="op">(</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    method<span class="op">:</span> Method<span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    uri<span class="op">:</span> Uri<span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// headers,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// httpVersion,</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    body<span class="op">:</span> EntityBody</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Response</span><span class="op">(</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    status<span class="op">:</span> Status<span class="op">,</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// headers,</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// httpVersion,</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    body<span class="op">:</span> EntityBody</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span></code></pre></div>
+</section>
+<section id="section" class="slide level1">
+<h1></h1>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpApp <span class="op">=</span> Request <span class="op">=&gt;</span> IO<span class="op">[</span>Response<span class="op">]</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpRoutes <span class="op">=</span> Request <span class="op">=&gt;</span> IO<span class="op">[</span><span class="bu">Option</span><span class="op">[</span>Response<span class="op">]]</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> HttpRoutes <span class="op">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">of</span><span class="op">(</span>pf<span class="op">:</span> <span class="bu">PartialFunction</span><span class="op">[</span>Request<span class="op">,</span> IO<span class="op">[</span>Response<span class="op">]]):</span> HttpRoutes <span class="op">=</span> pf<span class="op">.</span>lift</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Http<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">=</span> Request <span class="op">=&gt;</span> F<span class="op">[</span>Response<span class="op">]</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpApp <span class="op">=</span> Http<span class="op">[</span>IO<span class="op">]</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpRoutes <span class="op">=</span> Http<span class="op">[</span>IO<span class="op">[</span><span class="bu">Option</span><span class="op">[</span>_<span class="op">]]]</span></span></code></pre></div>
+</div>
+</section>
+<section id="section-1" class="slide level1">
+<h1></h1>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Http<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">=</span> Request <span class="op">=&gt;</span> F<span class="op">[</span>Response<span class="op">]</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpApp <span class="op">=</span> Http<span class="op">[</span>IO<span class="op">]</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> OptionIO<span class="op">[</span>A<span class="op">]</span> <span class="op">=</span> IO<span class="op">[</span><span class="bu">Option</span><span class="op">[</span>A<span class="op">]]</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpRoutes <span class="op">=</span> Http<span class="op">[</span>OptionIO<span class="op">]</span></span></code></pre></div>
+</section>
+<section id="optiont" class="slide level1">
+<h1><a href="https://typelevel.org/cats/datatypes/optiont.html">OptionT</a></h1>
+<blockquote>
+<p>OptionT[F[_], A] is a light wrapper on an F[Option[A]]</p>
+</blockquote>
+<div class="fragment">
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> cats<span class="op">.</span>data<span class="op">.</span>OptionT</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Http<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">=</span> Request <span class="op">=&gt;</span> F<span class="op">[</span>Response<span class="op">]</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpApp <span class="op">=</span> Http<span class="op">[</span>IO<span class="op">]</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> OptionTIO<span class="op">[</span>A<span class="op">]</span> <span class="op">=</span> OptionT<span class="op">[</span>IO<span class="op">,</span> A<span class="op">]</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpRoutes <span class="op">=</span> Http<span class="op">[</span>OptionTIO<span class="op">]</span> </span></code></pre></div>
+</div>
+<div class="fragment">
+<p><a href="https://github.com/typelevel/kind-projector">Kind Projector</a></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpRoutes <span class="op">=</span> Http<span class="op">[</span>OptionT<span class="op">[</span>IO<span class="op">,</span> <span class="op">*]]</span></span></code></pre></div>
+</div>
+</section>
+<section id="какво-имаме-накрая" class="slide level1">
+<h1>Какво имаме накрая</h1>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Http<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">=</span> Request <span class="op">=&gt;</span> F<span class="op">[</span>Response<span class="op">]</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpApp <span class="op">=</span> Http<span class="op">[</span>IO<span class="op">]</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpRoutes <span class="op">=</span> Http<span class="op">[</span>OptionT<span class="op">[</span>IO<span class="op">,</span> <span class="op">*]]</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> HttpRoutes <span class="op">{</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">of</span><span class="op">(</span>pf<span class="op">:</span> <span class="bu">PartialFunction</span><span class="op">[</span>Request<span class="op">,</span> IO<span class="op">[</span>Response<span class="op">]]):</span> HttpRoutes <span class="op">=</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    req <span class="op">=&gt;</span> <span class="fu">OptionT</span><span class="op">(</span>pf<span class="op">.</span><span class="fu">lift</span><span class="op">(</span>req<span class="op">).</span>sequence<span class="op">)</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="всъщност-е-малко-по-различно" class="slide level1">
+<h1>Всъщност е малко по-различно</h1>
+<p><a href="https://typelevel.org/cats/datatypes/kleisli.html">Kleisli</a></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Http<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">=</span> Kleisli<span class="op">[</span>F<span class="op">,</span> Request<span class="op">,</span> Response<span class="op">]</span></span></code></pre></div>
+<div class="fragment">
+<p>Освен това - IO не е фиксирано</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpApp<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">=</span> Http<span class="op">[</span>F<span class="op">]</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> HttpRoutes<span class="op">[</span>F<span class="op">[</span>_<span class="op">]]</span> <span class="op">=</span> Http<span class="op">[</span>OptionT<span class="op">[</span>F<span class="op">,</span> <span class="op">*]]</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> HttpRoutes <span class="op">{</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> of<span class="op">[</span>F<span class="op">[</span>_<span class="op">]:</span> Defer<span class="op">:</span> Applicative<span class="op">](</span>pf<span class="op">:</span> <span class="bu">PartialFunction</span><span class="op">[</span>Request<span class="op">[</span>F<span class="op">],</span> F<span class="op">[</span>Response<span class="op">[</span>F<span class="op">]]]):</span> HttpRoutes<span class="op">[</span>F<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Kleisli</span><span class="op">(</span>req <span class="op">=&gt;</span> <span class="fu">OptionT</span><span class="op">(</span>Defer<span class="op">[</span>F<span class="op">].</span><span class="fu">defer</span><span class="op">(</span>pf<span class="op">.</span><span class="fu">lift</span><span class="op">(</span>req<span class="op">).</span>sequence<span class="op">)))</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+</section>
+<section id="examples" class="slide level1">
+<h1>Examples</h1>
+</section>
+<section id="middlewares" class="slide level1">
+<h1>middlewares</h1>
+<ul>
+<li><a href="https://http4s.org/v0.23/middleware/">документация</a></li>
+<li><a href="https://http4s.org/v0.23/auth/">Authentication</a></li>
+<li>Cross Origin Resource Sharing (<a href="https://http4s.org/v0.23/cors">CORS</a>)</li>
+<li>Response Compression (<a href="https://http4s.org/v0.23/gzip">GZip</a>)</li>
+<li><a href="https://http4s.org/v0.23/api/org/http4s/server/middleware/Metrics">Metrics</a></li>
+<li><a href="https://http4s.org/v0.23/api/org/http4s/server/middleware/RequestId">X-Request-ID header</a></li>
+</ul>
+</section>
+<section id="http-client" class="slide level1">
+<h1>http client</h1>
+<ul>
+<li>Освен сървърна част, <code>http4s</code> има и HTTP клиент</li>
+<li><a href="https://http4s.org/v0.23/client/">пример от документацията</a></li>
+</ul>
+</section>
+<section id="потоци" class="slide level1">
+<h1>Потоци</h1>
+<ul>
+<li><a href="https://fs2.io/">Fs2</a></li>
+<li><a href="https://doc.akka.io/docs/akka/current/stream/index.html">Akka Streams</a></li>
+<li><a href="https://monix.io/">Monix</a></li>
+<li><a href="https://www.playframework.com/documentation/2.8.x/Iteratees">Play Iteratees</a></li>
+</ul>
+</section>
+<section id="fs2-демо" class="slide level1">
+<h1>Fs2 – Демо</h1>
+</section>
+<section id="въпроси" class="slide level1">
+<h1>Въпроси :)?</h1>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal-js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal-js/plugin/notes/notes.js"></script>
+  <script src="reveal-js/plugin/search/search.js"></script>
+  <script src="reveal-js/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

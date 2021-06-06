@@ -188,6 +188,82 @@
   - Производни операции на апликативи. `map3`, `map4`, `sequence`, `traverse`.
   - Апликативни инстанции на основни ефектни типове
   - `Traversable` - генерализация на `sequence` и `traverse`
+* [11 – Cats и Cats Effect](https://scala-fmi.github.io/scala-fmi-2021/lectures/11-cats-and-cats-effect.html) \[[код](lectures/examples/11-cats-and-cats-effects)\]
+  - Typelevel.scala екосистемата
+  - Cats – библиотека, осигуряваща абстракции за функционално програмиране
+    * type class-ове
+    * техни инстанции
+    * синтаксис
+    * типове от данни
+    * тестване на аксиоми
+  - Типове от данни – `Chain`, `Validated`, `Id`, `State`, `FunctionK` (или още `~>`), `Nested`
+  - Синтаксис за `Option`, `Either`, и `Validated`
+  - [Йеархия от type class-ове](https://cdn.rawgit.com/tpolecat/cats-infographic/master/cats.svg)
+  - Type class-ове за сравнение и наредба (`Eq`, `Hash`, `PartialOrder`, `Order`). Синтакси
+  - Алгебрични type class-ове. `Semigroup` и `Monoid`. Синтаксис
+  - Тестване на аксиоми – пример с моноид за рационални числа
+  - Type class-ове за ефекти. Операции и синтаксис към всеки от тях
+    * `Foldable`
+    * `Functor`
+    * `Apply`, `Applicative` и `Traverse`
+    * `ApplicativeError`
+    * `FlatMap`, `Monad` и `MonadError`
+  - `Parallel` – type class за типове, позволяващи последователна (монадна) и паралелна (апликативна) обработка
+    * примери с инстанции за `IO`/`IO.Par`, `Either`/`Validated` и `List`/`ZipList`
+    * синтаксис за `Parallel`
+  - Композитност на функтор, апликатив и монада
+    * композиране на функтор и апликатив. Тип `Nested`
+    * невъзможност за композиция на монади в общия случай. Композитност при вложени ефекти, които имат `sequence` (тоест са `Traverse`). Типове `OptionT` и `EitherT` като решение за тези два конкретни типа
+  - [Всички примери за Cats](lectures/examples/11-cats-and-cats-effects/src/main/scala/cats)
+  - Cats Effect и type class-ове за конкурентност. Имплементацията им в типа `IO`
+  - Cats Effect fibers. Thread pool-ове. Реализация на приложение чрез `IO`. `IOApp`
+  - Feature-и на Cats Effect според type class-овете. [Йеархия на type class-овете](https://typelevel.org/cats-effect/docs/typeclasses)
+    * [`MonadCancel`](https://typelevel.org/cats-effect/docs/typeclasses/monadcancel) – добавя възможност за канселиране
+    * [`Spawn`](https://typelevel.org/cats-effect/docs/typeclasses/spawn) – изпълнение на множество конкурентни fiber-а
+    * [`Concurrent`](https://typelevel.org/cats-effect/docs/typeclasses/concurrent) – възможност за описване на безопасен достъп до споделени ресурси (т. нар. Ref) и за изчакване на ресурси (т. нар. Deferred)
+    * [`Clock`](https://typelevel.org/cats-effect/docs/typeclasses/clock) – описване на достъп до текущото време
+    * [`Temporal`](https://typelevel.org/cats-effect/docs/typeclasses/temporal) – приспиване на fiber за определено време
+    * [`Unique`](https://typelevel.org/cats-effect/docs/typeclasses/unique) – генериране на случайни и уникални тоукъни
+    * [`Sync`](https://typelevel.org/cats-effect/docs/typeclasses/sync) – адаптиране на синхронни изчисления (блокиращи и неблокиращи) към ефектни (и асинхронни) такива
+    * [`Async`](https://typelevel.org/cats-effect/docs/typeclasses/async) – адаптиране на callback-базиран асинхронен API към ефектен такъв
+    * Пример за функционално описване на план чрез всеки от type class-овете. Изпълнение на плана – изпълнение на страничните ефекти (чрез `unsafeRun*` методите).
+  - Безопасен достъп до ресурси, изискващи затваряне. `Resource` ефект
+  - [Всички примери за Cats Effect](lectures/examples/11-cats-and-cats-effects/src/main/scala/io)
+* [12 – Изграждане на Scala приложение](https://scala-fmi.github.io/scala-fmi-2021/lectures/12-building-a-scala-app.html) \[[код](lectures/examples/12-building-a-scala-app)\]
+  - Какво постигнахме досега? Как можем да използваме ФП при моделиране на конкретни домейни?
+  - Избор на IO ефект
+  - Структуриране на кода
+    * зависимости и dependency injection. Реализация чрез параметри (на функции или конструктор на клас). Ползи
+    * навързване на зависимостите. Thin Cake Pattern
+    * използване на `Resource` за безопасни инициализация и затваряне на глобални и локални ресурси
+  - Kак да разделим програмата ни на модули? Разделение по домейн вместо по слоеве. Ползи
+  - Връзка със SQL база от данни чрез Doobie
+    * `ConnectionIO` ефект и пробразуване до `IO.` Транзакции
+    * [примери с Doobie](lectures/examples/12-building-a-scala-app/src/main/scala/sql).
+      - заявки
+      - сериализация на данните към и от заявка
+      - фрагменти
+      - Въвеждане и обновяване на данни – единично и на куп
+  - JSON сериализация и десериализация чрез Circe
+    * Encoder-и и decoder-и
+    * Полуавтоматична деривация encoder-и и decoder-и чрез макроси
+    * [Примери със Circe](lectures/examples/12-building-a-scala-app/src/main/scala/json)
+  - HTTP приложения чрез http4s
+    * HTTP като ефектна функция от `Request` към `Response`
+    * HTTP server чрез http4s. Стартиране като `IOApp`
+    * HTTP routes – pattern matching по `Request`-а
+    * Сериализация и десериализация на entity-та. Връщане и четене на JSON чрез Circe
+    * Добавяне на обща функционалност чрез middlewares
+    * HTTP клиент
+    * [Примери с http4s](lectures/examples/12-building-a-scala-app/src/main/scala/http)
+  - Функционални конкурентни потоци чрез Fs2
+    * От `LazyList` до ефектен `Stream`
+    * Функционални трансфомрации на потоци
+    * Връзка с вход/изход – файловата система, TCP, UDP, ...
+    * Поточно генериране на резултат от HTTP резултат. Поток от Doobie през http4s сървър до клиент
+    * Web socket-и чрез Fs2 и http4s
+    * [Примери с Fs2](lectures/examples/12-building-a-scala-app/src/main/scala/streams)
+
 ## Ресурси
 
 * [Таблица на елементите, съставящи типовата система на Scala](resources/type-elements-in-scala.md)
