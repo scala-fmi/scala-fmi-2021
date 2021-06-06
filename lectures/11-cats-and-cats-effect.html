@@ -304,16 +304,53 @@
 </section>
 <section id="free-монада" class="slide level1">
 <h1>Free Монада:</h1>
-<p>Повече на следните ресурси:</p>
+<div>
 <ul>
-<li><a href="https://www.youtube.com/watch?v=aKUQUIHRGec">Free as in Monads</a></li>
-<li><a href="https://www.youtube.com/watch?v=M258zVn4m2M">Composable application architecture with reasonably priced monads</a></li>
-<li><a href="https://www.youtube.com/watch?v=ycrpJrcWMp4">Free Monads</a></li>
+<li class="fragment">позволява изграждането не езици и интерпретатори</li>
+<li class="fragment">няма да го разглеждаме в курса</li>
+<li class="fragment">повече на следните ресурси:
+<ul>
+<li class="fragment"><a href="https://www.youtube.com/watch?v=aKUQUIHRGec">Free as in Monads</a></li>
+<li class="fragment"><a href="https://www.youtube.com/watch?v=M258zVn4m2M">Composable application architecture with reasonably priced monads</a></li>
+<li class="fragment"><a href="https://www.youtube.com/watch?v=ycrpJrcWMp4">Free Monads</a></li>
+</ul></li>
 </ul>
+</div>
 </section>
 <section id="cats-effect" class="slide level1">
 <h1>Cats Effect</h1>
+<blockquote>
+<p>“Framework to build composable typesafe functional concurrency libraries and applications.” – Cats Effect</p>
+</blockquote>
+</section>
+<section id="internals" class="slide level1">
+<h1>Internals</h1>
+<div>
+<ul>
+<li class="fragment">JVM is all about threadpools</li>
+<li class="fragment">Modern concurrency isn’t</li>
+<li class="fragment">Fibers + Scheduler</li>
+</ul>
+</div>
+</section>
+<section id="how-cats-does-it" class="slide level1">
+<h1>How cats does it</h1>
+<ul>
+<li><strong>A work-stealing pool for computation</strong>, consisting of exactly the same number of Threads as there are hardware processors (minimum: 2)</li>
+<li><strong>A single-threaded schedule dispatcher</strong>, consisting of a single maximum-priority Thread which dispatches sleeps with high precision</li>
+<li><strong>An unbounded blocking pool</strong>, defaulting to zero Threads and allocating as-needed (with caching and downsizing) to meet demand for blocking operations</li>
+</ul>
+<p><a href="https://typelevel.org/cats-effect/docs/schedulers">https://typelevel.org/cats-effect/docs/schedulers</a></p>
+</section>
+<section id="what-we-get-is" class="slide level1">
+<h1>What we get is…</h1>
 <p><a href="https://typelevel.org/cats-effect/"><img data-src="images/11-cats-and-cats-effects/hierarchy-impure.jpeg" height="520" /></a></p>
+</section>
+<section id="cats-effect-демо" class="slide level1">
+<h1>Cats Effect (демо)</h1>
+</section>
+<section id="въпроси" class="slide level1">
+<h1>Въпроси :)?</h1>
 </section>
     </div>
   </div>

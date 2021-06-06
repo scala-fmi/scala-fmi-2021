@@ -27,6 +27,23 @@ object Composition extends App {
 
   println(ex5)
 
+  // Monad composition cannot be defined generically like we did for Functor or Applicative
+  // Monads can be composed only if G is a Traverse, i.e. the way composition is done depends on the nested effect
+  def composedMonad[F[_], G[_] : Traverse](implicit fm: Monad[F], gm: Monad[G]) =
+    new Monad[({type FG[A] = F[G[A]]})#FG] {
+      def pure[A](x: A): F[G[A]] = fm.pure(gm.pure(x))
+
+      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
+        val fApplied = gm.map(ga)(f)
+        val fggb = Traverse[G].sequence(fApplied) // we cannot do it if G doesn't support sequence
+        fm.map(fggb)(gm.flatten)
+      }
+
+      def tailRecM[A, B](a: A)(f: A => F[G[Either[A, B]]]): F[G[B]] = ???
+    }
+
+  // OptionT allow us to compose any monad with an Option
+  // There is also a variant called EitherT for Eithers
   def monadComposition: Future[Option[String]] = {
     val greetingFO: Future[Option[String]] = Future.successful(Some("Hello"))
 
@@ -42,23 +59,4 @@ object Composition extends App {
 
     greeting.value
   }
-
-//  def composedMonad[F[_], G[_]](implicit fm: Monad[F], gm: Monad[G]) =
-//    new Monad[({type FG[A] = F[G[A]]})#FG] {
-//      def pure[A](x: A): F[G[A]] = fm.pure(gm.pure(x))
-//
-////      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
-////        gm.map(ga)(f)
-////      }
-//
-//      def flatMap[A, B](fga: F[G[A]])(f: A => F[G[B]]): F[G[B]] = fm.flatMap(fga) { ga =>
-//        val fApplied = gm.map(ga)(f)
-//        val fggb = sequence(fApplied)
-//        fm.map(fggb)(gm.flatten)
-//      }
-//
-//      def sequence[A](fga: G[F[A]]): F[G[A]] = ???
-//
-//      def tailRecM[A, B](a: A)(f: A => F[G[Either[A, B]]]): F[G[B]] = ???
-//    }
 }

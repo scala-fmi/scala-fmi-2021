@@ -251,12 +251,43 @@ trait Parallel[M[_]] extends NonEmptyParallel[M] {
 
 # Free Монада:
 
-Повече на следните ресурси:
+::: incremental
 
-* [Free as in Monads](https://www.youtube.com/watch?v=aKUQUIHRGec)
-* [Composable application architecture with reasonably priced monads](https://www.youtube.com/watch?v=M258zVn4m2M)
-* [Free Monads](https://www.youtube.com/watch?v=ycrpJrcWMp4)
+* позволява изграждането не езици и интерпретатори
+* няма да го разглеждаме в курса
+* повече на следните ресурси:
+  - [Free as in Monads](https://www.youtube.com/watch?v=aKUQUIHRGec)
+  - [Composable application architecture with reasonably priced monads](https://www.youtube.com/watch?v=M258zVn4m2M)
+  - [Free Monads](https://www.youtube.com/watch?v=ycrpJrcWMp4)
+
+:::
 
 # Cats Effect
 
+> "Framework to build composable typesafe functional concurrency libraries and applications." -- Cats Effect
+
+# Internals
+
+::: incremental
+
+* JVM is all about threadpools
+* Modern concurrency isn't
+* Fibers + Scheduler
+
+:::
+
+# How cats does it
+
+* **A work-stealing pool for computation**, consisting of exactly the same number of Threads as there are hardware processors (minimum: 2)
+* **A single-threaded schedule dispatcher**, consisting of a single maximum-priority Thread which dispatches sleeps with high precision
+* **An unbounded blocking pool**, defaulting to zero Threads and allocating as-needed (with caching and downsizing) to meet demand for blocking operations
+
+[https://typelevel.org/cats-effect/docs/schedulers](https://typelevel.org/cats-effect/docs/schedulers)
+
+# What we get is...
+
 [![](images/11-cats-and-cats-effects/hierarchy-impure.jpeg){ height=520 }](https://typelevel.org/cats-effect/)
+
+# Cats Effect (демо)
+
+# Въпроси :)?

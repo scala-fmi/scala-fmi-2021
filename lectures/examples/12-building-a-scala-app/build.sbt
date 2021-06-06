@@ -1,4 +1,4 @@
-name := "cats-and-cats-effects"
+name := "building-a-scala-app"
 version := "0.1"
 
 scalaVersion := "2.13.6"
@@ -16,6 +16,10 @@ libraryDependencies ++= Seq(
   "co.fs2" %% "fs2-core" % "3.0.4",
   "co.fs2" %% "fs2-io" % "3.0.4",
   "co.fs2" %% "fs2-reactive-streams" % "3.0.4",
+
+  "io.circe" %% "circe-core" % "0.14.1",
+  "io.circe" %% "circe-generic" % "0.14.1",
+  "io.circe" %% "circe-parser" % "0.14.1",
 
   "org.http4s" %% "http4s-dsl" % "0.23.0-RC1",
   "org.http4s" %% "http4s-blaze-server" % "0.23.0-RC1",
