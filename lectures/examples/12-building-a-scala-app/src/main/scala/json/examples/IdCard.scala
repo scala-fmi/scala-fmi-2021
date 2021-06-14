@@ -1,6 +1,6 @@
 package json.examples
 
-import io.circe.syntax.EncoderOps
+import io.circe.syntax._
 import io.circe.{Decoder, Encoder, HCursor, Json, ParsingFailure}
 import io.circe.parser._
 

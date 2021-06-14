@@ -10,6 +10,7 @@ object MyApplication extends CModule with BModule with AModule with DModule  {
   lazy val config: Config = ConfigFactory.load()
 
   def main(args: Array[String]): Unit = {
+    c.doSomething()
     println(d)
   }
 }

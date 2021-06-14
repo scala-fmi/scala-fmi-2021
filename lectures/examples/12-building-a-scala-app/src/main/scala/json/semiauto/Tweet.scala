@@ -1,8 +1,8 @@
 package json.semiauto
 
-import io.circe.{Codec, Decoder, Encoder}
-import io.circe.syntax._
+import io.circe.Codec
 import io.circe.parser._
+import io.circe.syntax._
 
 case class Tweet(id: Int, content: String, likes: Int = 0)
 
@@ -15,7 +15,7 @@ object Tweet {
 }
 
 object DerivedCodecExample extends App {
-  val tweet = Tweet(1, "Some random contect", 123124)
+  val tweet = Tweet(1, "Some random content", 123124)
 
   println(tweet.asJson)
 

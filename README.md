@@ -223,7 +223,7 @@
     * [`Concurrent`](https://typelevel.org/cats-effect/docs/typeclasses/concurrent) – възможност за описване на безопасен достъп до споделени ресурси (т. нар. Ref) и за изчакване на ресурси (т. нар. Deferred)
     * [`Clock`](https://typelevel.org/cats-effect/docs/typeclasses/clock) – описване на достъп до текущото време
     * [`Temporal`](https://typelevel.org/cats-effect/docs/typeclasses/temporal) – приспиване на fiber за определено време
-    * [`Unique`](https://typelevel.org/cats-effect/docs/typeclasses/unique) – генериране на случайни и уникални тоукъни
+    * [`Unique`](https://typelevel.org/cats-effect/docs/typeclasses/unique) – генериране на уникални тоукъни
     * [`Sync`](https://typelevel.org/cats-effect/docs/typeclasses/sync) – адаптиране на синхронни изчисления (блокиращи и неблокиращи) към ефектни (и асинхронни) такива
     * [`Async`](https://typelevel.org/cats-effect/docs/typeclasses/async) – адаптиране на callback-базиран асинхронен API към ефектен такъв
     * Пример за функционално описване на план чрез всеки от type class-овете. Изпълнение на плана – изпълнение на страничните ефекти (чрез `unsafeRun*` методите).
@@ -263,10 +263,13 @@
     * Поточно генериране на резултат от HTTP резултат. Поток от Doobie през http4s сървър до клиент
     * Web socket-и чрез Fs2 и http4s
     * [Примери с Fs2](lectures/examples/12-building-a-scala-app/src/main/scala/streams)
-
-## Ресурси
+  - [Примерно приложение със сървър и клиент за библиотека](lectures/examples/12-library-app)
+  - [Цялостно примерно приложение за уеб магазин](lectures/examples/12-shopping-app)
+  
+## Допълнителни ресурси
 
 * [Таблица на елементите, съставящи типовата система на Scala](resources/type-elements-in-scala.md)
+* [Конкурентност със Akka](https://scala-fmi.github.io/scala-fmi-2021/lectures/12-building-a-scala-app.html) \[[код](lectures/examples/xx-akka-examples)\]
 
 ## Генериране на лекции
 
