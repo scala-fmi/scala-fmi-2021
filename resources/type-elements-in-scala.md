@@ -325,6 +325,26 @@ def sum[A](xs: List[A])(implicit m: Monoid[A]) = {
     </tr>
     <tr>
 <th>
+Комбинация от type bounds
+
+`A <: Type1 >: Type2 : Type3 : Type4 : Type 5`
+</th>
+<td>
+
+```scala
+def doSomething[V, E <: Expression[V] : Monoid : Eq]
+  (expressions: List[E]): E = ???
+```
+
+</td>
+<td>
+
+Scala ни позволява да поставяме произволен брой ограничения върху `A`. `A` може също така да бъде higher-kinded тип.
+
+</td>
+    </tr>
+    <tr>
+<th>
 Ковариантност
 
 `+A`
