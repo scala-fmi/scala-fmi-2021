@@ -269,6 +269,7 @@
 ## Допълнителни ресурси
 
 * [Таблица на елементите, съставящи типовата система на Scala](resources/type-elements-in-scala.md)
+* [Cheat sheet със типовете и инстанциите на Cats](resources/cats-cheat-sheet.md)
 * [Конкурентност със Akka](https://scala-fmi.github.io/scala-fmi-2021/lectures/xx-concurrency-with-akka.html) \[[код](lectures/examples/xx-akka-examples)\]
 
 ## Генериране на лекции
